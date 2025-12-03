@@ -282,10 +282,10 @@ export default function Navbar() {
         {/* RIGHT BUTTONS (DESKTOP) */}
         <div className="hidden md:flex items-center gap-6">
           <Link
-            href="/signin"
+            href="/sign-up"
             className={`px-3 py-2 rounded-md transition
               ${
-                isActive("/signin")
+                isActive("/sign-up")
                   ? "bg-indigo-100 text-indigo-900"
                   : "text-gray-800 hover:bg-gray-200"
               }`}
@@ -293,7 +293,7 @@ export default function Navbar() {
             Sign in
           </Link>
 
-          <Link href="/get-started">
+          <Link href="/sign-up">
             <button className="bg-indigo-900 text-white px-6 py-2 rounded-full hover:bg-indigo-800 transition">
               Get Started
             </button>
