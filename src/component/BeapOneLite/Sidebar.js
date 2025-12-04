@@ -76,7 +76,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { href: "/beapOneLite/ewallet", icon: Wallet, label: "eWallet & Payments", status: "✓" },
     { href: "/bank-reconciliation", icon: Building2, label: "Bank Reconciliation", status: "S" },
     { href: "/project-profitability", icon: FileText, label: "Project Profitability", status: "S" },
-    { href: "/financial-reports", icon: BarChart3, label: "Financial Reports", status: "S" },
+    { href: "/beapOneLite/financial-reports", icon: BarChart3, label: "Financial Reports", status: "S" },
     { href: "/reporting-engine", icon: FileText, label: "Reporting Engine", status: "S" },
     { href: "/e-invoicing-tax", icon: FileText, label: "E-Invoicing & Tax", status: "P" },
     { href: "/document-management", icon: FileText, label: "Document Management", status: "P" },
