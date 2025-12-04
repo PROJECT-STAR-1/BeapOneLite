@@ -90,7 +90,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/project-profitability",
+      href: "/beapOneLite/project",
       icon: FileText,
       label: "Project Profitability",
       status: "S",
