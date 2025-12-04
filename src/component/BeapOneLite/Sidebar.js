@@ -74,7 +74,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const menuItems = [
     { href: "/beapOneLite", icon: LayoutDashboard, label: "Dashboard", status: "✓" },
     { href: "/beapOneLite/ewallet", icon: Wallet, label: "eWallet & Payments", status: "✓" },
-    { href: "/bank-reconciliation", icon: Building2, label: "Bank Reconciliation", status: "S" },
+    { href: "/beapOneLite/bank-reconciliation", icon: Building2, label: "Bank Reconciliation", status: "S" },
     { href: "/project-profitability", icon: FileText, label: "Project Profitability", status: "S" },
     { href: "/financial-reports", icon: BarChart3, label: "Financial Reports", status: "S" },
     { href: "/reporting-engine", icon: FileText, label: "Reporting Engine", status: "S" },
