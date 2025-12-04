@@ -114,7 +114,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     {
-      href: "/document-management",
+      href: "/beapOneLite/document-management",
       icon: FileText,
       label: "Document Management",
       status: "P",
