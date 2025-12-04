@@ -38,8 +38,7 @@ const Dropdown = ({ title, icon: Icon, items, isOpen, toggle }) => (
   <div>
     <button
       onClick={toggle}
-      className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg w-full text-sm"
-    >
+      className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg w-full text-sm">
       <Icon size={18} />
       {title}
       <span className="ml-auto text-purple-400">S</span>
@@ -72,15 +71,60 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
-    { href: "/beapOneLite", icon: LayoutDashboard, label: "Dashboard", status: "✓" },
-    { href: "/beapOneLite/ewallet", icon: Wallet, label: "eWallet & Payments", status: "✓" },
-    { href: "/bank-reconciliation", icon: Building2, label: "Bank Reconciliation", status: "S" },
-    { href: "/project-profitability", icon: FileText, label: "Project Profitability", status: "S" },
-    { href: "/financial-reports", icon: BarChart3, label: "Financial Reports", status: "S" },
-    { href: "/reporting-engine", icon: FileText, label: "Reporting Engine", status: "S" },
-    { href: "/e-invoicing-tax", icon: FileText, label: "E-Invoicing & Tax", status: "P" },
-    { href: "/document-management", icon: FileText, label: "Document Management", status: "P" },
-    { href: "/subscription-billing", icon: FileText, label: "Subscription & Billing", status: "✓" },
+    {
+      href: "/beapOneLite",
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      status: "✓",
+    },
+    {
+      href: "/beapOneLite/ewallet",
+      icon: Wallet,
+      label: "eWallet & Payments",
+      status: "✓",
+    },
+    {
+      href: "/bank-reconciliation",
+      icon: Building2,
+      label: "Bank Reconciliation",
+      status: "S",
+    },
+    {
+      href: "/project-profitability",
+      icon: FileText,
+      label: "Project Profitability",
+      status: "S",
+    },
+    {
+      href: "/financial-reports",
+      icon: BarChart3,
+      label: "Financial Reports",
+      status: "S",
+    },
+    {
+      href: "/reporting-engine",
+      icon: FileText,
+      label: "Reporting Engine",
+      status: "S",
+    },
+    {
+      href: "/e-invoicing-tax",
+      icon: FileText,
+      label: "E-Invoicing & Tax",
+      status: "P",
+    },
+    {
+      href: "/document-management",
+      icon: FileText,
+      label: "Document Management",
+      status: "P",
+    },
+    {
+      href: "/subscription-billing",
+      icon: FileText,
+      label: "Subscription & Billing",
+      status: "✓",
+    },
     { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
     { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
@@ -101,7 +145,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const purchasingItems = [
     { href: "/purchase-orders", icon: Clipboard, label: "Purchase Orders" },
-    { href: "/purchasing-reports", icon: BarChart3, label: "Purchasing Reports" },
+    {
+      href: "/purchasing-reports",
+      icon: BarChart3,
+      label: "Purchasing Reports",
+    },
   ];
 
   const salesOrdersItems = [
@@ -110,8 +158,16 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const documentsComplianceItems = [
-    { href: "/compliance-documents", icon: File, label: "Compliance Documents" },
-    { href: "/document-archiving", icon: Clipboard, label: "Document Archiving" },
+    {
+      href: "/compliance-documents",
+      icon: File,
+      label: "Compliance Documents",
+    },
+    {
+      href: "/document-archiving",
+      icon: Clipboard,
+      label: "Document Archiving",
+    },
   ];
 
   const channelManagementItems = [
@@ -123,8 +179,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     <div
       className={`bg-[#0A0F1F] text-white w-64 h-screen fixed left-0 top-0 overflow-y-auto transition-transform duration-300 z-50 ${
         isOpen ? "translate-x-0" : "-translate-x-64"
-      } md:translate-x-0`}
-    >
+      } md:translate-x-0`}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
         <div className="text-xl font-bold">BEAPOne Lite</div>
@@ -136,7 +191,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       {/* Menu items */}
       <div className="mt-4 space-y-1 px-2">
         {menuItems.map((item, idx) => (
-          <MenuItem key={idx} href={item.href} icon={item.icon} label={item.label} status={item.status} />
+          <MenuItem
+            key={idx}
+            href={item.href}
+            icon={item.icon}
+            label={item.label}
+            status={item.status}
+          />
         ))}
 
         {/* Dropdowns */}
