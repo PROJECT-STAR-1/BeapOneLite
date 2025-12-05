@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Building2, FileText, MapPin, Coins, ChevronDown } from "lucide-react";
+import SuccessModal from "@/component/BeapOneLite/Settings/Modal/SuccessModal";
 
 export default function SettingsPage() {
   const [data, setData] = useState(null);
+
+
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("/api/beapOnelite/settings")
@@ -103,7 +107,8 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <button className="bg-black text-white px-6 py-3 rounded-lg mt-4">
+        <button className="bg-black text-white px-6 py-3 rounded-lg mt-4"
+         onClick={() => setShowModal(true)}>
           Save Changes
         </button>
       </div>
@@ -134,6 +139,8 @@ export default function SettingsPage() {
           ))}
         </div>
       </div>
+
+ <SuccessModal open={showModal} onClose={() => setShowModal(false)} />
 
     </div>
   );

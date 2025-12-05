@@ -1,6 +1,7 @@
 "use client";
+import { useState, useEffect } from "react";
 import Layout from "@/component/BeapOneLite/Layout";
-import { useState } from "react";
+
 import Profile from "@/component/BeapOneLite/Settings/Profile";
 import Business from "@/component/BeapOneLite/Settings/Buisness";
 import Locations from "@/component/BeapOneLite/Settings/Locations";

@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { User, Phone, Mail, Globe } from "lucide-react";
+import SuccessModal from "@/component/BeapOneLite/Settings/Modal/SuccessModal";
+
 
 export default function ProfilePage() {
   const [data, setData] = useState(null);
+
+  const [showModal, setShowModal] = useState(false);
 
   // Load API data
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function ProfilePage() {
         <p className="text-gray-600 mb-6">Update your personal details</p>
 
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-full bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center">
             <User className="text-white" size={40} />
           </div>
 
@@ -111,7 +115,8 @@ export default function ProfilePage() {
 
         </div>
 
-        <button className="px-5 py-2 bg-black text-white rounded-lg">
+        <button className="px-5 py-2 bg-black text-white rounded-lg"
+        onClick={() => setShowModal(true)}>
           Save Changes
         </button>
       </div>
@@ -146,6 +151,8 @@ export default function ProfilePage() {
 
         </div>
       </div>
+
+      <SuccessModal open={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }
