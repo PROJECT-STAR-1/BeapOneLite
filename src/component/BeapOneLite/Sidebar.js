@@ -153,7 +153,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: File,
       label: "Expense Register",
     },
-    { href: "/expenses-legacy", icon: Calendar, label: "Legacy" },
+    { href: "/beapOneLite/expense-legacy", icon: Calendar, label: "Legacy" },
   ];
 
   const purchasingItems = [
