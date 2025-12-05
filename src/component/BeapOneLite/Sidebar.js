@@ -166,7 +166,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const salesOrdersItems = [
-    { href: "/sales-orders-overview", icon: Clipboard, label: "Overview" },
+    {
+      href: "/beapOneLite/sales-order-dashboard",
+      icon: Clipboard,
+      label: "Sales Order Management",
+    },
     { href: "/sales-orders-history", icon: Calendar, label: "History" },
   ];
 
