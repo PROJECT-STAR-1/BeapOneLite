@@ -144,7 +144,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const expensesItems = [
     { href: "/expenses-dashboard", icon: Clipboard, label: "Dashboard" },
-    { href: "/expenses-register", icon: File, label: "Expense Register" },
+    {
+      href: "/beapOneLite/expenses-register",
+      icon: File,
+      label: "Expense Register",
+    },
     { href: "/expenses-legacy", icon: Calendar, label: "Legacy" },
   ];
 
