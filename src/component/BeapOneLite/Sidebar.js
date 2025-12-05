@@ -80,7 +80,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { href: "/reporting-engine", icon: FileText, label: "Reporting Engine", status: "S" },
     { href: "/e-invoicing-tax", icon: FileText, label: "E-Invoicing & Tax", status: "P" },
     { href: "/document-management", icon: FileText, label: "Document Management", status: "P" },
-    { href: "/subscription-billing", icon: FileText, label: "Subscription & Billing", status: "✓" },
+    { href: "/beapOneLite/subscription-billing", icon: FileText, label: "Subscription & Billing", status: "✓" },
     { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
     { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
