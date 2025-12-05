@@ -86,11 +86,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const salesInvoicingItems = [
-    { href: "/invoices", icon: Clipboard, label: "Invoices" },
-    { href: "/aging-schedule", icon: Calendar, label: "Aging Schedule" },
-    { href: "/invoice-register", icon: File, label: "Invoice Register" },
-    { href: "/tax-wht-report", icon: DollarSign, label: "Tax & WHT Report" },
-    { href: "/sales-reports", icon: BarChart3, label: "Sales Reports" },
+    { href: "/beapOneLite/sales-invoices/invoices", icon: Clipboard, label: "Invoices" },
+    { href: "/beapOneLite/sales-invoices/aging-schedule", icon: Calendar, label: "Aging Schedule" },
+    { href: "/beapOneLite/sales-invoices/invoice-register", icon: File, label: "Invoice Register" },
+    { href: "/beapOneLite/sales-invoices/tax-wht-report", icon: DollarSign, label: "Tax & WHT Report" },
+    { href: "/beapOneLite/sales-invoices/sales-reports", icon: BarChart3, label: "Sales Reports" },
   ];
 
   const expensesItems = [
