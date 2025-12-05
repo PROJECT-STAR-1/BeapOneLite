@@ -97,10 +97,7 @@ const StatCard = ({ metric }) => {
         <p className="text-xs text-gray-400 mt-2">Ready to sync</p>
       )}
 
-      {/* Large background icon for design aesthetic */}
-      <div className={`absolute -bottom-4 -right-4 opacity-5 ${metric.color}`}>
-        <UploadIcon size={100} />
-      </div>
+      {/* Large background icon for design aesthetic - REMOVED */}
     </div>
   );
 };
