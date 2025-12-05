@@ -125,7 +125,12 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       label: "Subscription & Billing",
       status: "✓",
     },
-    { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
+    {
+      href: "/beapOneLite/bpc",
+      icon: FileText,
+      label: "BPC Portal",
+      status: "P",
+    },
     { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
 
