@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   Smartphone,
   DollarSign,
@@ -7,48 +8,18 @@ import {
   XOctagon,
   CheckCircle,
   Info,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    CONSTANTS & MOCK DATA
+    CONSTANTS & UI LOGIC
 ============================================================ */
 
-const PRIMARY_COLOR = "text-green-600"; // Using green as the main color for Mobile Money, mirroring the image
 const ICON_SIZE_SM = 18;
 const ICON_SIZE_LG = 28;
 
-const MOCK_MOBILE_MONEY = [
-  {
-    id: 1,
-    name: "M-Pesa Kenya",
-    code: "MPESA",
-    status: "ACTIVE",
-    fee: "0.5%",
-    shortCode: "123456",
-    supportedCountries: ["KE", "TZ", "UG"],
-  },
-  {
-    id: 2,
-    name: "MTN Mobile Money",
-    code: "MTN MOBILE MONEY",
-    status: "INACTIVE",
-    fee: "0.8%",
-    shortCode: "789012",
-    supportedCountries: ["UG", "RW", "CM", "CI", "GH"],
-  },
-  {
-    id: 3,
-    name: "MoMo Ghana",
-    code: "MOMO GHANA",
-    status: "ACTIVE",
-    fee: "0.65%",
-    shortCode: "345678",
-    supportedCountries: ["GH"],
-  },
-];
-
 /* ============================================================
-    HELPER COMPONENTS
+    SUB-COMPONENTS
 ============================================================ */
 
 /**
@@ -85,13 +56,11 @@ const DetailRow = ({ label, value, icon: Icon }) => (
  */
 const MobileMoneyCard = ({ provider }) => {
   const isActive = provider.status === "ACTIVE";
-  // Active border is green, inactive is gray. Hover is subtle on the card itself.
   const borderColor = isActive ? "border-green-500" : "border-gray-200";
   const iconBgColor = isActive ? "bg-green-100" : "bg-gray-100";
   const iconColor = isActive ? "text-green-600" : "text-gray-500";
 
   return (
-    // Added h-full and min-h-[350px] for consistent card height, matching the visual style
     <div
       className={`flex flex-col p-6 bg-white rounded-xl shadow-lg border-2 ${borderColor} transition-all duration-300 
             hover:shadow-xl h-full min-h-[350px]`}>
@@ -110,8 +79,6 @@ const MobileMoneyCard = ({ provider }) => {
           </div>
         </div>
         <div className="pt-2">
-          {" "}
-          {/* Align status badge slightly lower */}
           <StatusBadge status={provider.status} />
         </div>
       </div>
@@ -174,17 +141,52 @@ const MobileMoneyCard = ({ provider }) => {
     MAIN COMPONENT
 ============================================================ */
 
-export function MobileMoneyComponent() {
+export default function MobileMoneyComponent() {
+  const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/ewallet");
+        if (response.ok) {
+          const data = await response.json();
+          // Assuming the API returns a 'mobileMoneyProviders' key based on the structure provided
+          // Using nullish coalescing to ensure it defaults to an empty array if undefined
+          setProviders(data.mobileMoneyProviders ?? []);
+        } else {
+          console.error("Failed to fetch mobile money data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Mobile Money...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen p-0 lg:p-0 font-sans">
       <div className="w-full mx-auto">
-        {/* Mobile Money Cards Grid (2 columns for tablet/desktop) */}
+        {/* Mobile Money Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 lg:p-8">
-          {MOCK_MOBILE_MONEY.map((provider) => (
+          {providers.map((provider) => (
             <MobileMoneyCard key={provider.id} provider={provider} />
           ))}
 
-          {/* Placeholder for adding a new service (Mirroring the style of the other sub-components) */}
+          {/* Placeholder for adding a new service */}
           <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg border-2 border-dashed border-gray-300 transition-colors hover:border-green-400 h-full min-h-[350px] text-center">
             <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
               <Smartphone size={32} className="text-gray-400" />
@@ -206,5 +208,3 @@ export function MobileMoneyComponent() {
     </div>
   );
 }
-
-export default MobileMoneyComponent;
