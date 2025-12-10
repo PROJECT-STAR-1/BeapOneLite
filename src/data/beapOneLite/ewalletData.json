@@ -1,0 +1,399 @@
+{
+  "walletDetails": {
+    "name": "Business Operations Wallet",
+    "status": "ACTIVE",
+    "type": "BUSINESS",
+    "currencySymbol": "₦",
+    "availableBalance": "4,600,000",
+    "pendingBalance": "250,000"
+  },
+  "availableActions": [
+    {
+      "id": "deposit",
+      "title": "Deposit"
+    },
+    {
+      "id": "withdraw",
+      "title": "Withdraw"
+    },
+    {
+      "id": "transfer",
+      "title": "Transfer"
+    }
+  ],
+
+  "kpiData": [
+    {
+      "id": "credits",
+      "title": "Total Credits",
+      "amount": 4500000,
+      "subtext": "Last 30 days",
+      "changeValue": "+12.5%",
+      "changeType": "positive"
+    },
+    {
+      "id": "debits",
+      "title": "Total Debits",
+      "amount": 2522500,
+      "subtext": "Last 30 days",
+      "changeValue": "-8.3%",
+      "changeType": "negative"
+    },
+    {
+      "id": "balance",
+      "title": "Total Bank Balance",
+      "amount": 11700000,
+      "subtext": "Across all accounts",
+      "badgeLabel": "3 Banks",
+      "changeType": "neutral"
+    },
+    {
+      "id": "fees",
+      "title": "Gateway Fees",
+      "amount": 0,
+      "subtext": "Transaction costs",
+      "badgeLabel": "Monthly",
+      "changeType": "neutral"
+    }
+  ],
+  "flowChartData": [
+    { "name": "27/Nov", "credits": 1.5, "debits": 0.82 },
+    { "name": "28/Nov", "credits": 2.0, "debits": 1.2 },
+    { "name": "29/Nov", "credits": 0.5, "debits": 0.05 },
+    { "name": "30/Nov", "credits": 3.5, "debits": 1.8 },
+    { "name": "01/Dec", "credits": 1.0, "debits": 0.6 },
+    { "name": "02/Dec", "credits": 2.5, "debits": 1.5 },
+    { "name": "03/Dec", "credits": 4.0, "debits": 2.5 }
+  ],
+  "spendingChartData": [
+    { "name": "Vendor Payment", "value": 32, "category": "payment" },
+    { "name": "Withdrawal", "value": 48, "category": "withdrawal" },
+    { "name": "Wallet Transfer", "value": 2, "category": "transfer" },
+    { "name": "Bank Deposit", "value": 0, "category": "deposit" },
+    { "name": "Other Expenses", "value": 18, "category": "other" }
+  ],
+  "transactionData": [
+    {
+      "type": "Debit",
+      "description": "Payment to TechSupply Nigeria Ltd",
+      "date": "11/27/2024, 11:00:00 AM",
+      "amount": -800000,
+      "status": "completed"
+    },
+    {
+      "type": "Debit",
+      "description": "Paystack transaction fee for INV-2024-11-025",
+      "date": "11/27/2024, 10:16:00 AM",
+      "amount": -22500,
+      "status": "completed"
+    },
+    {
+      "type": "Credit",
+      "description": "Payment received for Invoice INV-2024-11-025",
+      "date": "11/27/2024, 10:15:00 AM",
+      "amount": 1500000,
+      "status": "completed"
+    },
+    {
+      "type": "Debit",
+      "description": "Bank sweep to Access Bank ****6789",
+      "date": "11/26/2024, 7:00:00 PM",
+      "amount": -1200000,
+      "status": "completed"
+    },
+    {
+      "type": "Credit",
+      "description": "Bank transfer from Access Bank ****6789",
+      "date": "11/26/2024, 3:00:00 PM",
+      "amount": 2000000,
+      "status": "completed"
+    }
+  ],
+  "bankData": [
+    {
+      "bank": "Access Bank Nigeria",
+      "account": "****6789",
+      "balance": 8500000,
+      "isPrimary": true,
+      "currency": "₦"
+    },
+    {
+      "bank": "GTBank Nigeria",
+      "account": "****3210",
+      "balance": 3200000,
+      "isPrimary": false,
+      "currency": "₦"
+    },
+    {
+      "bank": "M-Pesa Kenya",
+      "account": "****5678",
+      "balance": 450000,
+      "isPrimary": false,
+      "currency": "KSh"
+    }
+  ],
+
+  "allTransactions": [
+    {
+      "id": "txn-1",
+      "type": "Debit",
+      "title": "Payment to TechSupply Nigeria Ltd",
+      "category": "VENDOR PAYMENT",
+      "user": "Adebayo Okonkwo",
+      "ref": "EW-WALLET-TXN-20241127-002",
+      "date": "11/27/2024, 11:00:00 AM",
+      "amount": -800000,
+      "status": "COMPLETED",
+      "balance": 4050000
+    },
+    {
+      "id": "txn-2",
+      "type": "Debit",
+      "title": "Paystack transaction fee for INV-2024-11-025",
+      "category": "GATEWAY FEE",
+      "system": "Fee Deduction",
+      "ref": "REF: FEE-PAYSTACK-20241127-001",
+      "date": "11/27/2024, 10:16:00 AM",
+      "amount": -22500,
+      "status": "COMPLETED",
+      "processor": "PAYSTACK",
+      "balance": 5327500
+    },
+    {
+      "id": "txn-3",
+      "type": "Credit",
+      "title": "Payment received for Invoice INV-2024-11-025",
+      "category": "INVOICE PAYMENT",
+      "client": "Mega Corp Nigeria",
+      "ref": "PAYSTACK-TXN-20241127-001",
+      "date": "11/27/2024, 10:15:00 AM",
+      "amount": 1500000,
+      "status": "COMPLETED",
+      "processor": "PAYSTACK",
+      "fee": 22500,
+      "balance": 4850000
+    },
+    {
+      "id": "txn-4",
+      "type": "Debit",
+      "title": "Bank sweep to Access Bank ****6789",
+      "category": "BANK WITHDRAWAL",
+      "system": "Auto-Sweep",
+      "ref": "REF: BANK-WITHDRAWAL-20241126-002",
+      "date": "11/26/2024, 7:00:00 PM",
+      "amount": -1200000,
+      "status": "COMPLETED",
+      "balance": 4850000
+    },
+    {
+      "id": "txn-5",
+      "type": "Credit",
+      "title": "Bank transfer from Access Bank ****6789",
+      "category": "BANK DEPOSIT",
+      "system": "Auto-Sync",
+      "ref": "REF: BANK-DEPOSIT-20241126-001",
+      "date": "11/26/2024, 3:30:00 PM",
+      "amount": 2000000,
+      "status": "COMPLETED",
+      "balance": 6050000
+    },
+    {
+      "id": "txn-6",
+      "type": "Debit",
+      "title": "Transfer to Project Escrow Wallet",
+      "category": "WALLET TRANSFER",
+      "user": "Adebayo Okonkwo",
+      "ref": "REF: WALLET-TRANSFER-20241125-004",
+      "date": "11/25/2024, 4:45:00 PM",
+      "amount": -500000,
+      "status": "COMPLETED",
+      "balance": 5100000
+    },
+    {
+      "id": "txn-7",
+      "type": "Credit",
+      "title": "Payment received for Invoice INV-2024-11-023",
+      "category": "INVOICE PAYMENT",
+      "client": "StarTech Solutions",
+      "ref": "FLUTTERWAVE-TXN-20241125-003",
+      "date": "11/25/2024, 12:20:00 PM",
+      "amount": 750000,
+      "status": "COMPLETED",
+      "processor": "FLUTTERWAVE",
+      "fee": 11250,
+      "balance": 5600000
+    },
+    {
+      "id": "txn-8",
+      "type": "Credit",
+      "title": "Refund from Office Furniture Pro",
+      "category": "REFUND",
+      "vendor": "Office Furniture Pro",
+      "ref": "REF: REFUND-20241124-001",
+      "date": "11/24/2024, 2:00:00 PM",
+      "amount": 250000,
+      "status": "PENDING",
+      "balance": 5350000
+    },
+    {
+      "id": "txn-9",
+      "type": "Debit",
+      "title": "Subscription Renewal - Cloud Hosting",
+      "category": "UTILITY BILL",
+      "system": "Auto-Pay",
+      "ref": "REF: AUTOPAY-20241123-010",
+      "date": "11/23/2024, 1:00:00 AM",
+      "amount": -50000,
+      "status": "FAILED",
+      "balance": 5600000
+    }
+  ],
+
+  "bankAccounts": [
+    {
+      "id": 1,
+      "bankName": "Access Bank Nigeria",
+      "accountType": "CURRENT",
+      "accountNumber": "0123456789",
+      "entity": "TechVentures SME Ltd",
+      "balance": 8500000,
+      "currency": "₦",
+      "locale": "en-NG",
+      "isPrimary": true,
+      "lastSynced": "11/27/2024, 11:30:00 AM",
+      "syncStatus": "SYNCED",
+      "swift": "ABNGNGLA"
+    },
+    {
+      "id": 2,
+      "bankName": "GTBank Nigeria",
+      "accountType": "SAVINGS",
+      "accountNumber": "9876543210",
+      "entity": "TechVentures SME Ltd",
+      "balance": 3200000,
+      "currency": "₦",
+      "locale": "en-NG",
+      "isPrimary": false,
+      "lastSynced": "11/27/2024, 9:15:00 AM",
+      "syncStatus": "SYNCED",
+      "swift": "GTBINGLA"
+    },
+    {
+      "id": 3,
+      "bankName": "M-Pesa Kenya",
+      "accountType": "MOBILE_MONEY",
+      "accountNumber": "+254712345678",
+      "entity": "TechVentures East Africa",
+      "balance": 450000,
+      "currency": "KSh",
+      "locale": "en-KE",
+      "isPrimary": false,
+      "lastSynced": "11/27/2024, 10:45:00 AM",
+      "syncStatus": "SYNCED",
+      "provider": "Safaricom PLC"
+    }
+  ],
+
+  "gateways": [
+    {
+      "id": 1,
+      "name": "Paystack Nigeria",
+      "code": "PAYSTACK",
+      "status": "ACTIVE",
+      "fee": "1.5% + ₦ 100",
+      "currencies": "4 currencies",
+      "publicKey": "pk_live_xxxxxxxxxxxx...",
+      "lastUsed": "11/27/2024, 10:15:00 AM",
+      "isTestMode": false
+    },
+    {
+      "id": 2,
+      "name": "Flutterwave Africa",
+      "code": "FLUTTERWAVE",
+      "status": "ACTIVE",
+      "fee": "1.4% + ₦ 0",
+      "currencies": "6 currencies",
+      "publicKey": "FLWPUBK_TEST-xxxxxxxx...",
+      "lastUsed": "11/25/2024, 12:20:00 PM",
+      "isTestMode": true
+    },
+    {
+      "id": 3,
+      "name": "Stripe International",
+      "code": "STRIPE",
+      "status": "INACTIVE",
+      "fee": "2.9% + ₦ 30",
+      "currencies": "3 currencies",
+      "publicKey": "pk_test_xxxxxxxxxxxx...",
+      "lastUsed": "11/27/2024, 9:00:00 AM",
+      "isTestMode": true
+    }
+  ],
+
+  "mobileMoneyProviders": [
+    {
+      "id": 1,
+      "name": "M-Pesa Kenya",
+      "code": "MPESA",
+      "status": "ACTIVE",
+      "fee": "0.5%",
+      "shortCode": "123456",
+      "supportedCountries": ["KE", "TZ", "UG"]
+    },
+    {
+      "id": 2,
+      "name": "MTN Mobile Money",
+      "code": "MTN MOBILE MONEY",
+      "status": "INACTIVE",
+      "fee": "0.8%",
+      "shortCode": "789012",
+      "supportedCountries": ["UG", "RW", "CM", "CI", "GH"]
+    },
+    {
+      "id": 3,
+      "name": "MoMo Ghana",
+      "code": "MOMO GHANA",
+      "status": "ACTIVE",
+      "fee": "0.65%",
+      "shortCode": "345678",
+      "supportedCountries": ["GH"]
+    }
+  ],
+
+  "transactionTrendsData": [
+    { "date": "2025-11-27", "credits": 1, "debits": 2 },
+    { "date": "2025-11-28", "credits": 3, "debits": 1 },
+    { "date": "2025-11-29", "credits": 2, "debits": 4 },
+    { "date": "2025-11-30", "credits": 5, "debits": 3 },
+    { "date": "2025-12-01", "credits": 4, "debits": 2 },
+    { "date": "2025-12-02", "credits": 6, "debits": 5 },
+    { "date": "2025-12-03", "credits": 7, "debits": 3 }
+  ],
+
+  "settings": [
+    {
+      "id": "2fa",
+      "title": "Two-Factor Authentication",
+      "description": "Require 2FA for all transactions.",
+      "value": false
+    },
+    {
+      "id": "autoSweep",
+      "title": "Auto-Sweep to Bank",
+      "description": "Automatically sweep funds above ₦ 5,000,000.",
+      "value": false
+    },
+    {
+      "id": "lowBalanceAlerts",
+      "title": "Low Balance Alerts",
+      "description": "Notify when balance falls below ₦ 500,000.",
+      "value": false
+    },
+    {
+      "id": "largeTxnAlerts",
+      "title": "Large Transaction Alerts",
+      "description": "Notify for transactions above ₦ 1,000,000.",
+      "value": false
+    }
+  ]
+}
