@@ -100,8 +100,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const purchasingItems = [
-    { href: "/purchase-orders", icon: Clipboard, label: "Purchase Orders" },
-    { href: "/purchasing-reports", icon: BarChart3, label: "Purchasing Reports" },
+    { href: "/beapOneLite/purchasing/vendor-bills", icon: Clipboard, label: "Vendor Bills" },
+    { href: "/beapOneLite/purchasing/purchase-orders", icon: BarChart3, label: "Purchase Orders" },
   ];
 
   const salesOrdersItems = [
