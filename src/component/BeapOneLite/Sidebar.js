@@ -90,7 +90,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/beapOneLite/project",
+      href: "/project-profitability",
       icon: FileText,
       label: "Project Profitability",
       status: "S",
@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/beapOneLite/reporting-engine",
+      href: "/reporting-engine",
       icon: FileText,
       label: "Reporting Engine",
       status: "S",
@@ -114,7 +114,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     {
-      href: "/beapOneLite/document-management",
+      href: "/document-management",
       icon: FileText,
       label: "Document Management",
       status: "P",

@@ -1,8 +1,6 @@
 "use client";
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import Layout from "@/component/BeapOneLite/Layout";
-
 import {
   Briefcase,
   Layers,
@@ -15,6 +13,7 @@ import {
   Target,
   Users,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 import BpcOverview from "@/component/BeapOneLite/bpc/overview";
 import BpcMetricsDashboard from "@/component/BeapOneLite/bpc/metrics";
@@ -22,74 +21,58 @@ import ServiceCatalog from "@/component/BeapOneLite/bpc/service-catalog";
 import Engagements from "@/component/BeapOneLite/bpc/engagements";
 
 /* ============================================================
-    DATA & CONFIGURATION (Content from Figma Image)
+    UI CONFIGURATION & MAPPINGS
 ============================================================ */
 
-const METRICS_DATA = [
-  {
-    title: "Service Adoption",
-    value: "8.9",
-    unit: "%",
-    subtitle: "Of active K4 projects",
-    icon: BarChart3, // Used to represent growth/adoption
-    color: "text-green-600",
-  },
-  {
-    title: "Avg Revenue Per Service",
-    value: "$14.0K",
-    unit: "",
-    subtitle: "Per engagement",
-    icon: Wallet,
-    color: "text-green-600",
-  },
-  {
-    title: "Context Transfer Success",
-    value: "100.0",
-    unit: "%",
-    subtitle: "Target: > 99.5%",
-    icon: CheckCircle, // Used to represent success/completion
-    color: "text-blue-500",
-  },
-  {
-    title: "Billing Event Latency",
-    value: "80",
-    unit: "ms",
-    subtitle: "Target: < 100ms",
-    icon: Zap, // Used to represent speed/latency
-    color: "text-purple-500",
-  },
-];
+const ICON_MAP = {
+  BarChart3,
+  Wallet,
+  CheckCircle,
+  Zap,
+  Eye,
+  FileText,
+  Users,
+  Target,
+  Briefcase,
+  Layers,
+};
 
-const TABS = [
-  { id: "overview", name: "Overview", icon: Eye },
-  { id: "service-catalog", name: "Service Catalog", icon: FileText },
-  { id: "engagements", name: "Engagements", icon: Users },
-  { id: "metrics", name: "Metrics", icon: Target },
-];
+const COLOR_MAP = {
+  green: {
+    text: "text-green-600",
+    bg: "bg-green-100",
+  },
+  blue: {
+    text: "text-blue-500",
+    bg: "bg-blue-100",
+  },
+  purple: {
+    text: "text-purple-500",
+    bg: "bg-purple-100",
+  },
+  default: {
+    text: "text-indigo-600",
+    bg: "bg-indigo-100",
+  },
+};
 
 /* ============================================================
-    SHARED COMPONENTS (Metrics and Summary)
+    SUB-COMPONENTS
 ============================================================ */
 
 /**
  * 1. Metric Card Component
- * Reduced boldness of value font from font-extrabold to font-bold.
  */
 const MetricCard = ({ metric }) => {
-  const MetricIcon = metric.icon;
-  const ICON_COLOR = metric.color;
-
-  // Extract base color for background shade
-  const colorMatch = ICON_COLOR.match(/text-(\w+)-\d+/);
-  const baseColor = colorMatch ? colorMatch[1] : "indigo";
-  const ICON_BG = `bg-${baseColor}-100 dark:bg-gray-100`;
+  const Icon = ICON_MAP[metric.icon] || BarChart3;
+  const styles = COLOR_MAP[metric.color] || COLOR_MAP.default;
 
   return (
     <div className="p-5 rounded-2xl bg-white shadow-lg border border-gray-100 transition duration-300 hover:shadow-xl hover:shadow-indigo-100/50 flex flex-col justify-between h-full">
       <div className="flex items-center mb-4">
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${ICON_BG} ${ICON_COLOR}`}>
-          <MetricIcon size={16} />
+          className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${styles.bg} ${styles.text}`}>
+          <Icon size={16} />
         </div>
         <p className="text-sm font-medium text-gray-600 leading-relaxed">
           {metric.title}
@@ -97,7 +80,6 @@ const MetricCard = ({ metric }) => {
       </div>
       <div className="mb-2">
         <div className="flex items-end">
-          {/* Reduced boldness here: from font-extrabold to font-bold */}
           <h3 className="text-3xl font-bold text-gray-900 leading-none">
             {metric.value}
           </h3>
@@ -112,9 +94,9 @@ const MetricCard = ({ metric }) => {
 };
 
 /**
- * 2. Three-Tier Integration Summary Card (Dark Blue Theme)
+ * 2. Three-Tier Integration Summary Card
  */
-const IntegrationSummary = () => {
+const IntegrationSummary = ({ stats }) => {
   const cardBg = "bg-indigo-900";
 
   return (
@@ -145,13 +127,17 @@ const IntegrationSummary = () => {
         </div>
         <div className="flex space-x-8 md:space-x-12 flex-shrink-0">
           <div className="text-right">
-            <p className="text-4xl font-extrabold text-white">6</p>
+            <p className="text-4xl font-extrabold text-white">
+              {stats?.activeServices || 0}
+            </p>
             <p className="text-sm text-gray-300 mt-1 whitespace-nowrap">
               Active Services
             </p>
           </div>
           <div className="text-right">
-            <p className="text-4xl font-extrabold text-white">4</p>
+            <p className="text-4xl font-extrabold text-white">
+              {stats?.totalEngagements || 0}
+            </p>
             <p className="text-sm text-gray-300 mt-1 whitespace-nowrap">
               Total Engagements
             </p>
@@ -163,43 +149,36 @@ const IntegrationSummary = () => {
 };
 
 /* ============================================================
-    TAB CONTENT COMPONENTS (Placeholders)
-============================================================ */
-
-/**
- * Generic Placeholder for Other Tabs
- */
-const PlaceholderTabContent = ({ activeTab }) => {
-  const bgColor = "bg-indigo-50";
-  const borderColor = "border-indigo-400";
-
-  return (
-    <div
-      className={`p-8 min-h-[400px] flex items-center justify-center rounded-2xl border-4 border-dashed ${borderColor} ${bgColor}`}>
-      <div className="text-center text-gray-600">
-        <h3 className="text-2xl font-bold mb-2">
-          Tab Content:{" "}
-          <span className="uppercase text-gray-800">{activeTab}</span>
-        </h3>
-        <p className="text-lg">
-          Actual component content for the **{activeTab}** tab goes here.
-        </p>
-        <p className="mt-4 text-sm text-gray-500">
-          Replace this placeholder with your React components.
-        </p>
-      </div>
-    </div>
-  );
-};
-
-/* ============================================================
     MAIN DASHBOARD COMPONENT
 ============================================================ */
 
 export default function BusinessProjectConsultingPortal() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // --- Tab Rendering Logic ---
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/bpc");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch BPC data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Tab Rendering Logic
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
@@ -211,85 +190,90 @@ export default function BusinessProjectConsultingPortal() {
       case "metrics":
         return <BpcMetricsDashboard />;
       default:
-        return <OverviewTabContent />;
+        return <BpcOverview />;
     }
   };
 
-  // Custom container for Canvas display
-  const containerClasses =
-    "w-full font-sans bg-gray-50 min-h-screen p-4 sm:p-6 lg:px-8 lg:pt-8";
+  if (loading) {
+    return (
+      <Layout>
+        <div className="w-full h-screen flex flex-col items-center justify-center">
+          <Loader2 className="h-10 w-10 text-indigo-700 animate-spin mb-4" />
+          <p className="text-gray-600 font-medium">Loading Portal...</p>
+        </div>
+      </Layout>
+    );
+  }
 
-  const content = (
-    <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
-      {/* REMOVED: Top-level A2 Business Portal Header was here */}
+  // Safe Data Access
+  const metrics = data?.metrics ?? [];
+  const tabs = data?.tabs ?? [];
+  const integrationStats = data?.integrationSummary ?? {};
 
-      {/* 1. Header with Title and Actions */}
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
-        <div className="flex items-center mb-4 sm:mb-0">
-          {/* Using Briefcase for BPC Portal */}
-          <Briefcase size={30} className="mr-3 text-indigo-700" />
-          <div>
-            {/* Reduced boldness here: from font-extrabold to font-bold */}
-            <h1 className="text-2xl font-bold text-gray-900">
-              Business & Project Consulting Portal
-            </h1>
-            <p className="text-sm text-gray-600 mt-0.5">
-              Three-tier integration: BEAPOne Lite (K4) → BPC Portal A2-3 →
-              Subscription Mgmt (A2-4)
-            </p>
+  return (
+    <Layout>
+      <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
+        {/* 1. Header with Title and Actions */}
+        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
+          <div className="flex items-center mb-4 sm:mb-0">
+            <Briefcase size={30} className="mr-3 text-indigo-700" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Business & Project Consulting Portal
+              </h1>
+              <p className="text-sm text-gray-600 mt-0.5">
+                Three-tier integration: BEAPOne Lite (K4) → BPC Portal A2-3 →
+                Subscription Mgmt (A2-4)
+              </p>
+            </div>
           </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap justify-end items-center gap-3">
+            <button className="flex items-center px-4 py-2 bg-indigo-700 text-white rounded-xl font-semibold hover:bg-indigo-800 transition shadow-lg whitespace-nowrap">
+              <Target size={18} className="mr-2" />
+              Start New Engagement
+            </button>
+          </div>
+        </header>
+
+        {/* 2. Integration Summary Card */}
+        <IntegrationSummary stats={integrationStats} />
+
+        {/* 3. Key Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {metrics.map((metric, index) => (
+            <MetricCard key={index} metric={metric} />
+          ))}
         </div>
 
-        {/* Action Buttons & Filter (Placeholder for a dropdown and an action button) */}
-        <div className="flex flex-wrap justify-end items-center gap-3">
-          {/* REMOVED: Global Filter Placeholder was here */}
+        {/* 4. Tabs Navigation */}
+        <nav className="bg-gray-200 p-2 rounded-2xl mb-8">
+          <div className="grid grid-cols-4 gap-1">
+            {tabs.map((tab) => {
+              const Icon = ICON_MAP[tab.icon] || FileText;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center justify-center w-full py-2.5 text-sm font-semibold transition duration-200 rounded-xl
+                    ${
+                      isActive
+                        ? "bg-white text-indigo-700 shadow-lg"
+                        : "text-gray-600 hover:text-indigo-700 hover:bg-white/50"
+                    }`}>
+                  <Icon size={18} className="mr-2" />
+                  {tab.name}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-          {/* New Project/Engagement Button */}
-          <button className="flex items-center px-4 py-2 bg-indigo-700 text-white rounded-xl font-semibold hover:bg-indigo-800 transition shadow-lg whitespace-nowrap">
-            <Target size={18} className="mr-2" />
-            Start New Engagement
-          </button>
-        </div>
-      </header>
-
-      {/* 2. Integration Summary Card */}
-      <IntegrationSummary />
-
-      {/* 3. Key Metrics (Moved from OverviewTabContent) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {METRICS_DATA.map((metric, index) => (
-          <MetricCard key={index} metric={metric} />
-        ))}
+        {/* 5. Tab Content Area */}
+        <div className="tab-content">{renderTabContent()}</div>
       </div>
-
-      {/* 4. Tabs Navigation */}
-      <nav className="bg-gray-200 p-2 rounded-2xl mb-8">
-        <div className="grid grid-cols-4 gap-1">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center justify-center w-full py-2.5 text-sm font-semibold transition duration-200 rounded-xl
-                  ${
-                    isActive
-                      ? "bg-white text-indigo-700 shadow-lg"
-                      : "text-gray-600 hover:text-indigo-700 hover:bg-white/50"
-                  }`}>
-                <Icon size={18} className="mr-2" />
-                {tab.name}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* 5. Tab Content Area */}
-      <div className="tab-content">{renderTabContent()}</div>
-    </div>
+    </Layout>
   );
-
-  return <Layout>{content}</Layout>;
 }
