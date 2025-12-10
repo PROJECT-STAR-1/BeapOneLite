@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from "react";
+"use client";
+
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Download,
   Eye,
@@ -7,96 +9,13 @@ import {
   CheckCircle,
   AlertTriangle,
   XCircle,
+  Loader2,
 } from "lucide-react";
 
 // ====================================================================
-// 1. MOCK DATA
+// 1. UI CONFIGURATION & MAPPINGS
 // ====================================================================
 
-const MOCK_DOCUMENTS = [
-  {
-    id: "doc-008",
-    name: "INV-2025-002.pdf",
-    type: "INVOICE",
-    owner: "user-001",
-    size: "0.52 MB",
-    status: "CLEARED",
-    created: "Nov 27, 2025, 03:00 PM",
-    alert: false, // For the small orange alert dot
-  },
-  {
-    id: "doc-004",
-    name: "EST-2025-045.pdf",
-    type: "ESTIMATE",
-    owner: "user-001",
-    size: "0.35 MB",
-    status: "CLEARED",
-    created: "Nov 27, 2025, 12:45 PM",
-    alert: false,
-  },
-  {
-    id: "doc-006",
-    name: "Receipt_Payment_Nov_27.pdf",
-    type: "RECEIPT",
-    owner: "user-004",
-    size: "0.15 MB",
-    status: "CLEARED",
-    created: "Nov 27, 2025, 10:50 AM",
-    alert: false,
-  },
-  {
-    id: "doc-001",
-    name: "INV-2025-001.pdf",
-    type: "INVOICE",
-    owner: "user-001",
-    size: "0.45 MB",
-    status: "CLEARED",
-    created: "Nov 27, 2025, 09:15 AM",
-    alert: true,
-  },
-  {
-    id: "doc-002",
-    name: "Monthly_Report_Nov_2025.pdf",
-    type: "REPORT",
-    owner: "user-002",
-    size: "2.30 MB",
-    status: "CLEARED",
-    created: "Nov 26, 2025, 03:30 PM",
-    alert: false,
-  },
-  {
-    id: "doc-003",
-    name: "Service_Contract_TechStart_2...",
-    type: "CONTRACT",
-    owner: "user-003",
-    size: "1.80 MB",
-    status: "PENDING",
-    created: "Nov 25, 2025, 11:00 AM",
-    alert: true,
-  },
-  {
-    id: "doc-005",
-    name: "VAT_Return_Q3_2025.pdf",
-    type: "TAX_FILING",
-    owner: "user-005",
-    size: "0.80 MB",
-    status: "CLEARED",
-    created: "Nov 24, 2025, 05:20 PM",
-    alert: false,
-  },
-  {
-    id: "doc-007",
-    name: "Compliance_Audit_2025.pdf",
-    type: "COMPLIANCE",
-    owner: "user-002",
-    size: "4.20 MB",
-    status: "FAILED",
-    created: "Nov 23, 2025, 02:00 PM",
-    alert: false,
-  },
-];
-
-// Configuration for Document Type Pills
 const TYPE_CONFIG = {
   INVOICE: { text: "INVOICE" },
   ESTIMATE: { text: "ESTIMATE" },
@@ -107,8 +26,6 @@ const TYPE_CONFIG = {
   COMPLIANCE: { text: "COMPLIANCE" },
 };
 
-// EXPLICIT Tailwind Class Map for maximum contrast and consistency.
-// All colors now use: bg-X-50, border-X-500, text-X-900.
 const TYPE_CLASS_MAP = {
   INVOICE: "border-indigo-500 bg-indigo-50 text-indigo-900",
   ESTIMATE: "border-purple-500 bg-purple-50 text-purple-900",
@@ -120,7 +37,6 @@ const TYPE_CLASS_MAP = {
   DEFAULT: "border-gray-500 bg-gray-50 text-gray-900",
 };
 
-// Configuration for Status Pills
 const STATUS_CONFIG = {
   CLEARED: {
     color: "green",
@@ -146,10 +62,6 @@ const STATUS_CONFIG = {
 // 2. REUSABLE COMPONENTS
 // ====================================================================
 
-/**
- * Status Pill Component (e.g., CLEARED, PENDING, FAILED)
- * Renders the document processing status with a corresponding icon and color.
- */
 const StatusPill = ({ status }) => {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.PENDING;
   const Icon = config.icon;
@@ -163,13 +75,8 @@ const StatusPill = ({ status }) => {
   );
 };
 
-/**
- * Type Pill Component (e.g., INVOICE, CONTRACT)
- * Renders the document type with its specific background/border color.
- */
 const TypePill = ({ type, alert }) => {
-  const config = TYPE_CONFIG[type] || TYPE_CONFIG.DEFAULT;
-  // Get the explicit class string from the map
+  const config = TYPE_CONFIG[type] || { text: type };
   const classString = TYPE_CLASS_MAP[type] || TYPE_CLASS_MAP.DEFAULT;
 
   return (
@@ -192,14 +99,36 @@ const TypePill = ({ type, alert }) => {
 
 export default function DocumentRegister() {
   const [searchTerm, setSearchTerm] = useState("");
-  const documents = MOCK_DOCUMENTS; // Use mock data directly
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // --- Filtering Logic ---
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/document");
+        if (response.ok) {
+          const data = await response.json();
+          // Assuming the API returns a 'documents' array
+          setDocuments(data.documents || []);
+        } else {
+          console.error("Failed to fetch documents");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filtering Logic
   const filteredDocuments = useMemo(() => {
     if (!searchTerm) return documents;
     const lowerCaseSearch = searchTerm.toLowerCase();
 
-    // Filter documents based on name, type, or owner
     return documents.filter(
       (doc) =>
         doc.name.toLowerCase().includes(lowerCaseSearch) ||
@@ -208,18 +137,16 @@ export default function DocumentRegister() {
     );
   }, [documents, searchTerm]);
 
-  // --- Action Handlers (Mocked) ---
+  // Action Handlers
   const handleDownload = (doc) => {
-    // Replaced alert() with a console log as per instructions
     console.log(`[ACTION] Requesting signed URL for download: ${doc.name}`);
   };
 
   const handleView = (doc) => {
-    // Replaced alert() with a console log as per instructions
     console.log(`[ACTION] Viewing document: ${doc.name}`);
   };
 
-  // --- Render Functions ---
+  // Render Functions
   const renderTableHeader = () => (
     <div className="hidden lg:grid grid-cols-[3fr_1.5fr_1fr_1fr_1.5fr_2fr_1fr] text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 py-3 px-6">
       <div>Document</div>
@@ -236,9 +163,8 @@ export default function DocumentRegister() {
     <div
       key={doc.id}
       className="p-4 lg:py-4 lg:px-6 border-b border-gray-100 hover:bg-indigo-50/50 transition duration-150 ease-in-out cursor-pointer">
-      {/* Desktop/Tablet Row Layout (lg:grid) */}
+      {/* Desktop/Tablet Row Layout */}
       <div className="hidden lg:grid grid-cols-[3fr_1.5fr_1fr_1fr_1.5fr_2fr_1fr] items-center text-sm">
-        {/* Document */}
         <div className="flex items-center space-x-3">
           <FileText size={18} className="text-indigo-400" />
           <div>
@@ -249,35 +175,34 @@ export default function DocumentRegister() {
           </div>
         </div>
 
-        {/* Type */}
         <div>
           <TypePill type={doc.type} alert={doc.alert} />
         </div>
 
-        {/* Owner */}
         <div className="text-gray-600">{doc.owner}</div>
-
-        {/* Size */}
         <div className="text-gray-600">{doc.size}</div>
 
-        {/* Status */}
         <div>
           <StatusPill status={doc.status} />
         </div>
 
-        {/* Created */}
         <div className="text-gray-600">{doc.created}</div>
 
-        {/* Actions */}
         <div className="flex justify-end space-x-2">
           <button
-            onClick={() => handleDownload(doc)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDownload(doc);
+            }}
             className="p-2 text-gray-500 hover:text-indigo-600 rounded-full transition-colors"
             title="Download Document">
             <Download size={18} />
           </button>
           <button
-            onClick={() => handleView(doc)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleView(doc);
+            }}
             className="p-2 text-gray-500 hover:text-indigo-600 rounded-full transition-colors"
             title="View Document">
             <Eye size={18} />
@@ -285,10 +210,9 @@ export default function DocumentRegister() {
         </div>
       </div>
 
-      {/* Mobile/Small Screen Layout (flex) */}
+      {/* Mobile/Small Screen Layout */}
       <div className="flex flex-col lg:hidden space-y-2">
         <div className="flex justify-between items-start">
-          {/* Document Name & Type (Left) */}
           <div className="flex items-start space-x-3">
             <FileText
               size={20}
@@ -302,13 +226,10 @@ export default function DocumentRegister() {
               <TypePill type={doc.type} alert={doc.alert} />
             </div>
           </div>
-
-          {/* Status (Right) */}
           <StatusPill status={doc.status} />
         </div>
 
         <div className="flex justify-between text-sm text-gray-600 border-t border-gray-100 pt-2">
-          {/* Metadata */}
           <div className="flex flex-col space-y-1">
             <p>
               <span className="font-medium text-gray-500">Owner:</span>{" "}
@@ -324,16 +245,21 @@ export default function DocumentRegister() {
             </p>
           </div>
 
-          {/* Mobile Actions */}
           <div className="flex items-end space-x-3">
             <button
-              onClick={() => handleDownload(doc)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDownload(doc);
+              }}
               className="p-2 text-indigo-600 bg-indigo-100 rounded-full shadow-md transition-all hover:bg-indigo-200"
               title="Download Document">
               <Download size={20} />
             </button>
             <button
-              onClick={() => handleView(doc)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleView(doc);
+              }}
               className="p-2 text-gray-600 bg-gray-100 rounded-full shadow-md transition-all hover:bg-gray-200"
               title="View Document">
               <Eye size={20} />
@@ -343,6 +269,15 @@ export default function DocumentRegister() {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 min-h-[400px]">
+        <Loader2 className="w-10 h-10 text-indigo-700 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Documents...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
@@ -377,10 +312,8 @@ export default function DocumentRegister() {
 
         {/* Document Table Container */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-          {/* Table Header */}
           {renderTableHeader()}
 
-          {/* Table Body / Document List */}
           <div className="divide-y divide-gray-100">
             {filteredDocuments.length > 0 ? (
               filteredDocuments.map(renderTableRow)
