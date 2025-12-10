@@ -1,0 +1,171 @@
+{
+  "profile": {
+    "fullName": "Adebayo Okonkwo",
+    "email": "adebayo@example.com",
+    "role": "Owner",
+    "phoneNumber": "+234 XXX XXX XXXX",
+    "preferredLanguage": "English"
+  },
+  "notificationPreferences": {
+    "invoicePayments": true,
+    "overdueReminders": true,
+    "whatsAppNotifications": false
+  },
+    "businessInformation": {
+    "businessName": "Okonkwo Enterprises Ltd",
+    "businessType": "Consulting",
+    "taxIdOrRcNumber": "RC123456",
+    "baseCurrency": "NGN - Nigerian Naira",
+    "businessAddress": "123 Main Street, Lagos"
+  },
+  "exchangeRates": {
+    "baseCurrency": "NGN",
+    "rates": [
+      {
+        "currencyCode": "USD",
+        "currencyName": "US Dollar",
+        "value": "₦1,547.50",
+        "lastUpdated": "24 Nov 2025, 8:00 AM"
+      },
+      {
+        "currencyCode": "EUR",
+        "currencyName": "Euro",
+        "value": "₦1,688.25",
+        "lastUpdated": "24 Nov 2025, 8:00 AM"
+      },
+      {
+        "currencyCode": "GBP",
+        "currencyName": "British Pound",
+        "value": "₦1,958.75",
+        "lastUpdated": "24 Nov 2025, 8:00 AM"
+      }
+    ]
+  },
+   "businessLocations": {
+    "locations": [
+      {
+        "name": "Lagos Main Branch",
+        "code": "LG-MAIN",
+        "primary": true
+      },
+      {
+        "name": "Abuja Office",
+        "code": "ABJ-01",
+        "primary": false
+      },
+      {
+        "name": "Port Harcourt",
+        "code": "PH-01",
+        "primary": false
+      }
+    ],
+    "multiLocationAddon": {
+      "description": "Multi-Location Add-On: Additional locations cost $7/month per location. Current plan includes 1 location."
+    }
+  },
+   "currentRole": "Owner (Full Access)",
+  "roles": ["Owner (Full Access)", "Finance (Reports & Reconciliation)", "Cashier (Location-Restricted)"],
+  "permissions": [
+    {
+      "feature": "Create Invoices",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": true,
+      "Cashier (Location-Restricted)": true
+    },
+    {
+      "feature": "View Financial Reports",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": true,
+      "Cashier (Location-Restricted)": false
+    },
+    {
+      "feature": "Bank Reconciliation",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": true,
+      "Cashier (Location-Restricted)": false
+    },
+    {
+      "feature": "Manage Users & Roles",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": false,
+      "Cashier (Location-Restricted)": false
+    },
+    {
+      "feature": "Delete Transactions",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": true,
+      "Cashier (Location-Restricted)": false
+    },
+    {
+      "feature": "Access All Locations",
+      "Owner (Full Access)": true,
+      "Finance (Reports & Reconciliation)": true,
+      "Cashier (Location-Restricted)": "Assigned Only"
+    }
+  ],
+  "multiUserAddon": {
+    "description": "Additional users cost $3/month per user. Current plan includes 1 user."
+  },
+   "currentSubscription": {
+    "title": "Current Subscription",
+    "description": "Manage your BEAPOne Lite subscription",
+    "plan": {
+      "name": "FREE TIER",
+      "tagline": "Perfect for getting started",
+      "features": [
+        "Unlimited Invoices & Quotes",
+        "Mobile Expense Tracking",
+        "1 User & 1 Location"
+      ],
+      "price": "$0 / month",
+      "status": "Active"
+    }
+  },
+  "tiers": [
+    {
+      "name": "STANDARD TIER",
+      "tag": "Popular",
+      "tagline": "For growing businesses",
+      "features": [
+        "Everything in FREE",
+        "Bank Reconciliation",
+        "Financial Reports (P&L, Balance Sheet)",
+        "Project Tracking",
+        "3 Users & 1 Location"
+      ],
+      "price": "$15 / month",
+      "buttonText": "Upgrade to Standard"
+    },
+    {
+      "name": "PROFESSIONAL TIER",
+      "tagline": "For scaling enterprises",
+      "features": [
+        "Everything in STANDARD",
+        "Vendor Bill Management",
+        "Purchase Orders & Sales Orders",
+        "Document Compliance",
+        "5 Users & 1 Location"
+      ],
+      "price": "$30 / month",
+      "buttonText": "Upgrade to Professional"
+    }
+  ],
+  "addons": {
+    "title": "Add-Ons",
+    "description": "Scale your business with additional resources",
+    "items": [
+      {
+        "name": "Additional User",
+        "description": "Add more team members",
+        "price": "$3/month",
+        "buttonText": "Add User"
+      },
+      {
+        "name": "Additional Location",
+        "description": "Manage multiple branches",
+        "price": "$7/month",
+        "buttonText": "Add Location"
+      }
+    ]
+  }
+}

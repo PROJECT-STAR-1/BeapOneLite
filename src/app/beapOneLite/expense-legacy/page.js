@@ -1,8 +1,7 @@
 "use client";
-import React, { useState } from "react";
 
+import React, { useState, useEffect } from "react";
 import Layout from "@/component/BeapOneLite/Layout";
-
 import {
   Search,
   Plus,
@@ -11,106 +10,94 @@ import {
   Upload,
   CircleDollarSign,
   Redo2,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-   DATA MOCKUP
+    UI CONFIGURATION & MAPPINGS
 ============================================================ */
 
-const METRICS_DATA = [
-  {
-    title: "Total Expenses",
-    value: "₦241,062.50",
+const METRIC_STYLE_MAP = {
+  financial: {
     icon: DollarSign,
     color: "text-red-500",
     bgColor: "bg-red-50",
     iconBg: "bg-red-100",
   },
-  {
-    title: "Expense Count",
-    value: "2",
+  count: {
     icon: DollarSign,
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     iconBg: "bg-blue-100",
   },
-  {
-    title: "Synced Offline",
-    value: "1",
+  sync: {
     icon: Upload,
     color: "text-green-500",
     bgColor: "bg-green-50",
     iconBg: "bg-green-100",
   },
-];
+  default: {
+    icon: Wallet,
+    color: "text-gray-500",
+    bgColor: "bg-gray-50",
+    iconBg: "bg-gray-100",
+  },
+};
 
-const EXPENSE_DATA = [
-  {
-    id: "EXP-001",
-    vendor: "AWS Cloud Services",
-    date: "11/15/2025",
-    description: "Cloud hosting for TechStart mobile app backend",
-    amount: "₦125,000.00",
-    tag: "Cloud Hosting Services",
-    status: "online",
+const STATUS_STYLE_MAP = {
+  synced: {
+    text: "Synced",
+    styles: "text-green-600 bg-green-50",
   },
-  {
-    id: "EXP-002",
-    vendor: "Design Assets Store",
-    date: "11/5/2025",
-    description: "Stock photos and UI kit for Acme website",
-    amount: "US$75.00",
-    tag: "Design Assets",
-    secondaryAmount: "₦116,062.50",
-    status: "synced",
+  online: {
+    text: "Online",
+    styles: "text-blue-600 bg-blue-50", // Added style for consistency, though mocked as just text previously
   },
-];
+  default: {
+    text: "Unknown",
+    styles: "text-gray-600 bg-gray-50",
+  },
+};
 
 /* ============================================================
-   COMPONENT: 1. STAT CARD
+    SUB-COMPONENTS
 ============================================================ */
 
 const StatCard = ({ metric }) => {
-  const Icon = metric.icon;
-  const UploadIcon = metric.icon === Upload ? Redo2 : Wallet;
-  const isSyncCard = metric.icon === Upload;
+  const style = METRIC_STYLE_MAP[metric.type] || METRIC_STYLE_MAP.default;
+  const Icon = style.icon;
+  // Specific logic for Upload icon swap based on original code intent
+  const DisplayIcon = style.icon === Upload ? Redo2 : Icon;
+  const isSyncCard = metric.type === "sync";
 
   return (
-    // CHANGE 1: Removed hover:shadow-lg, added hover:bg-gray-100
     <div className="p-6 rounded-xl bg-white shadow-md border border-gray-100 relative overflow-hidden transition duration-300 hover:bg-gray-100">
       <p className="text-sm font-medium text-gray-500 mb-2">{metric.title}</p>
 
-      {/* Main Value and Icon */}
       <div className="flex justify-between items-start">
-        {/* CHANGE 2: Reduced size/boldness from text-3xl font-extrabold to text-2xl font-bold */}
         <h3 className="text-2xl font-bold text-gray-900 leading-none">
           {metric.value}
         </h3>
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${metric.iconBg} ${metric.color} flex-shrink-0`}>
-          <Icon size={16} />
+          className={`w-8 h-8 rounded-full flex items-center justify-center ${style.iconBg} ${style.color} flex-shrink-0`}>
+          <DisplayIcon size={16} />
         </div>
       </div>
 
-      {/* Optional Detail for Sync Card */}
       {isSyncCard && (
         <p className="text-xs text-gray-400 mt-2">Ready to sync</p>
       )}
-
-      {/* Large background icon for design aesthetic - REMOVED */}
     </div>
   );
 };
 
-/* ============================================================
-   COMPONENT: 2. EXPENSE ITEM
-============================================================ */
-
 const ExpenseItem = ({ expense }) => {
+  const statusConfig =
+    STATUS_STYLE_MAP[expense.statusId] || STATUS_STYLE_MAP.default;
+
   return (
-    // CHANGE 3: Removed hover:shadow-lg and hover:border-violet-200, added hover:bg-gray-50
     <div className="flex flex-col sm:flex-row justify-between bg-white p-5 rounded-xl shadow-md border border-gray-100 transition duration-150 hover:bg-gray-50 cursor-pointer">
-      {/* Left Section: Icon, Details, and Tags */}
+      {/* Left Section */}
       <div className="flex items-start mb-3 sm:mb-0 w-full sm:w-3/4">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-100 text-blue-600 flex-shrink-0 mr-4">
           <CircleDollarSign size={20} />
@@ -130,18 +117,18 @@ const ExpenseItem = ({ expense }) => {
             {expense.description}
           </p>
 
-          {/* Tag */}
           <span className="text-xs font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
             {expense.tag}
           </span>
         </div>
       </div>
 
-      {/* Right Section: Amount and Status */}
+      {/* Right Section */}
       <div className="flex flex-col items-start sm:items-end sm:w-1/4 pt-2 sm:pt-0">
         {expense.status === "synced" && (
-          <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full mb-1">
-            Synced
+          <span
+            className={`text-xs font-semibold px-2 py-0.5 rounded-full mb-1 ${statusConfig.styles}`}>
+            {statusConfig.text}
           </span>
         )}
 
@@ -151,7 +138,7 @@ const ExpenseItem = ({ expense }) => {
 
         {expense.secondaryAmount && (
           <p className="text-xs text-gray-500 mt-0.5 whitespace-nowrap">
-            ₦{expense.secondaryAmount}
+            {expense.secondaryAmount}
           </p>
         )}
       </div>
@@ -160,38 +147,79 @@ const ExpenseItem = ({ expense }) => {
 };
 
 /* ============================================================
-   MAIN COMPONENT
+    MAIN COMPONENT
 ============================================================ */
 
 export default function ExpenseTrackingDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/expenseLegacy");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch expense legacy data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="w-full h-screen flex flex-col items-center justify-center">
+          <Loader2 className="h-10 w-10 text-indigo-700 animate-spin mb-4" />
+          <p className="text-gray-600 font-medium">Loading Dashboard...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Safe Data Access
+  const metrics = data?.metrics ?? [];
+  const expenses = data?.expenses ?? [];
+
+  // Filter Logic (Client-side)
+  const filteredExpenses = expenses.filter(
+    (exp) =>
+      exp.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exp.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const content = (
     <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-6 lg:p-8">
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
         <div>
-          {/* CHANGE 4: Reduced size/boldness from text-3xl font-extrabold to text-2xl font-bold */}
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Expense Tracking
           </h1>
-          {/* CHANGE 5: Reduced size from text-md to text-sm */}
           <p className="text-sm text-gray-600">
             Track expenses for Lagos Main Branch
           </p>
         </div>
 
-        {/* Quick Action Button */}
-        {/* CHANGE 6: Removed shadow-lg for a cleaner look */}
         <button className="mt-4 sm:mt-0 flex items-center px-4 py-2 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition whitespace-nowrap">
           <Plus size={18} className="mr-2" />
           Quick Add Expense
         </button>
       </header>
 
-      {/* 1. Stat Cards (Responsive Grid) */}
+      {/* 1. Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {METRICS_DATA.map((metric, index) => (
+        {metrics.map((metric, index) => (
           <StatCard key={index} metric={metric} />
         ))}
       </div>
@@ -212,11 +240,10 @@ export default function ExpenseTrackingDashboard() {
 
       {/* 3. Expense List */}
       <div className="space-y-4">
-        {EXPENSE_DATA.map((expense) => (
+        {filteredExpenses.map((expense) => (
           <ExpenseItem key={expense.id} expense={expense} />
         ))}
-        {/* Add a note if the list is empty after filtering */}
-        {EXPENSE_DATA.length === 0 && (
+        {filteredExpenses.length === 0 && (
           <div className="text-center py-10 text-gray-500 border border-dashed rounded-xl">
             No expenses found matching your criteria.
           </div>
