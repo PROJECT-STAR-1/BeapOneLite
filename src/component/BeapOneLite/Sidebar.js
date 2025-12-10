@@ -71,6 +71,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
+
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -132,6 +133,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
+
+
   ];
 
   const salesInvoicingItems = [
