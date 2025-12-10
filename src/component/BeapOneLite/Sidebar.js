@@ -110,21 +110,31 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const documentsComplianceItems = [
-    { href: "/compliance-documents", icon: File, label: "Compliance Documents" },
-    { href: "/document-archiving", icon: Clipboard, label: "Document Archiving" },
+    { href: "/beapOneLite/documentDashboard", icon: File, label: "Document Dashboard" },
+    { href: "/beapOneLite/documentRegister", icon: Clipboard, label: "Document Register" },
   ];
 
   const channelManagementItems = [
-    { href: "/channel-setup", icon: Clipboard, label: "Channel Setup" },
-    { href: "/channel-reporting", icon: BarChart3, label: "Channel Reporting" },
+    { href: "/beapOneLite/a2-7-A2-4Portal", icon: Clipboard, label: "A2-7/A2-4 Portal" },
+    { href: "/beapOneLite/a1-1LiteAdmin", icon: BarChart3, label: "A1-1 Lite Admin" },
   ];
 
+
   return (
-    <div
-      className={`bg-[#0A0F1F] text-white w-64 h-screen fixed left-0 top-0 overflow-y-auto transition-transform duration-300 z-50 ${
-        isOpen ? "translate-x-0" : "-translate-x-64"
-      } md:translate-x-0`}
-    >
+   <div
+  className={`
+    bg-[#0A0F1F] text-white 
+    w-64 
+    fixed top-0 left-0 bottom-0   /* <-- FULL HEIGHT ALWAYS */
+    h-screen                      /* <-- EXTRA SAFETY FOR iOS */
+    overflow-y-auto 
+    transition-transform duration-300 
+    z-50
+    ${isOpen ? "translate-x-0" : "-translate-x-64"}
+    md:translate-x-0
+  `}
+>
+
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
         <div className="text-xl font-bold">BEAPOne Lite</div>
