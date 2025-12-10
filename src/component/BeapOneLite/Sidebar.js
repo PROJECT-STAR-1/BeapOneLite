@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/beapOneLite/reportingEngine",
+      href: "/beapOneLite/reporting-engine",
       icon: FileText,
       label: "Reporting Engine",
       status: "S",
