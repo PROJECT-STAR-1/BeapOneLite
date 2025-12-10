@@ -1,0 +1,85 @@
+{
+  "dashboardMetrics": {
+    "totalAmount": "153,000.00",
+    "totalCount": 14,
+    "pettyCashRate": "12.5",
+    "pettyCashAmount": "19,125.00",
+    "avgLoggingTime": "7.8",
+    "loggingTargetMet": true,
+    "pendingApprovalAmount": "41,500.00",
+    "pendingApprovalCount": 4,
+    "approvedCount": 7,
+    "pendingCount": 4,
+    "submittedCount": 3,
+    "rejectedCount": 3
+  },
+  "categoryData": [
+    { "name": "Small Supplies", "value": 30000, "categoryId": "indigo" },
+    { "name": "Fuel & Trans", "value": 15000, "categoryId": "green" },
+    { "name": "Staff Welfare", "value": 45000, "categoryId": "amber" },
+    { "name": "Professional Fees", "value": 50000, "categoryId": "blue" },
+    { "name": "Marketing", "value": 22000, "categoryId": "red" }
+  ],
+  "trendData": [
+    { "name": "11/27", "approved": 0 },
+    { "name": "11/28", "approved": 0 },
+    { "name": "11/29", "approved": 5000 },
+    { "name": "11/30", "approved": 15000 },
+    { "name": "12/1", "approved": 22000 },
+    { "name": "12/2", "approved": 10000 },
+    { "name": "12/3", "approved": 5000 }
+  ],
+  "statusData": [
+    { "name": "Approved", "value": 7, "statusId": "approved" },
+    { "name": "Pending", "value": 4, "statusId": "pending" },
+    { "name": "Submitted", "value": 3, "statusId": "submitted" },
+    { "name": "Rejected", "value": 3, "statusId": "rejected" }
+  ],
+  "recentExpenses": [
+    {
+      "id": "EXP-2025030",
+      "vendor": "The Local Market",
+      "amount": "5,000.00",
+      "status": "Submitted",
+      "statusId": "submitted"
+    },
+    {
+      "id": "EXP-2025029",
+      "vendor": "Luxury Restaurant",
+      "amount": "45,000.00",
+      "status": "Rejected",
+      "statusId": "rejected"
+    },
+    {
+      "id": "EXP-2025028",
+      "vendor": "Office Depot",
+      "amount": "6,500.00",
+      "status": "Submitted",
+      "statusId": "submitted"
+    },
+    {
+      "id": "EXP-2025027",
+      "vendor": "UBA",
+      "amount": "1,500.00",
+      "status": "Pending Review",
+      "statusId": "pending"
+    },
+    {
+      "id": "EXP-2025026",
+      "vendor": "Mobil Petrol",
+      "amount": "10,000.00",
+      "status": "Approved",
+      "statusId": "approved"
+    }
+  ],
+  "meta": {
+    "currencySymbol": "₦",
+    "dateOptions": [
+      "Today",
+      "Last 7 Days",
+      "Last 30 Days",
+      "This Month",
+      "Last Quarter"
+    ]
+  }
+}
