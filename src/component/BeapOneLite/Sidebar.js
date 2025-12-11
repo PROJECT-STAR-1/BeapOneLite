@@ -82,7 +82,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { href: "/document-management", icon: FileText, label: "Document Management", status: "P" },
     { href: "/subscription-billing", icon: FileText, label: "Subscription & Billing", status: "✓" },
     { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
-    { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
+    { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
 
   const salesInvoicingItems = [
