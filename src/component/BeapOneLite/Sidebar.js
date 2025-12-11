@@ -71,6 +71,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
+
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -132,6 +133,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
+
+
     { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
     {
       href: "/beapOneLite/settings",
@@ -152,7 +155,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const expensesItems = [
     { href: "/expenses-dashboard", icon: Clipboard, label: "Dashboard" },
-    { href: "/expenses-register", icon: File, label: "Expense Register" },
+    {
+      href: "/beapOneLite/expenses-register",
+      icon: File,
+      label: "Expense Register",
+    },
     { href: "/expenses-legacy", icon: Calendar, label: "Legacy" },
   ];
 
