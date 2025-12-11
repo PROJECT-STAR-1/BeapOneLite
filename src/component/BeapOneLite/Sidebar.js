@@ -71,6 +71,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
+
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -84,13 +85,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "✓",
     },
     {
-      href: "/bank-reconciliation",
+      href: "/beapOneLite/bank-reconciliation",
       icon: Building2,
       label: "Bank Reconciliation",
       status: "S",
     },
     {
-      href: "/project-profitability",
+      href: "/beapOneLite/project",
       icon: FileText,
       label: "Project Profitability",
       status: "S",
@@ -102,30 +103,35 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/reporting-engine",
+      href: "/beapOneLite/reporting-engine",
       icon: FileText,
       label: "Reporting Engine",
       status: "S",
     },
     {
-      href: "/e-invoicing-tax",
+      href: "/beapOneLite/e-invoicing-tax",
       icon: FileText,
       label: "E-Invoicing & Tax",
       status: "P",
     },
     {
-      href: "/document-management",
+      href: "/beapOneLite/document-management",
       icon: FileText,
       label: "Document Management",
       status: "P",
     },
     {
-      href: "/subscription-billing",
+      href: "/beapOneLite/subscription-billing",
       icon: FileText,
       label: "Subscription & Billing",
       status: "✓",
     },
-    { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
+    {
+      href: "/beapOneLite/bpc",
+      icon: FileText,
+      label: "BPC Portal",
+      status: "P",
+    },
     { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
 
@@ -138,18 +144,20 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const expensesItems = [
-    { href: "/expenses-dashboard", icon: Clipboard, label: "Dashboard" },
-    { href: "/expenses-register", icon: File, label: "Expense Register" },
-    { href: "/expenses-legacy", icon: Calendar, label: "Legacy" },
+    {
+      href: "/beapOneLite/expense-dashboard",
+      icon: Clipboard,
+      label: "Dashboard",
+    },
+    {
+      href: "/beapOneLite/expenses-register",
+      icon: File,
+      label: "Expense Register",
+    },
+    { href: "/beapOneLite/expense-legacy", icon: Calendar, label: "Legacy" },
   ];
 
   const purchasingItems = [
-    { href: "/purchase-orders", icon: Clipboard, label: "Purchase Orders" },
-    {
-      href: "/purchasing-reports",
-      icon: BarChart3,
-      label: "Purchasing Reports",
-    },
     { href: "/beapOneLite/purchasing/vendor-bills", icon: Clipboard, label: "Vendor Bills" },
     { href: "/beapOneLite/purchasing/purchase-orders", icon: BarChart3, label: "Purchase Orders" },
   ];
@@ -160,16 +168,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const documentsComplianceItems = [
-    {
-      href: "/compliance-documents",
-      icon: File,
-      label: "Compliance Documents",
-    },
-    {
-      href: "/document-archiving",
-      icon: Clipboard,
-      label: "Document Archiving",
-    },
     { href: "/beapOneLite/documentDashboard", icon: File, label: "Document Dashboard" },
     { href: "/beapOneLite/documentRegister", icon: Clipboard, label: "Document Register" },
   ];

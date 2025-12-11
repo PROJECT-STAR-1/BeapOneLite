@@ -1,0 +1,195 @@
+{
+  "metrics": {
+    "totalOutstanding": "₦3,650,000",
+    "avgDPO": "21.9 days",
+    "onTimePayment": "100.0%",
+    "overdueItems": 1,
+    "upcomingItems": 0
+  },
+  "agingSchedule": {
+    "labels": ["Not Due", "1-30 Days", "31-60 Days", "61-90 Days", "90+ Days"],
+    "values": [1790000, 830000, 830000, 0, 0]
+  },
+  "bills": [
+    {
+      "id": 5,
+      "vendor": "TechSupply Nigeria Ltd",
+      "description": "Office computers and accessories",
+      "billId": "TS-INV-10152025",
+      "issuedDate": "Oct 15, 2025",
+      "dueDate": "Nov 14, 2025",
+      "totalAmount": 500000,
+      "outstanding": 0,
+      "paid": 500000,
+      "status": "Paid",
+      "isInstallment": false,
+      "alwaysShowDetails": false
+    },
+
+    {
+      "id": 2,
+      "vendor": "Office Furniture Pro",
+      "description": "Office furniture - desks, chairs, cabinets",
+      "billId": "OFP-INV-10202025",
+      "issuedDate": "Oct 20, 2025",
+      "totalAmount": 1200000,
+      "outstanding": 800000,
+      "paid": 400000,
+      "status": "Partial",
+      "isInstallment": true,
+      "alwaysShowDetails": true,
+      "installments": [
+        { "id": 1, "amount": 400000, "dueDate": "Nov 20, 2025", "status": "Paid" },
+        { "id": 2, "amount": 400000, "dueDate": "Dec 20, 2025", "status": "Scheduled" },
+        { "id": 3, "amount": 400000, "dueDate": "Jan 20, 2026", "status": "Scheduled" }
+      ]
+    },
+
+    {
+      "id": 4,
+      "vendor": "Global Logistics Services",
+      "description": "Freight and delivery services",
+      "billId": "GLS-INV-11102025",
+      "issuedDate": "Nov 10, 2025",
+      "dueDate": "Dec 10, 2025",
+      "totalAmount": 350000,
+      "outstanding": 350000,
+      "paid": 0,
+      "status": "Issued",
+      "isInstallment": false,
+      "alwaysShowDetails": false
+    },
+
+    {
+      "id": 1,
+      "vendor": "Power Solutions Ltd",
+      "description": "Generator and installation",
+      "billId": "PS-INV-09012025",
+      "issuedDate": "Sep 1, 2025",
+      "totalAmount": 2400000,
+      "outstanding": 1600000,
+      "paid": 800000,
+      "status": "Overdue",
+      "isInstallment": true,
+      "alwaysShowDetails": true,
+      "installments": [
+        { "id": 1, "amount": 800000, "dueDate": "Oct 1, 2025", "status": "Paid" },
+        { "id": 2, "amount": 800000, "dueDate": "Nov 1, 2025", "status": "Overdue" },
+        { "id": 3, "amount": 800000, "dueDate": "Dec 1, 2025", "status": "Scheduled" }
+      ]
+    },
+
+    {
+      "id": 3,
+      "vendor": "TechSupply Nigeria Ltd",
+      "description": "Software licenses and IT equipment",
+      "billId": "TS-INV-11202025",
+      "issuedDate": "Nov 20, 2025",
+      "totalAmount": 900000,
+      "outstanding": 900000,
+      "paid": 0,
+      "status": "Issued",
+      "isInstallment": true,
+      "alwaysShowDetails": true,
+      "installments": [
+        { "id": 1, "amount": 300000, "dueDate": "Dec 20, 2025", "status": "Scheduled" },
+        { "id": 2, "amount": 300000, "dueDate": "Jan 20, 2026", "status": "Scheduled" },
+        { "id": 3, "amount": 300000, "dueDate": "Feb 20, 2026", "status": "Scheduled" }
+      ]
+    }
+  ],
+   "upcomingPayments": [
+    {
+      "id": 1,
+      "vendor": "Office Furniture Pro",
+      "description": "Office furniture - desks, chairs, cabinets",
+      "billId": "OFP-INV-10202025",
+      "installment": "#2",
+      "amount": 400000,
+      "dueDate": "Dec 20, 2025"
+    },
+    {
+      "id": 2,
+      "vendor": "TechSupply Nigeria Ltd",
+      "description": "Software licenses and IT equipment",
+      "billId": "TS-INV-11202025",
+      "installment": "#1",
+      "amount": 300000,
+      "dueDate": "Dec 20, 2025"
+    },
+    {
+      "id": 3,
+      "vendor": "Office Furniture Pro",
+      "description": "Office furniture - desks, chairs, cabinets",
+      "billId": "OFP-INV-10202025",
+      "installment": "#3",
+      "amount": 400000,
+      "dueDate": "Jan 20, 2026"
+    },
+    {
+      "id": 4,
+      "vendor": "TechSupply Nigeria Ltd",
+      "description": "Software licenses and IT equipment",
+      "billId": "TS-INV-11202025",
+      "installment": "#2",
+      "amount": 300000,
+      "dueDate": "Jan 20, 2026"
+    },
+    {
+      "id": 5,
+      "vendor": "TechSupply Nigeria Ltd",
+      "description": "Software licenses and IT equipment",
+      "billId": "TS-INV-11202025",
+      "installment": "#3",
+      "amount": 300000,
+      "dueDate": "Feb 20, 2026"
+    }
+  ],
+   "vendors": [
+    {
+      "id": 1,
+      "name": "Power Solutions Ltd",
+      "email": "finance@powersolutions.ng",
+      "phone": "+234-805-555-0401",
+      "eWallet": "ewallet-powersolutions@example.com",
+      "totalOwed": 1600000,
+      "activeBills": 1
+    },
+    {
+      "id": 2,
+      "name": "TechSupply Nigeria Ltd",
+      "email": "accounts@techsupply.ng",
+      "phone": "+234-802-555-0101",
+      "eWallet": "ewallet-techsupply@example.com",
+      "totalOwed": 900000,
+      "activeBills": 1
+    },
+    {
+      "id": 3,
+      "name": "Office Furniture Pro",
+      "email": "billing@officefurniture.ng",
+      "phone": "+234-803-555-0201",
+      "eWallet": "ewallet-officefurniture@example.com",
+      "totalOwed": 800000,
+      "activeBills": 1
+    },
+    {
+      "id": 4,
+      "name": "Global Logistics Services",
+      "email": "payments@globallogistics.ng",
+      "phone": "+234-804-555-0301",
+      "eWallet": "ewallet-globallogistics@example.com",
+      "totalOwed": 350000,
+      "activeBills": 1
+    },
+    {
+      "id": 5,
+      "name": "Marketing Solutions Co.",
+      "email": "info@marketingsolutions.com",
+      "phone": "+234-801-123-4567",
+      "eWallet": "ewallet-marketing@example.com",
+      "totalOwed": 0,
+      "activeBills": 0
+    }
+  ]
+}

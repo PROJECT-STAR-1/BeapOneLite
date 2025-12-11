@@ -1,0 +1,435 @@
+{
+  "metrics": [
+    {
+      "id": "upload-volume",
+      "title": "Lite Upload Volume",
+      "value": "7",
+      "unit": "",
+      "subtitle": "Last 7 days",
+      "color": "indigo"
+    },
+    {
+      "id": "signed-urls",
+      "title": "Signed URLs Generated",
+      "value": "4",
+      "unit": "",
+      "subtitle": "Last 7 days",
+      "color": "green"
+    },
+    {
+      "id": "compliance-index",
+      "title": "Compliance Index (DCI)",
+      "value": "88.9",
+      "unit": "%",
+      "subtitle": "Target: 100%",
+      "color": "orange"
+    },
+    {
+      "id": "upload-latency",
+      "title": "Avg Upload Latency",
+      "value": "353",
+      "unit": "ms",
+      "subtitle": "Target: ≤ 500ms (P95)",
+      "color": "red"
+    }
+  ],
+  "hubSummary": {
+    "totalDocuments": 8,
+    "liteInstances": 3
+  },
+  "companies": [
+    "All Companies",
+    "Acme Nigeria Ltd (NG)",
+    "TechStart Ghana (GH)",
+    "AgriPro Kenya (KE)"
+  ],
+
+  "featureStats": [
+    { "value": "8", "label": "Documents Stored Securely" },
+    { "value": "3", "label": "Business Locations Connected" },
+    { "value": "89%", "label": "Compliance Ready" }
+  ],
+  "sectionHeaders": {
+    "benefits": {
+      "title": "Why Use Document Hub?",
+      "subtitle": "Real problems solved for African SMEs every day"
+    },
+    "workflow": {
+      "title": "How It works",
+      "subtitle": "From uploading documents to finding them when you need them"
+    },
+    "docTypes": {
+      "title": "What Can You Store?",
+      "subtitle": "Common document types used by African SMEs",
+      "badge": "Unlimited Document Types"
+    },
+    "architecture": {
+      "title": "Technical Architecture Details (For IT/Technical Users)",
+      "subtitle": "How G5 integrates with BEAPOne modules behind the scenes"
+    }
+  },
+  "benefitsData": [
+    {
+      "id": "never-lose",
+      "iconId": "CheckCircle",
+      "color": "text-green-600",
+      "title": "Never Lose Important Documents",
+      "description": "No more searching through filing cabinets or email attachments. Your tax receipts, contracts, and compliance certificates are always accessible—even if your office floods or gets broken into."
+    },
+    {
+      "id": "auto-backup",
+      "iconId": "Clock",
+      "color": "text-yellow-600",
+      "title": "Automatic Backup & Security",
+      "description": "Your documents are automatically backed up and encrypted. Even if your computer crashes, your business records are safe. Bank-level security protects sensitive contracts."
+    },
+    {
+      "id": "access-anywhere",
+      "iconId": "MapPin",
+      "color": "text-indigo-600",
+      "title": "Access From Anywhere",
+      "description": "Need a client contract while visiting your Lagos branch? Access it instantly from your phone. Your documents follow you wherever your business takes you."
+    },
+    {
+      "id": "multi-location",
+      "iconId": "Globe",
+      "color": "text-orange-600",
+      "title": "Multi-Location Sharing",
+      "description": "Have branches in Accra, Nairobi, and Kigali? Everyone sees the same documents instantly. No more emailing files back and forth or wondering which version is current."
+    },
+    {
+      "id": "audit-ready",
+      "iconId": "ListChecks",
+      "color": "text-purple-600",
+      "title": "Audit-Ready Compliance",
+      "description": "Tax authority audit coming? All your receipts and invoices are organized by date, type, and purpose. Generate compliance reports in seconds, not days."
+    },
+    {
+      "id": "track-access",
+      "iconId": "Eye",
+      "color": "text-red-600",
+      "title": "Track Who Accessed What",
+      "description": "Complete audit trail shows who uploaded, viewed, or downloaded each document. Perfect for compliance investigations or internal accountability."
+    }
+  ],
+  "workflowData": [
+    {
+      "step": 1,
+      "title": "Upload Your Documents",
+      "description": "Click the \"Upload Document\" button and select your file. Add basic information like document type (Invoice, Contract, Receipt, etc.), description, and tags. The system automatically records who uploaded it and when.",
+      "example": {
+        "text": "Example: Upload a signed client contract → Select \"Contract\" type → Add tag \"Client-Adeola\" → System automatically knows it's from your company and today's date → Click Save. Done in 30 seconds!",
+        "color": "blue"
+      },
+      "security": null
+    },
+    {
+      "step": 2,
+      "title": "Organize & Find Documents",
+      "description": "Go to the Documents tab to see all your files. Filter by document type, date range, or search by tags. Sort by upload date or file name. Every document is categorized and searchable.",
+      "example": {
+        "text": "Example: Tax auditor asks for all February 2024 expense receipts → Go to Documents tab → Filter \"Type: Receipt\" + \"Date: Feb 2024\" → Export list with one click → Print for auditor. Takes 2 minutes instead of 2 days!",
+        "color": "green"
+      },
+      "security": null
+    },
+    {
+      "step": 3,
+      "title": "Download & Share Securely",
+      "description": "Click any document to download it. The system creates a secure, time-limited download link (expires after 1-48 hours depending on your settings). You can access documents from any device—laptop, phone, or tablet.",
+      "example": null,
+      "security": {
+        "text": "Security: Every download is tracked and logged. If someone unauthorized tries to access your documents, you'll know immediately. All files are encrypted both during upload and storage."
+      }
+    }
+  ],
+  "docTypesData": [
+    {
+      "id": "client-contracts",
+      "iconId": "HeartHandshake",
+      "color": "bg-blue-100 text-blue-700",
+      "title": "Client Contracts",
+      "subtitle": "Service agreements, NDAs, payment terms, scope documents"
+    },
+    {
+      "id": "tax-receipts",
+      "iconId": "DollarSign",
+      "color": "bg-green-100 text-green-700",
+      "title": "Tax & Receipts",
+      "subtitle": "VAT receipts, tax filings, PAYE records, expense receipts"
+    },
+    {
+      "id": "invoices",
+      "iconId": "FileBadge",
+      "color": "bg-purple-100 text-purple-700",
+      "title": "Invoices & Bills",
+      "subtitle": "Customer invoices, vendor bills, payment confirmations"
+    },
+    {
+      "id": "compliance",
+      "iconId": "Shield",
+      "color": "bg-orange-100 text-orange-700",
+      "title": "Compliance Docs",
+      "subtitle": "Business licenses, permits, certifications, regulatory filings"
+    },
+    {
+      "id": "hr",
+      "iconId": "User",
+      "color": "bg-yellow-100 text-yellow-700",
+      "title": "HR Documents",
+      "subtitle": "Employment contracts, payroll records, performance reviews"
+    },
+    {
+      "id": "financial",
+      "iconId": "Briefcase",
+      "color": "bg-red-100 text-red-700",
+      "title": "Financial Reports",
+      "subtitle": "Balance sheets, P&L statements, cash flow reports"
+    }
+  ],
+  "archModulesData": [
+    {
+      "title": "BEAPOne Lite (Client)",
+      "color": "border-blue-300 bg-blue-50 text-blue-800",
+      "details": "Source of documents, metadata, and user/app context"
+    },
+    {
+      "title": "G2: Admin Management",
+      "color": "border-green-300 bg-green-50 text-green-800",
+      "details": "User roles and permissions for access control"
+    },
+    {
+      "title": "B1: Legal Entity",
+      "color": "border-purple-300 bg-purple-50 text-purple-800",
+      "details": "Validates appId for multi-tenancy enforcement"
+    },
+    {
+      "title": "A2: Journaling",
+      "color": "border-orange-300 bg-orange-50 text-orange-800",
+      "details": "Immutable audit logs for all document lifecycle events"
+    }
+  ],
+  "securityFeatures": [
+    "mTLS Authentication (Mutual TLS)",
+    "AES-256 Encryption (at-rest & in-transit)",
+    "Multi-Tenancy Isolation (company_id)",
+    "Time-Limited Signed URLs (1-48hr TTL)",
+    "Real-time Virus Scanning",
+    "Immutable Audit Trail (A2 Journaling)"
+  ],
+  "realStoryData": {
+    "title": "Real Story: How Tunde's Construction Company Passed Their Tax Audit",
+    "problem": "Tunde runs a construction company in Lagos with projects across Nigeria. The FIRS (tax authority) announced a surprise audit requesting 2 years of expense receipts—literally thousands of documents. His team had receipts in filing cabinets, email attachments, and WhatsApp messages. Organizing them would take weeks.",
+    "solution": "After implementing G5 Document Hub, Tunde's team uploaded all receipts going forward, tagging them by project and expense type. When the next audit came, they simply filtered \"Document Type: Receipt\" + \"Date Range: Jan 2023 - Dec 2024\" → Generated compliance report → Submitted to FIRS in 1 hour. The auditor was impressed. Tunde passed with zero issues.",
+    "result": "Saved 3 weeks of work, avoided ₦500,000 in potential penalties, and now they're always audit-ready."
+  },
+  "prototypeWarningData": {
+    "title": "Prototype Mode (Demo Data)",
+    "message": "This is a functional prototype demonstrating G5 Document Hub capabilities. In production, this will connect to real Supabase Object Storage, PostgreSQL for metadata, and A2 journaling for immutable audit trails. All data shown is for demonstration purposes."
+  },
+
+  "documents": [
+    {
+      "id": "doc-008",
+      "name": "INV-2025-002.pdf",
+      "type": "INVOICE",
+      "owner": "user-001",
+      "size": "0.52 MB",
+      "status": "CLEARED",
+      "created": "Nov 27, 2025, 03:00 PM",
+      "alert": false
+    },
+    {
+      "id": "doc-004",
+      "name": "EST-2025-045.pdf",
+      "type": "ESTIMATE",
+      "owner": "user-001",
+      "size": "0.35 MB",
+      "status": "CLEARED",
+      "created": "Nov 27, 2025, 12:45 PM",
+      "alert": false
+    },
+    {
+      "id": "doc-006",
+      "name": "Receipt_Payment_Nov_27.pdf",
+      "type": "RECEIPT",
+      "owner": "user-004",
+      "size": "0.15 MB",
+      "status": "CLEARED",
+      "created": "Nov 27, 2025, 10:50 AM",
+      "alert": false
+    },
+    {
+      "id": "doc-001",
+      "name": "INV-2025-001.pdf",
+      "type": "INVOICE",
+      "owner": "user-001",
+      "size": "0.45 MB",
+      "status": "CLEARED",
+      "created": "Nov 27, 2025, 09:15 AM",
+      "alert": true
+    },
+    {
+      "id": "doc-002",
+      "name": "Monthly_Report_Nov_2025.pdf",
+      "type": "REPORT",
+      "owner": "user-002",
+      "size": "2.30 MB",
+      "status": "CLEARED",
+      "created": "Nov 26, 2025, 03:30 PM",
+      "alert": false
+    },
+    {
+      "id": "doc-003",
+      "name": "Service_Contract_TechStart_2...",
+      "type": "CONTRACT",
+      "owner": "user-003",
+      "size": "1.80 MB",
+      "status": "PENDING",
+      "created": "Nov 25, 2025, 11:00 AM",
+      "alert": true
+    },
+    {
+      "id": "doc-005",
+      "name": "VAT_Return_Q3_2025.pdf",
+      "type": "TAX_FILING",
+      "owner": "user-005",
+      "size": "0.80 MB",
+      "status": "CLEARED",
+      "created": "Nov 24, 2025, 05:20 PM",
+      "alert": false
+    },
+    {
+      "id": "doc-007",
+      "name": "Compliance_Audit_2025.pdf",
+      "type": "COMPLIANCE",
+      "owner": "user-002",
+      "size": "4.20 MB",
+      "status": "FAILED",
+      "created": "Nov 23, 2025, 02:00 PM",
+      "alert": false
+    }
+  ],
+
+  "complianceMetrics": [
+    {
+      "id": "dci",
+      "title": "Document Compliance Index",
+      "subtitle": "DCI",
+      "value": "88.9%",
+      "target": "Target: 100% (Metadata completeness)",
+      "status": "success"
+    },
+    {
+      "id": "saar",
+      "title": "Secure Access Adherence Rate",
+      "subtitle": "SAAR",
+      "value": "33.3%",
+      "target": "Target: 100% (Signed URL usage)",
+      "status": "info"
+    },
+    {
+      "id": "ncr",
+      "title": "Note Compliance Rate",
+      "subtitle": "NCR",
+      "value": "100.0%",
+      "target": "Target: 100% (Mandatory notes)",
+      "status": "purple"
+    },
+    {
+      "id": "sufr",
+      "title": "Signed URL Failure Rate",
+      "subtitle": "SUFR",
+      "value": "22.2%",
+      "target": "Target: < 5% (Access control)",
+      "status": "warning"
+    }
+  ],
+  "trendData": [
+    { "name": "5Y", "dci": 85, "saar": 100 },
+    { "name": "3Y", "dci": 88, "saar": 100 },
+    { "name": "1Y", "dci": 90, "saar": 100 },
+    { "name": "Q", "dci": 92, "saar": 100 },
+    { "name": "M", "dci": 93, "saar": 100 },
+    { "name": "W", "dci": 94, "saar": 100 },
+    { "name": "D", "dci": 99, "saar": 33.3 },
+    { "name": "Today", "dci": 82, "saar": 20 }
+  ],
+  "pieChartData": [
+    { "name": "INVOICE 43%", "value": 3.5, "category": "blue" },
+    { "name": "REPORT 14%", "value": 1, "category": "green" },
+    { "name": "CONTRACT 14%", "value": 1, "category": "yellow" },
+    { "name": "TAX_FILING 14%", "value": 1, "category": "red" },
+    { "name": "RECEIPT 14%", "value": 1.5, "category": "purple" }
+  ],
+  "sloChartData": [
+    {
+      "name": "Upload (P95)",
+      "target": 500,
+      "actual": 353,
+      "unit": "ms",
+      "targetText": "On Target",
+      "actualText": "353ms",
+      "status": "success"
+    },
+    {
+      "name": "URL Gen (Avg)",
+      "target": 10,
+      "actual": 0.75,
+      "unit": "ms",
+      "targetText": "Sub-ms",
+      "actualText": "0.75ms",
+      "status": "success"
+    }
+  ],
+  "integrationMetrics": [
+    {
+      "id": "success-uploads",
+      "value": "7",
+      "label": "Successful Uploads",
+      "type": "success"
+    },
+    {
+      "id": "rejected-uploads",
+      "value": "1",
+      "label": "Rejected Uploads",
+      "type": "danger"
+    },
+    {
+      "id": "virus-detected",
+      "value": "1",
+      "label": "Virus Detected",
+      "type": "danger"
+    },
+    {
+      "id": "signed-urls",
+      "value": "4",
+      "label": "Signed URLs Generated",
+      "type": "info"
+    },
+    {
+      "id": "success-downloads",
+      "value": "3",
+      "label": "Successful Downloads",
+      "type": "success"
+    },
+    {
+      "id": "unauth-attempts",
+      "value": "2",
+      "label": "Unauthorized Attempts",
+      "type": "danger"
+    },
+    {
+      "id": "avg-upload",
+      "value": "353ms",
+      "label": "Avg Upload Latency",
+      "type": "success"
+    },
+    {
+      "id": "avg-url",
+      "value": "0.75ms",
+      "label": "Avg URL Gen Latency",
+      "type": "success"
+    }
+  ]
+}

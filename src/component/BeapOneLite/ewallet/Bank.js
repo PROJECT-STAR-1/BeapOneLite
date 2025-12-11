@@ -26,9 +26,12 @@ const formatCurrency = (amount, currencySymbol = "₦", locale = "en-NG") => {
   return `${currencySymbol} ${formattedAmount}`;
 };
 
+
+/**
+ * Renders an action button with an icon.
+ */
 /* ============================================================
     SUB-COMPONENTS
-============================================================ */
 
 const ActionButton = ({ icon: Icon, label }) => (
   <button className="flex items-center space-x-2 text-sm text-gray-600 hover:text-indigo-700 transition-colors">
