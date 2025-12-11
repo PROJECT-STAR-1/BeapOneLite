@@ -1,0 +1,29 @@
+[
+  {
+    "id": "INV-001",
+    "company": "Acme Corporation",
+    "date": "2025-11-20",
+    "amountUSD": "5000.00",
+    "amountNGN": "7737500.00",
+    "due": "2025-12-20",
+    "status": "Paid"
+  },
+  {
+    "id": "INV-004",
+    "company": "TechStart Ltd",
+    "date": "2025-11-15",
+    "amountUSD": "3800.00",
+    "amountNGN": "5880500.00",
+    "due": "2025-12-15",
+    "status": "Paid"
+  },
+  {
+    "id": "INV-003",
+    "company": "Guaranty Trust Bank",
+    "date": "2025-10-15",
+    "amountUSD": "1200.00",
+    "amountNGN": "1857000.00",
+    "due": "2025-11-14",
+    "status": "Overdue"
+  }
+]

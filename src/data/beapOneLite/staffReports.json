@@ -1,0 +1,55 @@
+{
+  "STAFF_DETAILS": [
+    { "id": "oluwaseun", "initials": "OA", "name": "Oluwaseun Ajayi", "role": "Sales Representative" },
+    { "id": "fatima", "initials": "FA", "name": "Fatima Abdullahi", "role": "Business Development" },
+    { "id": "adebayo", "initials": "AO", "name": "Adebayo Okonkwo", "role": "Sales Manager" },
+    { "id": "chioma", "initials": "CN", "name": "Chioma Nwosu", "role": "Account Executive" },
+    { "id": "ibrahim", "initials": "IH", "name": "Ibrahim Hassan", "role": "Sales Representative" }
+  ],
+  "MOCK_SALES_DATA": {
+    "default": {
+      "revenue": 21118000.00,
+      "quotes_created": 100,
+      "quotes_approved": 80,
+      "paid_invoices": 5,
+      "staff_performance": [
+        { "id": "oluwaseun", "sales": 7737500.00, "quotes": 30, "converted": 5, "avg_invoice": 1547500.00 },
+        { "id": "fatima", "sales": 5880500.00, "quotes": 25, "converted": 0, "avg_invoice": 0 },
+        { "id": "adebayo", "sales": 2500000.00, "quotes": 15, "converted": 0, "avg_invoice": 0 },
+        { "id": "chioma", "sales": 2500000.00, "quotes": 15, "converted": 0, "avg_invoice": 0 },
+        { "id": "ibrahim", "sales": 2500000.00, "quotes": 15, "converted": 0, "avg_invoice": 0 }
+      ]
+    },
+    "today": {
+      "revenue": 1500000.00,
+      "quotes_created": 10,
+      "quotes_approved": 8,
+      "paid_invoices": 1,
+      "staff_performance": [
+        { "id": "oluwaseun", "sales": 1500000.00, "quotes": 5, "converted": 1, "avg_invoice": 1500000.00 },
+        { "id": "fatima", "sales": 0, "quotes": 3, "converted": 0, "avg_invoice": 0 },
+        { "id": "adebayo", "sales": 0, "quotes": 2, "converted": 0, "avg_invoice": 0 }
+      ]
+    },
+    "lagos": {
+      "revenue": 15000000.00,
+      "quotes_created": 70,
+      "quotes_approved": 60,
+      "paid_invoices": 3,
+      "staff_performance": [
+        { "id": "adebayo", "sales": 5000000.00, "quotes": 20, "converted": 2, "avg_invoice": 2500000.00 },
+        { "id": "chioma", "sales": 5000000.00, "quotes": 20, "converted": 1, "avg_invoice": 5000000.00 },
+        { "id": "ibrahim", "sales": 5000000.00, "quotes": 30, "converted": 0, "avg_invoice": 0 }
+      ]
+    },
+    "fatima": {
+      "revenue": 5880500.00,
+      "quotes_created": 25,
+      "quotes_approved": 20,
+      "paid_invoices": 0,
+      "staff_performance": [
+        { "id": "fatima", "sales": 5880500.00, "quotes": 25, "converted": 0, "avg_invoice": 0 }
+      ]
+    }
+  }
+}
