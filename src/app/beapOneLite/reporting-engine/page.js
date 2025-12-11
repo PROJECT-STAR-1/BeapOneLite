@@ -1,8 +1,6 @@
 "use client";
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import Layout from "@/component/BeapOneLite/Layout";
-
 import {
   FileText,
   TrendingUp,
@@ -17,139 +15,50 @@ import {
   Plus,
   Shield,
   Settings,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    DATA: METRICS, RECENT, AND SCHEDULED REPORTS
+    UI MAPPINGS & CONFIGURATION
 ============================================================ */
 
-const METRICS_DATA = [
-  {
-    title: "Report Generation Latency",
-    value: "1.8",
-    unit: "sec",
-    target: "< 2 sec",
-    deviation: "-0.3s",
-    trend: TrendingDown,
-    isPositive: true,
-    icon: Clock,
+const METRIC_ICON_MAP = {
+  latency: Clock,
+  "delivery-success": CheckCircle,
+  "tax-accuracy": Target,
+  tti: Zap,
+  adoption: Users,
+  ctr: Eye,
+};
+
+const QUICK_ACTION_STYLE_MAP = {
+  generate: {
+    icon: FileText,
+    color: "text-yellow-300",
   },
-  {
-    title: "Scheduled Delivery Success Rate",
-    value: "99.92",
-    unit: "%",
-    target: ">= 99.9%",
-    deviation: "+0.02%",
-    trend: TrendingUp,
-    isPositive: true,
-    icon: CheckCircle,
-  },
-  {
-    title: "Tax Preview Accuracy",
-    value: "3.2",
-    unit: "% dev",
-    target: "< 5% dev",
-    deviation: "-0.8%",
-    trend: TrendingDown,
-    isPositive: true, // Lower deviation is good
+  "tax-preview": {
     icon: Target,
+    color: "text-green-300",
   },
-  {
-    title: "Time to Insight (TTI)",
-    value: "0.8",
-    unit: "days",
-    target: "< 1 day",
-    deviation: "-0.2d",
-    trend: TrendingDown,
-    isPositive: true,
-    icon: Zap,
+  "manage-schedules": {
+    icon: Settings,
+    color: "text-orange-300",
   },
-  {
-    title: "Adoption Rate (Scheduled Reports)",
-    value: "68",
-    unit: "%",
-    target: ">= 65%",
-    deviation: "+3%",
-    trend: TrendingUp,
-    isPositive: true,
-    icon: Users,
+  default: {
+    icon: FileText,
+    color: "text-gray-300",
   },
-  {
-    title: "Layman's Terms Click-Through Rate",
-    value: "18",
-    unit: "%",
-    target: ">= 15%",
-    deviation: "+2%",
-    trend: TrendingUp,
-    isPositive: true,
-    icon: Eye,
-  },
-];
-
-const RECENT_REPORTS = [
-  {
-    name: "P&L",
-    date: "Nov 2024",
-    deliveredAt: "2024-11-25 09:15",
-    status: "Delivered",
-  },
-  {
-    name: "Balance Sheet",
-    date: "Nov 2024",
-    deliveredAt: "2024-11-25 09:16",
-    status: "Delivered",
-  },
-  {
-    name: "Cash Flow",
-    date: "Nov 2024",
-    deliveredAt: "2024-11-25 09:18",
-    status: "Delivered",
-  },
-  {
-    name: "Tax Report (FIRS)",
-    date: "Q4 2024",
-    deliveredAt: "2024-11-20 14:30",
-    status: "Delivered",
-  },
-  {
-    name: "Sales Summary",
-    date: "Week 47",
-    deliveredAt: "2024-11-24 08:00",
-    status: "Delivered",
-  },
-];
-
-const SCHEDULED_REPORTS = [
-  { name: "P&L", frequency: "Monthly", status: "Active", next: "2024-12-01" },
-  {
-    name: "Balance Sheet",
-    frequency: "Monthly",
-    status: "Active",
-    next: "2024-12-01",
-  },
-  {
-    name: "Cash Flow",
-    frequency: "Monthly",
-    status: "Active",
-    next: "2024-12-01",
-  },
-  {
-    name: "Sales Summary",
-    frequency: "Weekly",
-    status: "Active",
-    next: "2024-11-27",
-  },
-];
+};
 
 /* ============================================================
-    COMPONENT: 1. METRIC CARD (RP1 & RP2)
+    SUB-COMPONENTS
 ============================================================ */
 
 const MetricCard = ({ metric }) => {
-  const TrendIcon = metric.trend;
-  const MetricIcon = metric.icon;
+  const TrendIcon = metric.trendDirection === "up" ? TrendingUp : TrendingDown;
+  const MetricIcon = METRIC_ICON_MAP[metric.id] || FileText;
 
-  const BG_COLOR = "bg-[#f0fff4]"; // Very light green/mint from Figma
+  const BG_COLOR = "bg-[#f0fff4]";
   const ICON_BG_COLOR = "bg-green-100";
   const TEXT_COLOR = "text-green-700";
   const TREND_COLOR = metric.isPositive ? "text-green-600" : "text-red-600";
@@ -158,7 +67,7 @@ const MetricCard = ({ metric }) => {
   return (
     <div
       className={`p-6 rounded-2xl border border-green-200 ${BG_COLOR} flex flex-col justify-between h-full transition duration-300 hover:shadow-lg hover:shadow-green-200/50`}>
-      {/* Top Section: Icon and "On Target" Tag */}
+      {/* Top Section */}
       <div className="flex justify-between items-center mb-4">
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center ${ICON_BG_COLOR} ${TEXT_COLOR}`}>
@@ -200,12 +109,8 @@ const MetricCard = ({ metric }) => {
   );
 };
 
-/* ============================================================
-    COMPONENT: 2. REPORT LIST ITEM (Part of RP3)
-============================================================ */
 const ReportItem = ({ item, isRecent }) => {
   const Icon = FileText;
-  // Use specific dark theme colors
   const statusColor =
     item.status === "Delivered" ? "bg-green-700" : "bg-blue-600";
   const iconBg = "bg-gray-600";
@@ -213,7 +118,6 @@ const ReportItem = ({ item, isRecent }) => {
 
   return (
     <div className="flex items-center justify-between p-4 rounded-xl hover:bg-white/10 transition duration-150 cursor-pointer">
-      {/* Left: Icon and Title */}
       <div className="flex items-center">
         <div className={`p-2 mr-3 rounded-lg ${iconBg} ${iconText}`}>
           <Icon size={18} />
@@ -226,46 +130,30 @@ const ReportItem = ({ item, isRecent }) => {
         </div>
       </div>
 
-      {/* Right: Status/Delivery Time */}
       <div className="text-right">
-        {isRecent ? (
-          <>
-            <span
-              className={`text-xs font-bold px-2 py-0.5 rounded-full text-white ${statusColor}`}>
-              {item.status}
-            </span>
-            <p className="text-xs text-gray-400 mt-1">{item.deliveredAt}</p>
-          </>
-        ) : (
-          <>
-            <span
-              className={`text-xs font-bold px-2 py-0.5 rounded-full text-white ${statusColor}`}>
-              {item.status}
-            </span>
-            <p className="text-xs text-gray-400 mt-1">Next: {item.next}</p>
-          </>
-        )}
+        <span
+          className={`text-xs font-bold px-2 py-0.5 rounded-full text-white ${statusColor}`}>
+          {item.status}
+        </span>
+        <p className="text-xs text-gray-400 mt-1">
+          {isRecent ? item.deliveredAt : `Next: ${item.next}`}
+        </p>
       </div>
     </div>
   );
 };
 
-/* ============================================================
-    COMPONENT: 3. REPORT LIST PANEL (RP3)
-============================================================ */
 const ReportListPanel = ({
   title,
   reports,
   isRecent,
   actionText,
-  actionIcon,
+  actionIcon: ActionIcon,
 }) => {
-  const ActionIcon = actionIcon || FileText;
   const PanelIcon = isRecent ? FileText : Calendar;
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-xl h-full">
-      {/* Header */}
       <div className="flex justify-between items-center text-white mb-4 border-b border-gray-700 pb-4">
         <div className="flex items-center">
           <PanelIcon size={24} className="mr-3 text-yellow-300" />
@@ -273,11 +161,10 @@ const ReportListPanel = ({
         </div>
         <button className="text-sm font-medium text-gray-300 hover:text-yellow-300 transition duration-150 flex items-center">
           {actionText}
-          {actionIcon && <ActionIcon size={16} className="ml-1" />}
+          {ActionIcon && <ActionIcon size={16} className="ml-1" />}
         </button>
       </div>
 
-      {/* List Items */}
       <div className="space-y-2">
         {reports.map((item, index) => (
           <ReportItem key={index} item={item} isRecent={isRecent} />
@@ -287,32 +174,7 @@ const ReportListPanel = ({
   );
 };
 
-/* ============================================================
-    COMPONENT: 4. QUICK ACTIONS (RP4)
-============================================================ */
-
-const QuickActions = () => {
-  const actions = [
-    {
-      title: "Generate Report",
-      subtitle: "P&L, Balance Sheet, Cash Flow",
-      icon: FileText,
-      color: "text-yellow-300",
-    },
-    {
-      title: "Tax Preview",
-      subtitle: "Local tax compliance estimate",
-      icon: Target,
-      color: "text-green-300",
-    },
-    {
-      title: "Manage Schedules",
-      subtitle: "Edit automated reports",
-      icon: Settings,
-      color: "text-orange-300",
-    },
-  ];
-
+const QuickActions = ({ actions }) => {
   return (
     <div className="mb-8 p-6 rounded-2xl border-2 border-violet-400/30 bg-gray-900 shadow-lg">
       <h2 className="text-xl font-semibold text-gray-200 mb-6">
@@ -320,14 +182,17 @@ const QuickActions = () => {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {actions.map((action, index) => {
-          const Icon = action.icon;
+          const style =
+            QUICK_ACTION_STYLE_MAP[action.id] || QUICK_ACTION_STYLE_MAP.default;
+          const Icon = style.icon;
+
           return (
             <button
               key={index}
               className="p-5 rounded-xl bg-gray-800 hover:bg-gray-700 transition duration-200 text-left shadow-xl"
               onClick={() => console.log(`${action.title} clicked`)}>
               <div className="flex items-start">
-                <Icon size={20} className={`mr-3 ${action.color}`} />
+                <Icon size={20} className={`mr-3 ${style.color}`} />
                 <div>
                   <p className="text-lg font-bold text-white mb-0.5">
                     {action.title}
@@ -348,74 +213,105 @@ const QuickActions = () => {
 ============================================================ */
 
 export default function ReportEngineDashboard() {
-  // Custom container to match the Figma's dark theme aesthetics in the canvas environment
-  const containerClasses =
-    "w-full font-sans bg-gray-50 min-h-screen p-4 sm:p-6 lg:px-8 lg:pt-8";
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Content that will be displayed either inside the Layout or the fallback div
-  const content = (
-    <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
-      {/* 1. Header with Actions (RP1) */}
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-8">
-        <div>
-          <h1 className="text-2xl font-extrabold text-gray-900">
-            Financial Reporting Engine
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Real-time financial statements, tax compliance, and automated report
-            delivery
-          </p>
+  // Fetch Logic
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/reportingEngine");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch reporting engine data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="w-full h-screen flex flex-col items-center justify-center">
+          <Loader2 className="h-10 w-10 text-indigo-700 animate-spin mb-4" />
+          <p className="text-gray-600 font-medium">Loading Dashboard...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Safe Data Access
+  const metrics = data?.metrics ?? [];
+  const recentReports = data?.recentReports ?? [];
+  const scheduledReports = data?.scheduledReports ?? [];
+  const quickActions = data?.quickActions ?? [];
+
+  return (
+    <Layout>
+      <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
+        {/* 1. Header with Actions */}
+        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-8">
+          <div>
+            <h1 className="text-2xl font-extrabold text-gray-900">
+              Financial Reporting Engine
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Real-time financial statements, tax compliance, and automated
+              report delivery
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-end gap-3 mt-4 sm:mt-0">
+            <button className="flex items-center px-3 py-1.5 bg-violet-600 text-white rounded-xl font-semibold hover:bg-violet-700 transition shadow-md whitespace-nowrap">
+              <Shield size={18} className="mr-2" />
+              Tax Preview
+            </button>
+            <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-md whitespace-nowrap">
+              <Calendar size={18} className="mr-2" />
+              Schedule Report
+            </button>
+            <button className="flex items-center px-3 py-1.5 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition shadow-lg whitespace-nowrap">
+              <Plus size={18} className="mr-2" />
+              Generate Report
+            </button>
+          </div>
+        </header>
+
+        {/* 2. Key Performance Indicators */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {metrics.map((metric, index) => (
+            <MetricCard key={index} metric={metric} />
+          ))}
         </div>
 
-        {/* Action Buttons (RP1 - Top Right) - Ensure buttons break when screen is too small */}
-        <div className="flex flex-wrap justify-end gap-3 mt-4 sm:mt-0">
-          <button className="flex items-center px-3 py-1.5 bg-violet-600 text-white rounded-xl font-semibold hover:bg-violet-700 transition shadow-md whitespace-nowrap">
-            <Shield size={18} className="mr-2" />
-            Tax Preview
-          </button>
-          <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-md whitespace-nowrap">
-            <Calendar size={18} className="mr-2" />
-            Schedule Report
-          </button>
-          <button className="flex items-center px-3 py-1.5 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition shadow-lg whitespace-nowrap">
-            <Plus size={18} className="mr-2" />
-            Generate Report
-          </button>
+        {/* 3. Report Lists */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <ReportListPanel
+            title="Recent Reports"
+            reports={recentReports}
+            isRecent={true}
+            actionText="View All"
+          />
+          <ReportListPanel
+            title="Scheduled Reports"
+            reports={scheduledReports}
+            isRecent={false}
+            actionText="Manage"
+            actionIcon={Settings}
+          />
         </div>
-      </header>
 
-      {/* 2. Key Performance Indicators (RP1 & RP2) - Responsive 3-column layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {METRICS_DATA.map((metric, index) => (
-          <MetricCard key={index} metric={metric} />
-        ))}
+        {/* 4. Quick Actions */}
+        <QuickActions actions={quickActions} />
       </div>
-
-      {/* 3. Report Lists (RP3) - Responsive 2-column layout - MOVED UP */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <ReportListPanel
-          title="Recent Reports"
-          reports={RECENT_REPORTS}
-          isRecent={true}
-          actionText="View All"
-          actionIcon={null}
-        />
-        <ReportListPanel
-          title="Scheduled Reports"
-          reports={SCHEDULED_REPORTS}
-          isRecent={false}
-          actionText="Manage"
-          actionIcon={Settings}
-        />
-      </div>
-
-      {/* 4. Quick Actions (RP4) - Responsive 3-column layout - MOVED DOWN */}
-      <QuickActions />
-    </div>
+    </Layout>
   );
-
-  // The user requested to comment out the Layout wrapper for canvas viewing.
-  // The structure below uses a fallback div for canvas and the full Layout import for the user's environment.
-
-  return <Layout>{content}</Layout>;
 }
