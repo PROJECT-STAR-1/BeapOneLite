@@ -297,5 +297,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         </div>
       </div>
     </div>
+    </div>
   );
 }
