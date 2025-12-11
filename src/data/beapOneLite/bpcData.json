@@ -1,0 +1,393 @@
+{
+  "metrics": [
+    {
+      "id": "adoption",
+      "title": "Service Adoption",
+      "value": "8.9",
+      "unit": "%",
+      "subtitle": "Of active K4 projects",
+      "color": "green",
+      "icon": "BarChart3"
+    },
+    {
+      "id": "revenue",
+      "title": "Avg Revenue Per Service",
+      "value": "$14.0K",
+      "unit": "",
+      "subtitle": "Per engagement",
+      "color": "green",
+      "icon": "Wallet"
+    },
+    {
+      "id": "context-transfer",
+      "title": "Context Transfer Success",
+      "value": "100.0",
+      "unit": "%",
+      "subtitle": "Target: > 99.5%",
+      "color": "blue",
+      "icon": "CheckCircle"
+    },
+    {
+      "id": "latency",
+      "title": "Billing Event Latency",
+      "value": "80",
+      "unit": "ms",
+      "subtitle": "Target: < 100ms",
+      "color": "purple",
+      "icon": "Zap"
+    }
+  ],
+  "tabs": [
+    { "id": "overview", "name": "Overview", "icon": "Eye" },
+    { "id": "service-catalog", "name": "Service Catalog", "icon": "FileText" },
+    { "id": "engagements", "name": "Engagements", "icon": "Users" },
+    { "id": "metrics", "name": "Metrics", "icon": "Target" }
+  ],
+  "integrationSummary": {
+    "activeServices": "6",
+    "totalEngagements": "4"
+  },
+
+  "heroMetrics": [
+    {
+      "id": "services-count",
+      "value": "6",
+      "label": "Expert Services Available"
+    },
+    {
+      "id": "engagement-range",
+      "value": "$12K - $22K",
+      "label": "Typical Engagement Range"
+    },
+    {
+      "id": "project-duration",
+      "value": "6-12 Weeks",
+      "label": "Average Project Duration"
+    }
+  ],
+  "features": [
+    {
+      "title": "Africa-Focused Expertise",
+      "iconId": "users",
+      "colorId": "green",
+      "description": "Consultants with deep experience in African markets, regulations, and business culture across Nigeria, Ghana, Kenya, and beyond."
+    },
+    {
+      "title": "Proven Methodologies",
+      "iconId": "check-circle",
+      "colorId": "yellow",
+      "description": "International best practices adapted for local markets. Get actionable strategies, not generic advice."
+    },
+    {
+      "title": "Seamless Integration",
+      "iconId": "zap",
+      "colorId": "blue",
+      "description": "Request consulting directly from your project dashboard. Your project data (budget, timeline, scope) is automatically shared—no need to re-explain your situation."
+    },
+    {
+      "title": "Clear Deliverables",
+      "iconId": "file-text",
+      "colorId": "teal",
+      "description": "Every service includes specific deliverables—reports, models, roadmaps, and implementation support. You know exactly what you’re getting."
+    },
+    {
+      "title": "Simple Billing",
+      "iconId": "scale",
+      "colorId": "purple",
+      "description": "All consulting fees are billed through your existing BEAPOne subscription. One invoice, one payment process."
+    },
+    {
+      "title": "Post-Engagement Support",
+      "iconId": "trending-up",
+      "colorId": "red",
+      "description": "Most services include follow-up sessions to help you implement recommendations and track progress."
+    }
+  ],
+  "howItWorks": [
+    {
+      "step": 1,
+      "title": "Browse Services & Request Help",
+      "content": "Go to the <span class=\"font-bold\">Service Catalog</span> tab and browse available consulting services. When you find what you need, click \"Request Consultation.\" If you're working on a specific project in BEAPOne, your project details are automatically shared with the consultant.",
+      "example": {
+        "colorId": "blue",
+        "text": "You're planning to expand into Ghana. From your \"Ghana Expansion\" project, click Request Consultation → Select \"Market Entry Strategy\" → Your project budget, timeline, and scope are automatically sent."
+      }
+    },
+    {
+      "step": 2,
+      "title": "Consultant Reviews & Proposes",
+      "content": "A specialized consultant reviews your request and project context. Within 48 hours, they'll contact you to discuss your needs, clarify scope, and provide a detailed proposal with timeline and final pricing.",
+      "example": {
+        "colorId": "green",
+        "text": "What happens? You'll receive a call/email to discuss your specific challenges. The consultant will explain their approach, share similar case studies, and answer your questions before you commit."
+      }
+    },
+    {
+      "step": 3,
+      "title": "Agreement, Work & Billing",
+      "content": "Once you agree to the proposal, the consultant starts work. You'll receive regular updates and deliverables according to the agreed timeline. The consulting fee is automatically added to your next BEAPOne subscription invoice.",
+      "example": {
+        "colorId": "purple",
+        "text": "Billing example: $15,000 Growth Strategy Consulting added to your subscription invoice. Payment terms: Net 30 days. All tracked in your BEAPOne account."
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "Growth Strategy Consulting",
+      "description": "Comprehensive growth strategy development for African SMEs",
+      "price": "$15K",
+      "duration": "8 weeks",
+      "deliverables": "5 deliverables"
+    },
+    {
+      "name": "Financial Restructuring Advisory",
+      "description": "Expert guidance on financial optimization and debt restructuring",
+      "price": "$22K",
+      "duration": "12 weeks",
+      "deliverables": "5 deliverables"
+    },
+    {
+      "name": "Market Entry Strategy (New Geography)",
+      "description": "Strategic planning for expansion into new African markets",
+      "price": "$19K",
+      "duration": "10 weeks",
+      "deliverables": "5 deliverables"
+    },
+    {
+      "name": "Operations Excellence Program",
+      "description": "Process optimization and operational efficiency improvement",
+      "price": "$13K",
+      "duration": "6 weeks",
+      "deliverables": "5 deliverables"
+    }
+  ],
+  "technicalSteps": [
+    {
+      "step": 1,
+      "title": "Service Catalog API (BEAPOne Lite — BPC Portal)",
+      "method": "GET",
+      "endpoint": "/api/bpc/v1/catalog",
+      "description": "BEAPOne Lite fetches available services with real-time pricing and availability",
+      "details": null
+    },
+    {
+      "step": 2,
+      "title": "Context Transfer (BEAPOne Lite — BPC Portal)",
+      "method": "POST",
+      "endpoint": "/api/bpc/v1/context",
+      "description": "Securely transfers project metadata with audit trail and mandatory justification note",
+      "details": "Security: JWT/OAuth 2.0, TLS 1.2+, 60-minute context token expiry"
+    },
+    {
+      "step": 3,
+      "title": "Billing Event (BPC Portal — Subscription Management)",
+      "method": "POST",
+      "endpoint": "/api/financial/v1/billing-event",
+      "description": "Automatically creates invoice upon agreement finalization",
+      "details": "Includes: Service fee, currency, transaction ID, audit correlation ID"
+    }
+  ],
+
+  "topMetrics": [
+    {
+      "id": "context-success",
+      "title": "Context Transfer Success Rate",
+      "value": "100.0%",
+      "target": "> 99.5%",
+      "trend": "+0.5% since 5Y",
+      "styleCategory": "green",
+      "status": "Success"
+    },
+    {
+      "id": "integration-error",
+      "title": "Integration Error Rate",
+      "value": "0.00%",
+      "target": "< 0.1%",
+      "trend": "-0.5% since 5Y",
+      "styleCategory": "indigo",
+      "status": "Success"
+    },
+    {
+      "id": "service-adoption",
+      "title": "BPC Service Adoption",
+      "value": "8.9%",
+      "target": "Of active projects",
+      "trend": "+1.8% since 5Y",
+      "styleCategory": "purple",
+      "status": "Info"
+    },
+    {
+      "id": "avg-revenue",
+      "title": "Avg Revenue Per Service",
+      "value": "$14.0K",
+      "target": "Per engagement",
+      "trend": "+$3K since 5Y",
+      "styleCategory": "yellow",
+      "status": "Info"
+    }
+  ],
+  "adoptionTrendData": [
+    { "name": "5Y", "value": 0.75 },
+    { "name": "3Y", "value": 1.5 },
+    { "name": "1Y", "value": 2.25 },
+    { "name": "Q", "value": 2.55 },
+    { "name": "M", "value": 2.65 },
+    { "name": "W", "value": 2.75 },
+    { "name": "D", "value": 2.9 },
+    { "name": "Today", "value": 2.7 }
+  ],
+  "categoryDistributionData": [
+    { "name": "Growth Strategy", "value": 33, "categoryId": "growth" },
+    { "name": "Compliance", "value": 17, "categoryId": "compliance" },
+    { "name": "Operations", "value": 17, "categoryId": "operations" },
+    { "name": "Market Expansion", "value": 17, "categoryId": "market" },
+    { "name": "Financial Advisory", "value": 16, "categoryId": "financial" }
+  ],
+  "performanceSloData": [
+    {
+      "name": "Context Transfer (P1)",
+      "actual": 245,
+      "target": 500,
+      "unit": "ms",
+      "status": "On Target"
+    },
+    {
+      "name": "Billing Event (P2)",
+      "actual": 80,
+      "target": 120,
+      "unit": "ms",
+      "status": "On Target"
+    },
+    {
+      "name": "Catalog Sync (P3)",
+      "actual": 2.5,
+      "target": 5,
+      "unit": "min",
+      "status": "Excellent"
+    }
+  ],
+  "complianceMetrics": [
+    {
+      "id": "mandatory-note",
+      "title": "Mandatory Note Compliance (M1)",
+      "value": "100.0%",
+      "description": "Adherence to Module Note Framework for high-risk actions",
+      "target": "100%",
+      "statusText": "Compliant",
+      "styleCategory": "orange",
+      "tagColor": "green"
+    },
+    {
+      "id": "audit-time",
+      "title": "Audit Justification Time (M2)",
+      "value": "1.58 min",
+      "description": "Average time to locate Module Note for billing events",
+      "target": "< 2 minutes",
+      "statusText": "Excellent",
+      "styleCategory": "cyan",
+      "tagColor": "green"
+    }
+  ],
+  "healthSummaryMetrics": [
+    {
+      "id": "ctx-transfer",
+      "label": "Context Transfer Success",
+      "value": "100.0%"
+    },
+    {
+      "id": "billing-latency",
+      "label": "Billing Event Latency",
+      "value": "80ms"
+    },
+    {
+      "id": "revenue-per-service",
+      "label": "Avg Revenue Per Service",
+      "value": "$14.0K"
+    },
+    {
+      "id": "error-rate",
+      "label": "Integration Error Rate",
+      "value": "0.00%"
+    }
+  ],
+  "meta": {
+    "totalActiveEngagements": 6
+  },
+
+  "engagements": [
+    {
+      "id": 1,
+      "service": "Growth Strategy Consulting",
+      "txn": "txn-bpc-2025-001",
+      "client": "Adebayo Okonkwo",
+      "clientCompany": "Acme Nigeria Ltd",
+      "project": "Q1 2025 Expansion Initiative",
+      "projectId": "proj-k4-001",
+      "status": "ACTIVE",
+      "statusType": "active",
+      "fee": 15500,
+      "invoiceId": "INV-A24-2025-112",
+      "requestedDate": "Nov 15, 2025"
+    },
+    {
+      "id": 2,
+      "service": "Market Entry Strategy (New Geography)",
+      "txn": "txn-bpc-2025-002",
+      "client": "Kwame Mensah",
+      "clientCompany": "TechStart Ghana",
+      "project": "West Africa Expansion Project",
+      "projectId": "proj-k4-005",
+      "status": "SCOPING",
+      "statusType": "scoping",
+      "fee": 18500,
+      "invoiceId": "Pending",
+      "requestedDate": "Nov 22, 2025"
+    },
+    {
+      "id": 3,
+      "service": "Financial Restructuring Advisory",
+      "txn": "txn-bpc-2025-003",
+      "client": "John Kamau",
+      "clientCompany": "AgriPro Kenya",
+      "project": "No project context",
+      "projectId": null,
+      "status": "AGREEMENT_PENDING",
+      "statusType": "pending",
+      "fee": 22000,
+      "invoiceDate": null,
+      "invoiceId": "Pending",
+      "requestedDate": "Nov 24, 2025"
+    },
+    {
+      "id": 4,
+      "service": "Operations Excellence Program",
+      "txn": "txn-bpc-2025-004",
+      "client": "Chioma Nwankwo",
+      "clientCompany": "Acme Nigeria Ltd",
+      "project": "Manufacturing Efficiency Project",
+      "projectId": "proj-k4-002",
+      "status": "COMPLETED",
+      "statusType": "completed",
+      "fee": 12500,
+      "invoiceId": "INV-A24-2025-089",
+      "requestedDate": "Oct 5, 2025"
+    }
+  ],
+  "auditNotes": [
+    {
+      "id": 1,
+      "service": "Growth Strategy Consulting",
+      "description": "Client requires comprehensive growth strategy to support planned expansion into Ghana and Kenya markets. Project budget approved at Board level.",
+      "auditId": "audit-corr-001",
+      "isMandatory": true
+    },
+    {
+      "id": 2,
+      "service": "Market Entry Strategy (New Geography)",
+      "description": "Market entry consulting for expansion into Nigeria, Senegal, and Côte d'Ivoire. Focus on fintech regulatory compliance.",
+      "auditId": "audit-corr-002",
+      "isMandatory": true
+    }
+  ]
+}
