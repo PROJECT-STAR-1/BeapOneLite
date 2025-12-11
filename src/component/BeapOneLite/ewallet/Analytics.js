@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -13,7 +14,6 @@ import { TrendingUp } from "lucide-react";
 
 /* ============================================================
     MOCK DATA
-============================================================ */
 
 // Mock data for the Transaction Trends Line Chart (7 days)
 const TRANSACTION_TRENDS_DATA = [
@@ -25,6 +25,7 @@ const TRANSACTION_TRENDS_DATA = [
   { date: "2025-12-02", credits: 6, debits: 5 },
   { date: "2025-12-03", credits: 7, debits: 3 },
 ];
+import { TrendingUp, Loader2 } from "lucide-react";
 
 /* ============================================================
     CUSTOM TOOLTIP COMPONENT
@@ -53,13 +54,14 @@ const CustomTrendsTooltip = ({ active, payload, label }) => {
 };
 
 /* ============================================================
-    ANALYTICS CARD
-============================================================ */
 
 /**
  * Renders the Transaction Trends Line Chart Card.
  */
 const TransactionTrendsCard = () => (
+    ANALYTICS CARD COMPONENT
+
+const TransactionTrendsCard = ({ data }) => (
   <div className="bg-white rounded-xl shadow-lg p-6 h-full min-h-[400px]">
     <div className="flex items-center space-x-2 mb-4 text-gray-800">
       <TrendingUp className="text-indigo-600" size={20} />
@@ -69,17 +71,16 @@ const TransactionTrendsCard = () => (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={TRANSACTION_TRENDS_DATA}
+          data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          {/* Reduced font size for better fit using style prop on XAxis */}
           <XAxis
             dataKey="date"
             stroke="#374151"
             axisLine={{ stroke: "#374151" }}
             tickLine={false}
-            style={{ fontSize: "10px" }} // Reduced font size
-            minTickGap={-10} // Adjusted tick gap
+            style={{ fontSize: "10px" }}
+            minTickGap={-10}
           />
           <YAxis
             stroke="#374151"
@@ -90,9 +91,9 @@ const TransactionTrendsCard = () => (
           <Legend
             iconType="circle"
             wrapperStyle={{ paddingTop: 10 }}
-            formatter={(value, entry) => (
+            formatter={(value) => (
               <span className="text-sm font-semibold text-gray-700">
-                {value}
+                {value.charAt(0).toUpperCase() + value.slice(1)}
               </span>
             )}
           />
@@ -126,17 +127,50 @@ const TransactionTrendsCard = () => (
     MAIN COMPONENT
 ============================================================ */
 
-export function AnalyticsComponent() {
+export default function AnalyticsComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/ewallet");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch analytics data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Trends...</p>
+      </div>
+    );
+  }
+
+  // Safe Data Access
+  const transactionTrendsData = data?.transactionTrendsData ?? [];
+
   return (
     <div className="bg-gray-50 min-h-screen p-0 lg:p-0 font-sans">
       <div className="w-full mx-auto">
-        {/* Ensure the card takes full width on all screens */}
         <div className="p-4 lg:p-8">
-          <TransactionTrendsCard />
+          <TransactionTrendsCard data={transactionTrendsData} />
         </div>
       </div>
     </div>
   );
 }
-
-export default AnalyticsComponent;
