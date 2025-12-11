@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useState, useEffect, useMemo } from 'react';
+
 import {
   Users,
   MapPin,
@@ -10,28 +12,86 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export default function Overview() {
-  // -------------------------
-  // MOCKED DYNAMIC DATA
-  // -------------------------
-  const subscription = {
-    tier: "Standard Tier",
-    paid: true,
-    activeUsers: 5,
-    userPrice: 1500,
-    activeLocations: 2,
-    locationLimit: 2,
-    dataUsed: 3.8,
-    dataLimit: 5,
-    monthlyCharge: 7500,
-    renewalDate: "December 1, 2024",
-    nextBillingDate: "Dec 1, 2024",
-  };
+// Initial state to prevent errors while data is loading
+const initialSubscriptionState = {
+  tier: "Loading...",
+  paid: false,
+  activeUsers: 0,
+  userPrice: 0,
+  activeLocations: 0,
+  locationLimit: 1, // Avoid division by zero
+  dataUsed: 0,
+  dataLimit: 1,     // Avoid division by zero
+  monthlyCharge: 0,
+  renewalDate: "N/A",
+  nextBillingDate: "N/A",
+};
 
-  // Calculate percentages
-  const dataPercent = (subscription.dataUsed / subscription.dataLimit) * 100;
-  const locationPercent =
-    (subscription.activeLocations / subscription.locationLimit) * 100;
+export default function Overview() {
+  // New state to store fetched data
+  const [subscription, setSubscription] = useState(initialSubscriptionState);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 1. DATA FETCHING (useEffect to fetch the API)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // FETCH THE API ROUTE EXACTLY AS REQUESTED
+        const response = await fetch('/api/beapOnelite/subscriptions'); 
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setSubscription(data);
+        setError(null);
+      } catch (e) {
+        console.error("Fetch error:", e);
+        setError("Failed to load subscription data.");
+        setSubscription(initialSubscriptionState);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 2. Calculations (useMemo is good practice for derived state)
+  const { dataPercent, locationPercent } = useMemo(() => {
+    const dataP = subscription.dataLimit > 0 
+      ? (subscription.dataUsed / subscription.dataLimit) * 100 
+      : 0;
+      
+    const locationP = subscription.locationLimit > 0 
+      ? (subscription.activeLocations / subscription.locationLimit) * 100 
+      : 0;
+      
+    return { dataPercent: dataP, locationPercent: locationP };
+  }, [subscription]);
+
+  // Handle Loading and Error States
+  if (loading) {
+    return (
+        <div className="p-8 text-center text-lg font-medium text-indigo-600">
+            Loading Subscription Details...
+        </div>
+    );
+  }
+
+  if (error) {
+    return (
+        <div className="p-8 text-center bg-red-100 text-red-700 rounded-xl">
+            <AlertCircle className="w-6 h-6 mx-auto mb-2" />
+            <p className="font-semibold">{error}</p>
+            <p className="text-sm">Please check the console for more details.</p>
+        </div>
+    );
+  }
+
 
   return (
     <div className="p-3 space-y-6">

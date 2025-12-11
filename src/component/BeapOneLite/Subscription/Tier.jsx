@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
+
 import {
   MapPin,
   Database,
@@ -7,69 +9,73 @@ import {
   Phone,
   Check,
   X,
+  AlertCircle,
 } from "lucide-react";
 
-const pricingData = [
-  {
-    id: "free",
-    title: "Free Tier",
-    price: 0,
-    locations: "1 Location",
-    storage: "1 GB Storage",
-    einvoice: "₦100 (up to 0% off)",
-    support: "Community Support",
-    recommended: false,
-    current: false,
-    features: {
-      invoicing: true,
-      expenseTracking: true,
-      accountManagement: true,
-      bankReconciliation: false,
-      projectProfitability: false,
-      financialReporting: false,
-    },
-  },
-  {
-    id: "standard",
-    title: "Standard Tier",
-    price: 1500,
-    locations: "2 Locations",
-    storage: "5 GB Storage",
-    einvoice: "₦50 (up to 15% off)",
-    support: "Email Support (24hr SLA)",
-    recommended: true,
-    current: true, // <-- mark current tier
-    features: {
-      invoicing: true,
-      expenseTracking: true,
-      accountManagement: true,
-      bankReconciliation: true,
-      projectProfitability: true,
-      financialReporting: true,
-    },
-  },
-  {
-    id: "premium",
-    title: "Premium Tier",
-    price: 3500,
-    locations: "Unlimited Locations",
-    storage: "10 GB Storage",
-    einvoice: "₦50 (up to 30% off)",
-    support: "Priority Phone/Chat (1hr SLA)",
-    recommended: false,
-    current: false,
-    features: {
-      invoicing: true,
-      expenseTracking: true,
-      accountManagement: true,
-      bankReconciliation: true,
-      projectProfitability: true,
-      financialReporting: true,
-    },
-  },
-];
+// Initial state for pricing tiers to prevent errors while loading
+const initialPricingData = [];
 
 export default function Tier() {
+  const [pricingData, setPricingData] = useState(initialPricingData);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 1. DATA FETCHING (useEffect to fetch the API)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // FETCH THE API ROUTE EXACTLY AS REQUESTED
+        const response = await fetch('/api/beapOnelite/subscriptions'); 
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // Extract the pricingTiers array from the fetched data
+        if (data && Array.isArray(data.pricingTiers)) {
+            setPricingData(data.pricingTiers);
+        } else {
+            throw new Error("Invalid data structure: pricingTiers array not found.");
+        }
+        setError(null);
+      } catch (e) {
+        console.error("Fetch error:", e);
+        setError("Failed to load pricing data.");
+        setPricingData(initialPricingData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Handle Loading and Error States
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center py-12">
+        <div className="text-xl font-medium text-purple-600">
+            Loading Tier Options...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex justify-center py-12">
+        <div className="p-6 bg-red-100 text-red-700 rounded-xl max-w-lg text-center">
+            <AlertCircle className="w-6 h-6 mx-auto mb-2" />
+            <p className="font-semibold">{error}</p>
+            <p className="text-sm">Cannot display pricing tiers.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // --- MAIN RENDER ---
   return (
     <div className="w-full flex justify-center py-12">
       <div className="grid md:grid-cols-3 gap-8 w-full max-w-6xl px-4">
@@ -152,9 +158,14 @@ export default function Tier() {
               {/* CTA Button */}
               <div className="mt-6">
                 {isCurrent ? (
-                  <></>
+                  <button 
+                    className="w-full bg-green-600 text-white py-2 rounded-lg cursor-not-allowed opacity-75"
+                    disabled
+                  >
+                    Current Plan
+                  </button>
                 ) : (
-                  <button className="w-full bg-purple-600 text-white py-2 rounded-lg">
+                  <button className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
                     {tier.price === 0
                       ? "Downgrade to Free Tier"
                       : "Upgrade to " + tier.title}

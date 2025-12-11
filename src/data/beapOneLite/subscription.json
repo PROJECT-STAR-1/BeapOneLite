@@ -1,0 +1,98 @@
+{
+  "tier": "Standard Tier",
+  "paid": true,
+  "activeUsers": 5,
+  "userPrice": 1500,
+  "activeLocations": 2,
+  "locationLimit": 2,
+  "dataUsed": 3.8,
+  "dataLimit": 5,
+  "monthlyCharge": 7500,
+  "renewalDate": "December 1, 2024",
+  "nextBillingDate": "Dec 1, 2024",
+  "pricingTiers": [
+    {
+      "id": "free",
+      "title": "Free Tier",
+      "price": 0,
+      "locations": "1 Location",
+      "storage": "1 GB Storage",
+      "einvoice": "₦100 (up to 0% off)",
+      "support": "Community Support",
+      "recommended": false,
+      "current": false,
+      "features": {
+        "invoicing": true,
+        "expenseTracking": true,
+        "accountManagement": true,
+        "bankReconciliation": false,
+        "projectProfitability": false,
+        "financialReporting": false
+      }
+    },
+    {
+      "id": "standard",
+      "title": "Standard Tier",
+      "price": 1500,
+      "locations": "2 Locations",
+      "storage": "5 GB Storage",
+      "einvoice": "₦50 (up to 15% off)",
+      "support": "Email Support (24hr SLA)",
+      "recommended": true,
+      "current": true,
+      "features": {
+        "invoicing": true,
+        "expenseTracking": true,
+        "accountManagement": true,
+        "bankReconciliation": true,
+        "projectProfitability": true,
+        "financialReporting": true
+      }
+    },
+    {
+      "id": "premium",
+      "title": "Premium Tier",
+      "price": 3500,
+      "locations": "Unlimited Locations",
+      "storage": "10 GB Storage",
+      "einvoice": "₦50 (up to 30% off)",
+      "support": "Priority Phone/Chat (1hr SLA)",
+      "recommended": false,
+      "current": false,
+      "features": {
+        "invoicing": true,
+        "expenseTracking": true,
+        "accountManagement": true,
+        "bankReconciliation": true,
+        "projectProfitability": true,
+        "financialReporting": true
+      }
+    }
+  ],
+  "usageMetrics": {
+    "usageTrends": {
+      "labels": ["2025-11-06", "2025-11-07", "2025-11-08", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-17", "2025-11-18", "2025-11-19", "2025-11-20", "2025-11-21", "2025-11-22", "2025-11-23", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-11-29", "2025-11-30", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05"],
+      "activeUsersData": [4, 5, 4, 6, 5, 7, 5, 5, 4, 6, 5, 5, 5, 6, 6, 4, 6, 5, 6, 4, 6, 6, 5, 7, 6, 5, 6, 7, 6, 5],
+      "dataUsageGBData": [2.1, 2.8, 2.5, 3.1, 3.5, 3.9, 2.8, 2.6, 3.0, 3.4, 3.1, 3.5, 3.8, 4.1, 4.5, 4.0, 3.8, 4.2, 4.5, 3.9, 4.3, 4.7, 4.1, 4.5, 4.9, 4.4, 4.8, 5.0, 4.6, 4.9]
+    },
+    "invoiceSubmissions": {
+      "labels": ["2025-11-28", "2025-11-29", "2025-11-30", "2025-12-02", "2025-12-04"],
+      "data": [14, 12, 14, 6, 4]
+    },
+    "locations": [
+      {
+        "name": "Head Office - Lagos",
+        "type": "Primary Location",
+        "status": "Active",
+        "color": "green"
+      },
+      {
+        "name": "Branch - Abuja",
+        "type": "Secondary Location",
+        "status": "Active",
+        "color": "blue"
+      }
+    ],
+    "locationLimitReached": true
+  }
+}
