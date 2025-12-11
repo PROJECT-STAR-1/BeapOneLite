@@ -1,17 +1,16 @@
 "use client";
 
-import { Globe, Wifi, WifiOff, Bell, ChevronDown, MapPin } from "lucide-react";
+import { Globe, Wifi, WifiOff, Bell, ChevronDown, MapPin, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function Navbar() {
+export default function Navbar({ toggleSidebar }) {
   const [openUser, setOpenUser] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
-  const [online, setOnline] = useState(true); // WIFI STATUS TOGGLE
+  const [online, setOnline] = useState(true);
 
   const userRef = useRef(null);
   const locationRef = useRef(null);
 
-  // CLICK OUTSIDE HANDLER
   useEffect(() => {
     function handleClickOutside(e) {
       if (userRef.current && !userRef.current.contains(e.target)) {
@@ -29,8 +28,16 @@ export default function Navbar() {
   return (
     <div className="w-full bg-white shadow-sm h-16 px-6 flex items-center justify-between sticky top-0 z-40">
 
-      {/* LEFT SIDE — LOCATION + ONLINE STATUS */}
+      {/* LEFT SIDE */}
       <div className="flex items-center gap-6">
+
+        {/* MOBILE MENU BUTTON */}
+        <button 
+          onClick={toggleSidebar}
+          className="md:hidden mr-2"
+        >
+          <Menu size={28} className="text-gray-800" />
+        </button>
 
         {/* LOCATION DROPDOWN */}
         <div className="relative" ref={locationRef}>
@@ -69,7 +76,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* ONLINE / OFFLINE STATUS TAG */}
+        {/* ONLINE / OFFLINE */}
         <span
           className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1
             ${online ? "text-green-600 bg-green-100" : "text-red-600 bg-red-100"}`}
@@ -81,18 +88,12 @@ export default function Navbar() {
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-6">
 
-        {/* GLOBE */}
         <Globe />
 
-        {/* WIFI TOGGLE BUTTON */}
-        <div
-          className="cursor-pointer"
-          onClick={() => setOnline((prev) => !prev)}
-        >
+        <div className="cursor-pointer" onClick={() => setOnline((prev) => !prev)}>
           {online ? <Wifi className="text-green-600" /> : <WifiOff className="text-red-600" />}
         </div>
 
-        {/* NOTIFICATION BELL */}
         <div className="relative cursor-pointer">
           <Bell />
           <span className="absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full"></span>
@@ -114,7 +115,6 @@ export default function Navbar() {
             <ChevronDown />
           </div>
 
-          {/* USER DROPDOWN CONTENT */}
           {openUser && (
             <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-72 border border-gray-200 text-sm">
               <div className="px-4 py-4 border-b border-gray-200">
@@ -138,7 +138,6 @@ export default function Navbar() {
           )}
         </div>
       </div>
-
     </div>
   );
 }
