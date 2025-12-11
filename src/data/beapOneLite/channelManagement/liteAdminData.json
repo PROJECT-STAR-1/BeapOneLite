@@ -1,0 +1,440 @@
+{
+  "portal": {
+    "title": "BEAPOne Lite Administrator Portal",
+    "description": "A1-1 BSS Framework - Centralized Instance Management",
+    "user": {
+      "name": "John Okonkwo",
+      "role": "Senior Administrator"
+    },
+    "systemStatus": "All Systems Operational",
+    "apiUrl": "/api/beapOnelite/a1-1LiteAdmin"
+  },
+  "totalLiteInstances": {
+    "total": 8,
+    "active": 6,
+    "suspended": 1,
+    "provisioning": 1
+  },
+  "totalActiveUsers": 85,
+  "totalMRR": 1192,
+  "o17BalanceExposure": 3420,
+  "portalPerformanceKPIs": {
+    "AES": {
+      "value": 1.21,
+      "target": "< 2.0s"
+    },
+    "DACR": {
+      "value": 100,
+      "target": "100%"
+    },
+    "auditLogIntegrity": {
+      "value": 100,
+      "target": "100%"
+    },
+    "noteCompliance": {
+      "value": 100,
+      "target": "100%"
+    },
+    "avgAJT": {
+      "value": 3.2,
+      "target": "< 5m"
+    }
+  },
+  "activeUsersTrend": [
+    {"date": "2025-11-12", "value": 110},
+    {"date": "2025-11-13", "value": 100},
+    {"date": "2025-11-14", "value": 105},
+    {"date": "2025-11-15", "value": 90},
+    {"date": "2025-11-16", "value": 85},
+    {"date": "2025-11-17", "value": 95},
+    {"date": "2025-11-18", "value": 100},
+    {"date": "2025-11-19", "value": 95},
+    {"date": "2025-11-20", "value": 105},
+    {"date": "2025-11-21", "value": 110},
+    {"date": "2025-11-22", "value": 100},
+    {"date": "2025-11-23", "value": 95},
+    {"date": "2025-11-24", "value": 90},
+    {"date": "2025-11-25", "value": 85},
+    {"date": "2025-11-26", "value": 95},
+    {"date": "2025-11-27", "value": 100},
+    {"date": "2025-11-28", "value": 110},
+    {"date": "2025-11-29", "value": 105},
+    {"date": "2025-11-30", "value": 90},
+    {"date": "2025-12-01", "value": 95},
+    {"date": "2025-12-02", "value": 100},
+    {"date": "2025-12-03", "value": 110},
+    {"date": "2025-12-04", "value": 105},
+    {"date": "2025-12-05", "value": 95},
+    {"date": "2025-12-06", "value": 90},
+    {"date": "2025-12-07", "value": 85},
+    {"date": "2025-12-08", "value": 95}
+  ],
+  "transactionVolume": [
+    {"date": "2025-11-12", "value": 9500},
+    {"date": "2025-11-13", "value": 9600},
+    {"date": "2025-11-14", "value": 9700},
+    {"date": "2025-11-15", "value": 9300},
+    {"date": "2025-11-16", "value": 9200},
+    {"date": "2025-11-17", "value": 9500},
+    {"date": "2025-11-18", "value": 9600},
+    {"date": "2025-11-19", "value": 9700},
+    {"date": "2025-11-20", "value": 9400},
+    {"date": "2025-11-21", "value": 9300},
+    {"date": "2025-11-22", "value": 9700},
+    {"date": "2025-11-23", "value": 9600},
+    {"date": "2025-11-24", "value": 9500},
+    {"date": "2025-11-25", "value": 9400},
+    {"date": "2025-11-26", "value": 9300},
+    {"date": "2025-11-27", "value": 9600},
+    {"date": "2025-11-28", "value": 9500},
+    {"date": "2025-11-29", "value": 9400},
+    {"date": "2025-11-30", "value": 9600},
+    {"date": "2025-12-01", "value": 9700},
+    {"date": "2025-12-02", "value": 9600},
+    {"date": "2025-12-03", "value": 9500},
+    {"date": "2025-12-04", "value": 9400},
+    {"date": "2025-12-05", "value": 9300},
+    {"date": "2025-12-06", "value": 9200},
+    {"date": "2025-12-07", "value": 9500},
+    {"date": "2025-12-08", "value": 9600}
+  ],
+   "instances": [
+    {
+      "appId": "lite-001-ng-12345",
+      "clientEmail": "admin@adeola.com.ng",
+      "clientName": "Adeola Business Solutions",
+      "status": "ACTIVE",
+      "activeUsers": 15,
+      "transactions": 2847,
+      "O17Exposure": 450.00
+    },
+    {
+      "appId": "lite-002-gh-67890",
+      "clientEmail": "contact@kwametrading.gh",
+      "clientName": "Kwame Trading Ltd",
+      "status": "ACTIVE",
+      "activeUsers": 8,
+      "transactions": 1523,
+      "O17Exposure": 120.00
+    },
+    {
+      "appId": "lite-003-ke-24680",
+      "clientEmail": "ops@nairobi logistics.co.ke",
+      "clientName": "Nairobi Logistics Hub",
+      "status": "SUSPENDED",
+      "activeUsers": 0,
+      "transactions": 0,
+      "O17Exposure": 1250.00
+    },
+    {
+      "appId": "lite-004-ng-13579",
+      "clientEmail": "info@lagostechnologies.ng",
+      "clientName": "Lagos Tech Ventures",
+      "status": "ACTIVE",
+      "activeUsers": 22,
+      "transactions": 4521,
+      "O17Exposure": 320.00
+    },
+    {
+      "appId": "lite-005-za-97531",
+      "clientEmail": "admin@ctdist.co.za",
+      "clientName": "Cape Town Distributors",
+      "status": "ACTIVE",
+      "activeUsers": 12,
+      "transactions": 2156,
+      "O17Exposure": 180.00
+    },
+    {
+      "appId": "lite-006-ci-86420",
+      "clientEmail": "contact@abidjancommerce.ci",
+      "clientName": "Abidjan Commerce Group",
+      "status": "PROVISIONING",
+      "activeUsers": 0,
+      "transactions": 0,
+      "O17Exposure": 0.00
+    },
+    {
+      "appId": "lite-007-ng-11223",
+      "clientEmail": "admin@abujafinance.ng",
+      "clientName": "Abuja Financial Services",
+      "status": "ACTIVE",
+      "activeUsers": 18,
+      "transactions": 3842,
+      "O17Exposure": 890.00
+    },
+    {
+      "appId": "lite-008-gh-33445",
+      "clientEmail": "operations@accramfg.gh",
+      "clientName": "Accra Manufacturing Co",
+      "status": "ACTIVE",
+      "activeUsers": 10,
+      "transactions": 1987,
+      "O17Exposure": 210.00
+    }
+  ],
+  
+  "usageBillingMetrics": {
+    "transactionVolume": 16876,
+    "totalMRR": 1192,
+    "o17BalanceExposure": 3420
+  },
+  "perInstanceUsage": [
+    {
+      "appId": "lite-001-ng-12345",
+      "client": "Adeola Business Solutions",
+      "activeUsers": 15,
+      "transactionVolume": 2847,
+      "storage": 12.4,
+      "mrr": 149,
+      "o17Exposure": 450
+    },
+    {
+      "appId": "lite-002-gh-67890",
+      "client": "Kwame Trading Ltd",
+      "activeUsers": 8,
+      "transactionVolume": 1523,
+      "storage": 6.8,
+      "mrr": 49,
+      "o17Exposure": 120
+    },
+    {
+      "appId": "lite-003-ke-24680",
+      "client": "Nairobi Logistics Hub",
+      "activeUsers": 0,
+      "transactionVolume": 0,
+      "storage": 18.2,
+      "mrr": 299,
+      "o17Exposure": 1250
+    },
+    {
+      "appId": "lite-004-ng-13579",
+      "client": "Lagos Tech Ventures",
+      "activeUsers": 22,
+      "transactionVolume": 4521,
+      "storage": 25.6,
+      "mrr": 299,
+      "o17Exposure": 320
+    },
+    {
+      "appId": "lite-005-za-97531",
+      "client": "Cape Town Distributors",
+      "activeUsers": 12,
+      "transactionVolume": 2156,
+      "storage": 14.3,
+      "mrr": 149,
+      "o17Exposure": 180
+    },
+    {
+      "appId": "lite-006-ci-86420",
+      "client": "Abidjan Commerce Group",
+      "activeUsers": 0,
+      "transactionVolume": 0,
+      "storage": 0.5,
+      "mrr": 49,
+      "o17Exposure": 0
+    },
+    {
+      "appId": "lite-007-ng-11223",
+      "client": "Abuja Financial Services",
+      "activeUsers": 18,
+      "transactionVolume": 3842,
+      "storage": 16.9,
+      "mrr": 149,
+      "o17Exposure": 890
+    },
+    {
+      "appId": "lite-008-gh-33445",
+      "client": "Accra Manufacturing Co",
+      "activeUsers": 10,
+      "transactionVolume": 1987,
+      "storage": 9.2,
+      "mrr": 49,
+      "o17Exposure": 210
+    }
+  ],
+  "o17BalanceExposureTrend": {
+    "data": [
+      { "date": "2025-11-14", "value": 2700 },
+      { "date": "2025-11-15", "value": 2400 },
+      { "date": "2025-11-16", "value": 2800 },
+      { "date": "2025-11-17", "value": 3100 },
+      { "date": "2025-11-18", "value": 2900 },
+      { "date": "2025-11-19", "value": 3000 },
+      { "date": "2025-11-20", "value": 2500 },
+      { "date": "2025-11-21", "value": 2800 },
+      { "date": "2025-11-22", "value": 2600 },
+      { "date": "2025-11-23", "value": 2900 },
+      { "date": "2025-11-24", "value": 3200 },
+      { "date": "2025-11-25", "value": 3100 },
+      { "date": "2025-11-26", "value": 3300 },
+      { "date": "2025-11-27", "value": 2800 },
+      { "date": "2025-11-28", "value": 3000 },
+      { "date": "2025-11-29", "value": 3100 },
+      { "date": "2025-11-30", "value": 2700 },
+      { "date": "2025-12-01", "value": 2800 },
+      { "date": "2025-12-02", "value": 3000 },
+      { "date": "2025-12-03", "value": 3200 },
+      { "date": "2025-12-04", "value": 3400 },
+      { "date": "2025-12-05", "value": 3300 },
+      { "date": "2025-12-06", "value": 3000 },
+      { "date": "2025-12-07", "value": 3100 },
+      { "date": "2025-12-08", "value": 2900 },
+      { "date": "2025-12-09", "value": 2800 },
+      { "date": "2025-12-10", "value": 2700 }
+    ]
+  },
+  "dailyProvisioningActivity": {
+    "newLiteUsersProvisioned": [
+      { "date": "2025-11-14", "value": 2 },
+      { "date": "2025-11-15", "value": 1 },
+      { "date": "2025-11-16", "value": 3 },
+      { "date": "2025-11-17", "value": 4 },
+      { "date": "2025-11-18", "value": 2 },
+      { "date": "2025-11-19", "value": 3 },
+      { "date": "2025-11-20", "value": 1 },
+      { "date": "2025-11-21", "value": 2 },
+      { "date": "2025-11-22", "value": 3 },
+      { "date": "2025-11-23", "value": 4 },
+      { "date": "2025-11-24", "value": 2 },
+      { "date": "2025-11-25", "value": 1 },
+      { "date": "2025-11-26", "value": 3 },
+      { "date": "2025-11-27", "value": 2 },
+      { "date": "2025-11-28", "value": 4 },
+      { "date": "2025-11-29", "value": 1 },
+      { "date": "2025-11-30", "value": 2 },
+      { "date": "2025-12-01", "value": 3 },
+      { "date": "2025-12-02", "value": 1 },
+      { "date": "2025-12-03", "value": 4 },
+      { "date": "2025-12-04", "value": 2 },
+      { "date": "2025-12-05", "value": 3 },
+      { "date": "2025-12-06", "value": 2 },
+      { "date": "2025-12-07", "value": 4 },
+      { "date": "2025-12-08", "value": 1 },
+      { "date": "2025-12-09", "value": 3 },
+      { "date": "2025-12-10", "value": 2 }
+    ]
+  },
+  "title": "Secure Support Access (G7 Integration)",
+  "subtitle": "Initiate secure, logged support/impersonation sessions via G7 Help Desk API",
+  "securityNoticeHeading": "Security Notice",
+  "securityNoticeText": "All support access requests are subject to mandatory note requirements and complete audit logging. Sessions are temporary, view-only, and automatically expire after 30 minutes.",
+  "form": {
+    "instanceLabel": "Select Instance for Support Access",
+    "instancePlaceholder": "Choose a Lite instance",
+    "ticketLabel": "Support Ticket Reference",
+    "ticketPlaceholder": "e.g., TICKET-4521",
+    "justificationLabel": "Justification for Support Access",
+    "justificationPlaceholder": "Detailed explanation for why support access is required (minimum 255 characters)",
+    "buttonText": "Initiate Support Session"
+  },
+  "sessionsSection": {
+    "title": "Recent Support Access Sessions",
+    "subtitle": "Last 30 days of G7-facilitated support activities",
+    "sessions": [
+      {
+        "instance": "lite-007-ng-11223",
+        "staff": "Staff: John Okonkwo",
+        "description": "Support access initiated to investigate reported transaction discrepancy. Customer support ticket #4521.",
+        "timestamp": "11/25/2024, 11:15:00 AM",
+        "status": "SUCCESS"
+      }
+    ]
+  },
+   "auditLog": [
+    {
+      "action": "SUSPEND",
+      "status": "SUCCESS",
+      "appId": "lite-003-ke-24680",
+      "staff": "John Okonkwo (staff-001)",
+      "timestamp": "11/27/2024, 9:30:00 AM",
+      "executionTime": "1.46s",
+      "note": "Suspended due to O17 balance exposure exceeding $1000 threshold. Customer notified via email and phone.",
+      "oldValue": {
+        "status": "ACTIVE",
+        "activeUsers": 12
+      },
+      "newValue": {
+        "status": "SUSPENDED",
+        "activeUsers": 0
+      },
+      "transaction": "txn-a1b2c3d4"
+    },
+    {
+      "action": "PROVISION",
+      "status": "SUCCESS",
+      "appId": "lite-006-ci-86420",
+      "staff": "Amina Diallo (staff-002)",
+      "timestamp": "11/27/2024, 9:00:00 AM",
+      "executionTime": "1.82s",
+      "note": "New provisioning request from channel partner CP-FR-001 for Abidjan Commerce Group.",
+      "oldValue": null,
+      "newValue": {
+        "appId": "lite-006-ci-86420",
+        "tier": "Starter",
+        "status": "PROVISIONING"
+      },
+      "transaction": "txn-e5f6g7h8"
+    },
+    {
+      "action": "UPDATE_CONFIG",
+      "status": "SUCCESS",
+      "appId": "lite-001-ng-12345",
+      "staff": "Sarah Mensah (staff-003)",
+      "timestamp": "11/26/2024, 3:22:00 PM",
+      "executionTime": "0.99s",
+      "note": "Upgraded configuration to accommodate client growth. Client requested increase in user limit.",
+      "oldValue": {
+        "maxUsers": 10,
+        "storageLimit": 10
+      },
+      "newValue": {
+        "maxUsers": 20,
+        "storageLimit": 15
+      },
+      "transaction": "txn-i9j0k1l2"
+    },
+    {
+      "action": "SUPPORT_ACCESS",
+      "status": "SUCCESS",
+      "appId": "lite-007-ng-11223",
+      "staff": "John Okonkwo (staff-001)",
+      "timestamp": "11/25/2024, 11:15:00 AM",
+      "executionTime": "0.65s",
+      "note": "Support access initiated to investigate reported transaction discrepancy. Customer support ticket #4521.",
+      "oldValue": null,
+      "newValue": null,
+      "transaction": "txn-m3n4o5p6"
+    },
+    {
+      "action": "UPDATE_CONFIG",
+      "status": "FAILED",
+      "appId": "lite-004-ng-13579",
+      "staff": "Amina Diallo (staff-002)",
+      "timestamp": "11/24/2024, 5:45:00 PM",
+      "executionTime": "5.23s",
+      "note": "Attempted to increase API rate limit per client request. Will retry after certificate renewal.",
+      "errorDetails": "mTLS handshake failed - certificate validation error",
+      "oldValue": {
+        "apiRateLimit": 1000
+      },
+      "newValue": null,
+      "transaction": "txn-q7r8s9t0"
+    },
+    {
+      "action": "REACTIVATE",
+      "status": "SUCCESS",
+      "appId": "lite-005-za-97531",
+      "staff": "Sarah Mensah (staff-003)",
+      "timestamp": "11/23/2024, 12:30:00 PM",
+      "executionTime": "1.12s",
+      "note": "Reactivated after client cleared outstanding O17 balance. Payment confirmed by billing team.",
+      "oldValue": {
+        "status": "SUSPENDED"
+      },
+      "newValue": {
+        "status": "ACTIVE"
+      },
+      "transaction": "txn-u1v2w3x4"
+    }
+  ]
+}

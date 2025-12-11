@@ -1,0 +1,148 @@
+{
+  "metrics": [
+    {
+      "id": "latency",
+      "title": "Report Generation Latency",
+      "value": "1.8",
+      "unit": "sec",
+      "target": "< 2 sec",
+      "deviation": "-0.3s",
+      "trendDirection": "down",
+      "isPositive": true
+    },
+    {
+      "id": "delivery-success",
+      "title": "Scheduled Delivery Success Rate",
+      "value": "99.92",
+      "unit": "%",
+      "target": ">= 99.9%",
+      "deviation": "+0.02%",
+      "trendDirection": "up",
+      "isPositive": true
+    },
+    {
+      "id": "tax-accuracy",
+      "title": "Tax Preview Accuracy",
+      "value": "3.2",
+      "unit": "% dev",
+      "target": "< 5% dev",
+      "deviation": "-0.8%",
+      "trendDirection": "down",
+      "isPositive": true
+    },
+    {
+      "id": "tti",
+      "title": "Time to Insight (TTI)",
+      "value": "0.8",
+      "unit": "days",
+      "target": "< 1 day",
+      "deviation": "-0.2d",
+      "trendDirection": "down",
+      "isPositive": true
+    },
+    {
+      "id": "adoption",
+      "title": "Adoption Rate (Scheduled Reports)",
+      "value": "68",
+      "unit": "%",
+      "target": ">= 65%",
+      "deviation": "+3%",
+      "trendDirection": "up",
+      "isPositive": true
+    },
+    {
+      "id": "ctr",
+      "title": "Layman's Terms Click-Through Rate",
+      "value": "18",
+      "unit": "%",
+      "target": ">= 15%",
+      "deviation": "+2%",
+      "trendDirection": "up",
+      "isPositive": true
+    }
+  ],
+  "recentReports": [
+    {
+      "id": "pl-nov",
+      "name": "P&L",
+      "date": "Nov 2024",
+      "deliveredAt": "2024-11-25 09:15",
+      "status": "Delivered"
+    },
+    {
+      "id": "bs-nov",
+      "name": "Balance Sheet",
+      "date": "Nov 2024",
+      "deliveredAt": "2024-11-25 09:16",
+      "status": "Delivered"
+    },
+    {
+      "id": "cf-nov",
+      "name": "Cash Flow",
+      "date": "Nov 2024",
+      "deliveredAt": "2024-11-25 09:18",
+      "status": "Delivered"
+    },
+    {
+      "id": "tax-q4",
+      "name": "Tax Report (FIRS)",
+      "date": "Q4 2024",
+      "deliveredAt": "2024-11-20 14:30",
+      "status": "Delivered"
+    },
+    {
+      "id": "sales-w47",
+      "name": "Sales Summary",
+      "date": "Week 47",
+      "deliveredAt": "2024-11-24 08:00",
+      "status": "Delivered"
+    }
+  ],
+  "scheduledReports": [
+    {
+      "id": "sched-pl",
+      "name": "P&L",
+      "frequency": "Monthly",
+      "status": "Active",
+      "next": "2024-12-01"
+    },
+    {
+      "id": "sched-bs",
+      "name": "Balance Sheet",
+      "frequency": "Monthly",
+      "status": "Active",
+      "next": "2024-12-01"
+    },
+    {
+      "id": "sched-cf",
+      "name": "Cash Flow",
+      "frequency": "Monthly",
+      "status": "Active",
+      "next": "2024-12-01"
+    },
+    {
+      "id": "sched-sales",
+      "name": "Sales Summary",
+      "frequency": "Weekly",
+      "status": "Active",
+      "next": "2024-11-27"
+    }
+  ],
+  "quickActions": [
+    {
+      "id": "generate",
+      "title": "Generate Report",
+      "subtitle": "P&L, Balance Sheet, Cash Flow"
+    },
+    {
+      "id": "tax-preview",
+      "title": "Tax Preview",
+      "subtitle": "Local tax compliance estimate"
+    },
+    {
+      "id": "manage-schedules",
+      "title": "Manage Schedules",
+      "subtitle": "Edit automated reports"
+    }
+  ]
+}

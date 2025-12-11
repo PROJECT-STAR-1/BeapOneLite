@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/component/BeapOneLite/Layout";
 
 import {
@@ -15,124 +15,21 @@ import {
   TrendingDown,
   XCircle,
   FolderOpen,
-  Info, // <-- ADDED Info icon for the information box
+  Info,
+  Loader2,
 } from "lucide-react";
 
-// MOCK DATA & CONSTANTS
+// CONSTANTS
 const PRIMARY_COLOR = "text-indigo-600";
 const ACCENT_COLOR = "bg-indigo-600";
 const ICON_SIZE_SM = 16;
 
-const PROJECT_DATA = [
-  {
-    id: "project-1",
-    name: "Acme Corp Website Redesign",
-    client: "Acme Corporation",
-    location: "LCT-001",
-    date: "Nov 2025",
-    loggedHours: 9,
-    status: "Active",
-    profitMargin: 98.4,
-    grossProfit: 7611438,
-    revenue: 7737500,
-    bur: 78,
-    burHours: 7,
-  },
-  {
-    id: "project-2",
-    name: "TechStart Mobile App Development",
-    client: "TechStart Ltd",
-    location: "LCT-001",
-    date: "Oct 2025",
-    loggedHours: 15,
-    status: "Active",
-    profitMargin: 97.7,
-    grossProfit: 5748000,
-    revenue: 5880500,
-    bur: 93,
-    burHours: 14,
-  },
-  {
-    id: "project-3",
-    name: "Finance Plus Integration",
-    client: "Finance Plus Inc",
-    location: "LCT-002",
-    date: "Sep 2025",
-    loggedHours: 20,
-    status: "Completed",
-    profitMargin: 99.0,
-    grossProfit: 2476000,
-    revenue: 2500000,
-    bur: 80,
-    burHours: 16,
-  },
-  {
-    id: "project-4",
-    name: "Global Logistics Dashboard",
-    client: "Global Logistics",
-    location: "LCT-001",
-    date: "Nov 2025",
-    loggedHours: 12,
-    status: "Active",
-    profitMargin: 0.0,
-    grossProfit: 0,
-    revenue: 0,
-    bur: 100,
-    burHours: 12,
-  },
-];
-
-const SUMMARY_DATA = {
-  totalProjects: 4,
-  totalRevenue: 16118000,
-  totalProfit: 15835438,
-  avgMargin: 73.8,
-};
-
-const UTILIZATION_SUMMARY = {
-  teamMembers: 2,
-  totalTimeHours: 36,
-  billableHours: 33,
-  avgBUR: 93,
-  nonBillableCost: 17500,
-  timeEntries: 8,
-};
-
-const STAFF_DATA = [
-  {
-    name: "Adebayo Okonkwo",
-    projects: 3,
-    timeEntries: 5,
-    totalTime: 20,
-    billable: 17,
-    nonBillable: 3,
-    internalCost: 17500,
-    bur: 85,
-  },
-  {
-    name: "Amina Hassan",
-    projects: 3,
-    timeEntries: 3,
-    totalTime: 16,
-    billable: 16,
-    nonBillable: 0,
-    internalCost: 0,
-    bur: 100,
-  },
-];
-
-const TIME_PERIODS = [
-  { value: "30d", label: "Last 30 Days" },
-  { value: "7d", label: "Last 7 Days" },
-  { value: "all", label: "All Time" },
-];
-
 // Helper function to format Naira currency
 const formatNaira = (amount) => {
-  return `₦ ${new Intl.NumberFormat("en-US").format(amount)}`;
+  return `₦ ${new Intl.NumberFormat("en-US").format(amount || 0)}`;
 };
 
-// GENERAL HELPER COMPONENTS
+// --- SUB-COMPONENTS ---
 
 /**
  * Renders a small badge for project status.
@@ -170,7 +67,7 @@ const ProfitMetrics = ({ margin, profit, revenue }) => {
       {/* Profit Margin */}
       <div
         className={`flex items-center justify-end text-sm font-bold p-1 rounded-lg ${marginColor}`}>
-        <span className="mr-1">{margin.toFixed(1)}%</span>
+        <span className="mr-1">{margin?.toFixed(1)}%</span>
         <MarginIcon size={ICON_SIZE_SM} />
       </div>
 
@@ -207,7 +104,7 @@ const BURMetrics = ({ bur, burHours }) => {
 const ProjectItem = ({ project }) => {
   const isCompleted = project.status === "Completed";
 
-  // Border color strip based on status
+  // Border color strip based on status logic
   const borderColor = isCompleted
     ? "border-l-4 border-indigo-500"
     : project.profitMargin === 0
@@ -217,9 +114,9 @@ const ProjectItem = ({ project }) => {
   return (
     <div
       className={`
-            relative flex flex-col md:flex-row justify-between p-4 md:p-6 bg-white rounded-xl shadow-lg border border-gray-200
-            ${borderColor}
-        `}>
+            relative flex flex-col md:flex-row justify-between p-4 md:p-6 bg-white rounded-xl shadow-lg border border-gray-200
+            ${borderColor}
+        `}>
       {/* Project Info Block (Left) */}
       <div className="flex space-x-4 mb-4 md:mb-0 md:w-1/2">
         <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-300">
@@ -286,23 +183,23 @@ const ProjectSummaryFooter = ({ summary }) => (
       {/* Summary Metrics */}
       <div>
         <p className="text-sm font-medium opacity-80">Total Projects</p>
-        <p className="text-2xl font-bold mt-1">{summary.totalProjects}</p>
+        <p className="text-2xl font-bold mt-1">{summary?.totalProjects ?? 0}</p>
       </div>
       <div>
         <p className="text-sm font-medium opacity-80">Total Revenue</p>
         <p className="text-2xl font-bold mt-1">
-          {formatNaira(summary.totalRevenue)}
+          {formatNaira(summary?.totalRevenue)}
         </p>
       </div>
       <div>
         <p className="text-sm font-medium opacity-80">Total Profit</p>
         <p className="text-2xl font-bold mt-1">
-          {formatNaira(summary.totalProfit)}
+          {formatNaira(summary?.totalProfit)}
         </p>
       </div>
       <div>
         <p className="text-sm font-medium opacity-80">Avg. Margin</p>
-        <p className="text-2xl font-bold mt-1">{summary.avgMargin}%</p>
+        <p className="text-2xl font-bold mt-1">{summary?.avgMargin ?? 0}%</p>
       </div>
     </div>
   </div>
@@ -373,7 +270,7 @@ const ProjectsTabContent = ({ projects, summary }) => (
 
     {/* Project List */}
     <div className="space-y-4">
-      {projects.map((project) => (
+      {projects?.map((project) => (
         <ProjectItem key={project.id} project={project} />
       ))}
     </div>
@@ -470,8 +367,16 @@ const StaffMemberPerformance = ({ staff }) => {
 /**
  * Renders the main content for the Staff Utilization Tab.
  */
-const StaffUtilizationContent = ({ staffData, summary, projects }) => {
-  const [timePeriod, setTimePeriod] = useState(TIME_PERIODS[0].value);
+const StaffUtilizationContent = ({
+  staffData,
+  summary,
+  projects,
+  timePeriods,
+}) => {
+  // Use optional chaining for default state if data isn't loaded yet
+  const [timePeriod, setTimePeriod] = useState(
+    timePeriods?.[0]?.value || "30d"
+  );
   const [selectedProject, setSelectedProject] = useState("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -483,7 +388,6 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
     "w-full appearance-none pl-4 pr-10 py-3 border border-gray-300 bg-white text-gray-900 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 text-sm placeholder-gray-400";
 
   const handleApplyFilters = () => {
-    // Logs the filter values to the console
     console.log("Applying filters:", {
       timePeriod,
       startDate,
@@ -517,7 +421,7 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
               value={timePeriod}
               onChange={(e) => setTimePeriod(e.target.value)}
               className={inputClasses}>
-              {TIME_PERIODS.map((p) => (
+              {timePeriods?.map((p) => (
                 <option key={p.value} value={p.value}>
                   {p.label}
                 </option>
@@ -585,10 +489,10 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
         <button
           onClick={handleApplyFilters}
           className={`
-                        flex items-center space-x-2 
-                        ${ACCENT_COLOR} text-white font-semibold py-2 px-6 rounded-xl shadow-lg 
-                        hover:bg-indigo-700 transition-colors
-                    `}>
+                        flex items-center space-x-2 
+                        ${ACCENT_COLOR} text-white font-semibold py-2 px-6 rounded-xl shadow-lg 
+                        hover:bg-indigo-700 transition-colors
+                    `}>
           Apply Filters
         </button>
       </div>
@@ -597,33 +501,35 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <UtilizationMetricCard
           title="Team Members"
-          value={summary.teamMembers}
-          footerText={`${summary.timeEntries} time entries`}
+          value={summary?.teamMembers ?? 0}
+          footerText={`${summary?.timeEntries ?? 0} time entries`}
           icon={Users}
         />
         <UtilizationMetricCard
           title="Total Time"
-          value={`${summary.totalTimeHours}h`}
-          subText={`${summary.billableHours}h billable`}
+          value={`${summary?.totalTimeHours ?? 0}h`}
+          subText={`${summary?.billableHours ?? 0}h billable`}
           icon={Clock}
         />
         <UtilizationMetricCard
           title="Avg. BUR"
-          value={`${summary.avgBUR}%`}
+          value={`${summary?.avgBUR ?? 0}%`}
           subText="Target: ≥ 80%"
           valueColor={
-            summary.avgBUR >= 80 ? "text-green-600" : "text-yellow-600"
+            (summary?.avgBUR ?? 0) >= 80 ? "text-green-600" : "text-yellow-600"
           }
           icon={TrendingUp}
         />
         <UtilizationMetricCard
           title="Non-Billable Cost"
-          value={formatNaira(summary.nonBillableCost)}
+          value={formatNaira(summary?.nonBillableCost)}
           subText={`${
-            summary.totalTimeHours - summary.billableHours
+            (summary?.totalTimeHours ?? 0) - (summary?.billableHours ?? 0)
           }h non-billable`}
           valueColor={
-            summary.nonBillableCost > 0 ? "text-red-600" : "text-gray-900"
+            (summary?.nonBillableCost ?? 0) > 0
+              ? "text-red-600"
+              : "text-gray-900"
           }
           icon={XCircle}
         />
@@ -634,7 +540,7 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
         Individual Performance
       </h3>
       <div className="space-y-6">
-        {staffData.map((staff, index) => (
+        {staffData?.map((staff, index) => (
           <StaffMemberPerformance key={index} staff={staff} />
         ))}
       </div>
@@ -642,7 +548,6 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
       {/* BUR Info Box */}
       <div className="mt-8 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-xl shadow-sm">
         <div className="flex items-start">
-          {/* 👇 REPLACED NATIVE SVG WITH LUCIDE REACT INFO ICON */}
           <Info size={20} className="text-blue-500 mr-3 mt-1 flex-shrink-0" />
           <div>
             <p className="font-semibold text-blue-800 text-sm mb-1">
@@ -661,28 +566,67 @@ const StaffUtilizationContent = ({ staffData, summary, projects }) => {
   );
 };
 
-// MAIN COMPONENT (FORCED LIGHT THEME)
+// MAIN DASHBOARD COMPONENT
 
-export function ProjectDashboard() {
+const ProjectDashboard = () => {
   const [activeTab, setActiveTab] = useState("projects");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data Logic
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/project");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch project data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const TabButton = ({ id, label }) => (
     <button
       onClick={() => setActiveTab(id)}
       className={`
-                flex-1 text-center py-2 px-4 transition-all text-sm font-semibold rounded-full
-                ${
-        activeTab === id
-          ? `bg-white text-gray-900 shadow-md`
-          : `text-gray-600 hover:text-gray-900`
-      }
-            `}>
+                flex-1 text-center py-2 px-4 transition-all text-sm font-semibold rounded-full
+                ${
+                  activeTab === id
+                    ? `bg-white text-gray-900 shadow-md`
+                    : `text-gray-600 hover:text-gray-900`
+                }
+            `}>
       {label}
     </button>
   );
 
+  // Loading State
+  if (loading) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Project Data...</p>
+      </div>
+    );
+  }
+
+  // Safe Data Access
+  const projectData = data?.projectData ?? [];
+  const summaryData = data?.summaryData ?? {};
+  const utilizationSummary = data?.utilizationSummary ?? {};
+  const staffData = data?.staffData ?? [];
+  const timePeriods = data?.timePeriods ?? [];
+
   return (
-    // Application Wrapper
     <div className="w-full max-w-7xl mx-auto p-4 lg:p-8">
       {/* Tabs Navigation */}
       <div className="flex justify-center mb-6">
@@ -695,27 +639,27 @@ export function ProjectDashboard() {
       {/* Content Area */}
       <div className="bg-white p-6 rounded-xl shadow-xl border border-gray-200">
         {activeTab === "projects" && (
-          <ProjectsTabContent projects={PROJECT_DATA} summary={SUMMARY_DATA} />
+          <ProjectsTabContent projects={projectData} summary={summaryData} />
         )}
 
         {activeTab === "utilization" && (
           <StaffUtilizationContent
-            staffData={STAFF_DATA}
-            summary={UTILIZATION_SUMMARY}
-            projects={PROJECT_DATA}
+            staffData={staffData}
+            summary={utilizationSummary}
+            projects={projectData}
+            timePeriods={timePeriods}
           />
         )}
       </div>
     </div>
   );
-}
+};
 
-// New Wrapper Component for Layout integration
+// Wrapper Component for Layout integration
 const ProjectDashboardWrapper = () => (
   <Layout>
     <ProjectDashboard />
   </Layout>
 );
 
-// Default Export changed to use the new wrapper component
 export default ProjectDashboardWrapper;
