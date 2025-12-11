@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "chart.js": "^4.5.1",
+    "chartjs": "^0.3.24",
     "lucide-react": "^0.555.0",
     "next": "16.0.5",
     "react": "19.2.0",

@@ -49,6 +49,10 @@ const ACTION_STYLE_MAP = {
     color: "bg-fuchsia-600",
     hover: "hover:bg-fuchsia-700",
   },
+const BrandHeader = () => (
+  // 🎯 Tighter Top: `pt-0` ensures it starts right at the top of the content area.
+  <header className="flex items-start mb-6 pt-0">
+    {/* Logo Icon */}
   default: {
     icon: Send,
     color: "bg-gray-600",
@@ -69,7 +73,6 @@ const NAVIGATION_TABS = [
 
 /* ============================================================
     SUB-COMPONENTS
-============================================================ */
 
 const BrandHeader = () => (
   <header className="flex items-start mb-6 pt-0">
@@ -88,6 +91,66 @@ const BrandHeader = () => (
   </header>
 );
 
+
+const WalletCard = () => (
+  <div className="p-8 rounded-2xl border border-gray-200 bg-white shadow-sm mb-6">
+    <div className="flex justify-between items-start">
+      {/* Left: Wallet Info */}
+      <div className="flex items-start">
+        {/* Small Wallet Icon */}
+        <div
+          className={`w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-700/10 ${BRAND_COLOR} mr-4`}>
+          <Wallet size={20} className={BRAND_COLOR} />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-1">
+            Business Operations Wallet
+          </h2>
+          {/* Status Tags */}
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-green-100 text-green-700">
+              ACTIVE
+            </span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
+              BUSINESS
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right: Available Balance */}
+      <div className="text-right">
+        <div className="flex items-center justify-end text-sm text-gray-600 mb-1">
+          Available Balance
+          <Eye size={16} className="ml-2" />
+        </div>
+        {/* Main Balance */}
+        <h3 className="text-3xl font-bold text-gray-900 mb-1 leading-none">
+          &#x20A6; 4,600,000
+        </h3>
+        {/* Pending Amount */}
+        <p className="text-sm text-orange-600 font-medium">
+          &#x20A6; 250,000 pending
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+    COMPONENT: 3. ACTION BUTTONS
+
+const ActionButtons = () => (
+  <div className="flex space-x-4 mb-8">
+    {actionButtons.map((btn, i) => {
+      const Icon = btn.icon;
+      return (
+        <button
+          key={i}
+          className={`flex-1 flex items-center justify-center px-6 py-3.5 text-white rounded-xl font-semibold transition duration-200 shadow-md ${btn.color} ${btn.hover}`}
+          onClick={() => console.log(`${btn.title} clicked`)}>
+          <Icon size={18} className="mr-2" />
+          {btn.title}
 const WalletCard = ({ data }) => {
   if (!data) return null;
 
@@ -159,6 +222,17 @@ const ActionButtons = ({ actions }) => (
   </div>
 );
 
+
+const NavigationBar = ({ activeTab, setActiveTab, navigationTabs }) => (
+  <div>
+    <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200">
+      {/* Inner container for the tabs: justify-between for end-to-end spreading */}
+      <div className="flex flex-wrap justify-between gap-1">
+        {navigationTabs.map((tab, i) => {
+          const Icon = tab.icon;
+          const isActive = tab.title === activeTab;
+
+          // Classes for active/inactive tabs
 const NavigationBar = ({ activeTab, setActiveTab }) => (
   <div>
     <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200">
