@@ -85,7 +85,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "✓",
     },
     {
-      href: "/bank-reconciliation",
+      href: "/beapOneLite/bank-reconciliation",
       icon: Building2,
       label: "Bank Reconciliation",
       status: "S",
@@ -109,7 +109,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/e-invoicing-tax",
+      href: "/beapOneLite/e-invoicing-tax",
       icon: FileText,
       label: "E-Invoicing & Tax",
       status: "P",
@@ -121,7 +121,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     {
-      href: "/subscription-billing",
+      href: "/beapOneLite/subscription-billing",
       icon: FileText,
       label: "Subscription & Billing",
       status: "✓",
@@ -131,16 +131,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       icon: FileText,
       label: "BPC Portal",
       status: "P",
-    },
-    { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
-
-
-    { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
-    {
-      href: "/beapOneLite/settings",
-      icon: FileText,
-      label: "Settings",
-      status: "✓",
     },
     { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
@@ -168,12 +158,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const purchasingItems = [
-    { href: "/purchase-orders", icon: Clipboard, label: "Purchase Orders" },
-    {
-      href: "/purchasing-reports",
-      icon: BarChart3,
-      label: "Purchasing Reports",
-    },
     { href: "/beapOneLite/purchasing/vendor-bills", icon: Clipboard, label: "Vendor Bills" },
     { href: "/beapOneLite/purchasing/purchase-orders", icon: BarChart3, label: "Purchase Orders" },
   ];
@@ -184,16 +168,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const documentsComplianceItems = [
-    {
-      href: "/compliance-documents",
-      icon: File,
-      label: "Compliance Documents",
-    },
-    {
-      href: "/document-archiving",
-      icon: Clipboard,
-      label: "Document Archiving",
-    },
     { href: "/beapOneLite/documentDashboard", icon: File, label: "Document Dashboard" },
     { href: "/beapOneLite/documentRegister", icon: Clipboard, label: "Document Register" },
   ];
