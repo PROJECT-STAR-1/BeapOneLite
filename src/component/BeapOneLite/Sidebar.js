@@ -71,6 +71,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
+
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -90,7 +91,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/project-profitability",
+      href: "/beapOneLite/project",
       icon: FileText,
       label: "Project Profitability",
       status: "S",
@@ -102,7 +103,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/reporting-engine",
+      href: "/beapOneLite/reporting-engine",
       icon: FileText,
       label: "Reporting Engine",
       status: "S",
@@ -114,7 +115,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     {
-      href: "/document-management",
+      href: "/beapOneLite/document-management",
       icon: FileText,
       label: "Document Management",
       status: "P",
@@ -125,7 +126,22 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       label: "Subscription & Billing",
       status: "✓",
     },
+    {
+      href: "/beapOneLite/bpc",
+      icon: FileText,
+      label: "BPC Portal",
+      status: "P",
+    },
+    { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
+
+
     { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
+    {
+      href: "/beapOneLite/settings",
+      icon: FileText,
+      label: "Settings",
+      status: "✓",
+    },
     { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
   ];
 
@@ -138,9 +154,17 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const expensesItems = [
-    { href: "/expenses-dashboard", icon: Clipboard, label: "Dashboard" },
-    { href: "/expenses-register", icon: File, label: "Expense Register" },
-    { href: "/expenses-legacy", icon: Calendar, label: "Legacy" },
+    {
+      href: "/beapOneLite/expense-dashboard",
+      icon: Clipboard,
+      label: "Dashboard",
+    },
+    {
+      href: "/beapOneLite/expenses-register",
+      icon: File,
+      label: "Expense Register",
+    },
+    { href: "/beapOneLite/expense-legacy", icon: Calendar, label: "Legacy" },
   ];
 
   const purchasingItems = [

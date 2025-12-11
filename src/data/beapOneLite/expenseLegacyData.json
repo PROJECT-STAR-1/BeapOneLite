@@ -1,0 +1,45 @@
+{
+  "metrics": [
+    {
+      "id": "total-expenses",
+      "title": "Total Expenses",
+      "value": "₦241,062.50",
+      "type": "financial"
+    },
+    {
+      "id": "expense-count",
+      "title": "Expense Count",
+      "value": "2",
+      "type": "count"
+    },
+    {
+      "id": "synced-offline",
+      "title": "Synced Offline",
+      "value": "1",
+      "type": "sync"
+    }
+  ],
+  "expenses": [
+    {
+      "id": "EXP-001",
+      "vendor": "AWS Cloud Services",
+      "date": "11/15/2025",
+      "description": "Cloud hosting for TechStart mobile app backend",
+      "amount": "₦125,000.00",
+      "tag": "Cloud Hosting Services",
+      "status": "online",
+      "statusId": "online"
+    },
+    {
+      "id": "EXP-002",
+      "vendor": "Design Assets Store",
+      "date": "11/5/2025",
+      "description": "Stock photos and UI kit for Acme website",
+      "amount": "US$75.00",
+      "tag": "Design Assets",
+      "secondaryAmount": "₦116,062.50",
+      "status": "synced",
+      "statusId": "synced"
+    }
+  ]
+}
