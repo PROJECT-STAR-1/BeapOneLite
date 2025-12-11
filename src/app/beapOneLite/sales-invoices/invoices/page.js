@@ -1,51 +1,16 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   ChevronDown,
   ArrowUpDown,
-  DollarSign,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
   Plus,
   FileText,
   Calendar,
   Eye,
-  MoreVerticalIcon,
+  MoreVerticalIcon
 } from "lucide-react";
 import Layout from "@/component/BeapOneLite/Layout";
-
-// Mock data for invoices and quotes
-const mockInvoices = [
-  {
-    id: "INV-001",
-    company: "Acme Corporation",
-    date: "11/20/2025",
-    amountUSD: "US$5,000.00",
-    amountNGN: "₦7,737,500.00",
-    due: "12/20/2025",
-    status: "Paid",
-  },
-  {
-    id: "INV-004",
-    company: "TechStart Ltd",
-    date: "11/15/2025",
-    amountUSD: "US$3,800.00",
-    amountNGN: "₦5,880,500.00",
-    due: "12/15/2025",
-    status: "Paid",
-  },
-  {
-    id: "INV-003",
-    company: "Guaranty Trust Bank",
-    date: "10/15/2025",
-    amountUSD: "US$1,200.00",
-    amountNGN: "₦1,857,000.00",
-    due: "11/14/2025",
-    status: "Overdue",
-  },
-];
 
 const statuses = ["All Status", "Draft", "Pending", "Paid", "Overdue"];
 
@@ -64,14 +29,30 @@ const StatusBadge = ({ status }) => {
 };
 
 const InvoicesPage = () => {
+  const [invoices, setInvoices] = useState([]);
   const [statusOpen, setStatusOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortDirection, setSortDirection] = useState("asc"); // "asc" for ascending, "desc" for descending
+  const [sortDirection, setSortDirection] = useState("asc");
   const [activeTab, setActiveTab] = useState("Invoices");
 
-  // Handle search and status filtering
-  const filteredInvoices = mockInvoices
+  // ⭐ Fetch API here
+  useEffect(() => {
+    async function loadInvoices() {
+      try {
+        const res = await fetch("/api/beapOnelite/invoices");
+        const json = await res.json();
+        setInvoices(json.invoices || []);
+      } catch (error) {
+        console.error("Failed to fetch invoices:", error);
+      }
+    }
+
+    loadInvoices();
+  }, []);
+
+  // Filtering & Sorting
+  const filteredInvoices = invoices
     .filter((invoice) => {
       const matchesSearch =
         invoice.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -86,8 +67,9 @@ const InvoicesPage = () => {
       return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
     });
 
+
   const InvoiceCard = ({ invoice }) => (
-    <div className="bg-white p-5 rounded-xl border shadow-sm mb-4">
+    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm mb-4">
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-1">
           <h2 className="font-medium text-lg flex items-center gap-2">{invoice.company}</h2>
@@ -139,10 +121,10 @@ const InvoicesPage = () => {
           </button>
         </div>
 
-        <div className="mt-6 bg-white border rounded-xl p-4 shadow-sm">
+        <div className="mt-6 bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
             {/* Search Bar */}
-            <div className="relative w-full md:w-1/2">
+            <div className="relative w-full md:w-1/2 focus:ring-blue-200">
               <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
                 type="text"

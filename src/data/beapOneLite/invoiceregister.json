@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "totalValue": "₦21,475,000.00",
+    "paid": "₦16,118,000.00",
+    "pending": "₦0.00",
+    "overdue": "₦1,857,000.00",
+    "draft": "₦3,500,000.00"
+  },
+  "entries": [
+    {
+      "id": "QTE-001",
+      "status": "Draft",
+      "type": "Quote",
+      "customer": "Access Bank Plc",
+      "date": "2025-11-23",
+      "due": null,
+      "location": "PH-01",
+      "amount": "₦3,500,000.00"
+    },
+    {
+      "id": "INV-001",
+      "status": "Paid",
+      "customer": "Acme Corporation",
+      "date": "2025-11-20",
+      "due": "2025-12-20",
+      "location": "LG-MAIN",
+      "amount": "US$5,000.00",
+      "usd": "₦7,737,500.00",
+      "rate": "1547.50"
+    },
+    {
+      "id": "INV-004",
+      "status": "Paid",
+      "customer": "TechStart Ltd",
+      "date": "2025-11-15",
+      "due": "2025-12-15",
+      "location": "LG-MAIN",
+      "amount": "US$3,800.00",
+      "usd": "₦5,880,500.00",
+      "rate": "1547.50"
+    },
+    {
+      "id": "INV-002",
+      "status": "Paid",
+      "customer": "Finance Plus Inc",
+      "date": "2025-10-28",
+      "due": "2025-11-15",
+      "location": "ABJ-01",
+      "amount": "₦2,500,000.00"
+    },
+    {
+      "id": "INV-003",
+      "status": "Overdue",
+      "customer": "Guaranty Trust Bank",
+      "date": "2025-10-15",
+      "due": "2025-11-14",
+      "location": "LG-MAIN",
+      "amount": "US$1,200.00",
+      "usd": "₦1,857,000.00",
+      "rate": "1547.50"
+    }
+  ]
+}

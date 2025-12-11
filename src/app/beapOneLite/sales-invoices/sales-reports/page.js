@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Layout from "@/component/BeapOneLite/Layout";
 
 import {
@@ -15,7 +15,7 @@ import {
   ClipboardList,
 } from 'lucide-react';
 
-// --- MOCK DATA ---
+// --- MOCK DATA (Filters - these usually don't come from the API) ---
 
 // Available filters
 const TIME_OPTIONS = [
@@ -35,72 +35,19 @@ const LOCATION_OPTIONS = [
 
 const STAFF_OPTIONS = [
   { label: 'All Staff Members', key: 'all' },
-  { label: 'Adebayo Okonkwo', key: 'adebayo' },
-  { label: 'Chioma Nwosu', key: 'chioma' },
-  { label: 'Ibrahim Hassan', key: 'ibrahim' },
-  { label: 'Fatima Abdullahi', key: 'fatima' },
-  { label: 'Oluwaseun Ajayi', key: 'oluwaseun' },
+  // Staff names will be populated from fetched data
 ];
 
-// Base Staff Data
-const STAFF_DETAILS = [
-  { id: 'oluwaseun', initials: 'OA', name: 'Oluwaseun Ajayi', role: 'Sales Representative' },
-  { id: 'fatima', initials: 'FA', name: 'Fatima Abdullahi', role: 'Business Development' },
-  { id: 'adebayo', initials: 'AO', name: 'Adebayo Okonkwo', role: 'Sales Manager' },
-  { id: 'chioma', initials: 'CN', name: 'Chioma Nwosu', role: 'Account Executive' },
-  { id: 'ibrahim', initials: 'IH', name: 'Ibrahim Hassan', role: 'Sales Representative' },
-];
-
-// Mock data structure by time/location/staff to simulate filtering
-const MOCK_SALES_DATA = {
-  // Default values (All Time/All Location/All Staff)
-  default: {
-    revenue: 21118000.00,
-    quotes_created: 100,
-    quotes_approved: 80,
-    paid_invoices: 5,
-    staff_performance: [
-      { id: 'oluwaseun', sales: 7737500.00, quotes: 30, converted: 5, avg_invoice: 1547500.00 },
-      { id: 'fatima', sales: 5880500.00, quotes: 25, converted: 0, avg_invoice: 0 },
-      { id: 'adebayo', sales: 2500000.00, quotes: 15, converted: 0, avg_invoice: 0 },
-      { id: 'chioma', sales: 2500000.00, quotes: 15, converted: 0, avg_invoice: 0 },
-      { id: 'ibrahim', sales: 2500000.00, quotes: 15, converted: 0, avg_invoice: 0 },
-    ],
-  },
-  // Data for 'Today' (used by default)
-  today: {
-    revenue: 1500000.00,
-    quotes_created: 10,
-    quotes_approved: 8,
-    paid_invoices: 1,
-    staff_performance: [
-      { id: 'oluwaseun', sales: 1500000.00, quotes: 5, converted: 1, avg_invoice: 1500000.00 },
-      { id: 'fatima', sales: 0, quotes: 3, converted: 0, avg_invoice: 0 },
-      { id: 'adebayo', sales: 0, quotes: 2, converted: 0, avg_invoice: 0 },
-    ],
-  },
-  // Data for 'lagos'
-  lagos: {
-    revenue: 15000000.00,
-    quotes_created: 70,
-    quotes_approved: 60,
-    paid_invoices: 3,
-    staff_performance: [
-      { id: 'adebayo', sales: 5000000.00, quotes: 20, converted: 2, avg_invoice: 2500000.00 },
-      { id: 'chioma', sales: 5000000.00, quotes: 20, converted: 1, avg_invoice: 5000000.00 },
-      { id: 'ibrahim', sales: 5000000.00, quotes: 30, converted: 0, avg_invoice: 0 },
-    ],
-  },
-  // Data for single staff member 'fatima'
-  fatima: {
-    revenue: 5880500.00,
-    quotes_created: 25,
-    quotes_approved: 20,
-    paid_invoices: 0,
-    staff_performance: [
-      { id: 'fatima', sales: 5880500.00, quotes: 25, converted: 0, avg_invoice: 0 },
-    ],
-  },
+// --- INITIAL STATE FOR DATA ---
+const initialReportData = {
+  totalRevenue: 0,
+  avgConversionRate: 0.0,
+  quotesCreated: 0,
+  totalQuotesConverted: 0,
+  paidInvoices: 0,
+  quotesApproved: 0,
+  staffData: [],
+  topPerformers: [],
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -114,9 +61,9 @@ const calculateConversionRate = (converted, quotes) => {
   return ((converted / quotes) * 100).toFixed(1);
 };
 
-// --- SHARED COMPONENTS ---
+// --- SHARED COMPONENTS (Keep them as they are) ---
 
-const DropdownFilter = ({ label, options, selected, setSelected, Icon }) => (
+const DropdownFilter = ({ options, selected, setSelected, Icon }) => (
   <div className="relative w-full sm:w-auto flex justify-around">
     <select
       className="appearance-none block w-full bg-white border border-gray-200 text-gray-700 py-2.5 pl-10 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 shadow-sm text-sm font-medium"
@@ -158,24 +105,73 @@ const StaffPerformanceReport = () => {
   const [timeFilter, setTimeFilter] = useState(TIME_OPTIONS[0].key);
   const [locationFilter, setLocationFilter] = useState(LOCATION_OPTIONS[0].key);
   const [staffFilter, setStaffFilter] = useState(STAFF_OPTIONS[0].key);
+  
+  // New state for API fetched data
+  const [apiData, setApiData] = useState({ STAFF_DETAILS: [], MOCK_SALES_DATA: {} });
+  const [loading, setLoading] = useState(true);
 
-  // Memoize filtered data based on state
+  // 1. DATA FETCHING (useEffect to fetch the API)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // FETCH THE API ROUTE EXACTLY AS REQUESTED
+        const response = await fetch('/api/beapOnelite/staffsreports'); 
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setApiData(data);
+      } catch (error) {
+        console.error("Fetch error:", error);
+        // Handle error state if necessary
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 2. STAFF OPTIONS UPDATE (from fetched STAFF_DETAILS)
+  const staffOptions = useMemo(() => {
+    const defaultOption = { label: 'All Staff Members', key: 'all' };
+    const staffListOptions = apiData.STAFF_DETAILS.map(staff => ({
+      label: staff.name,
+      key: staff.id
+    }));
+    return [defaultOption, ...staffListOptions];
+  }, [apiData.STAFF_DETAILS]);
+
+
+  // 3. MEMOIZED REPORT DATA (combines state and fetched data)
   const reportData = useMemo(() => {
+    // Check if data is available
+    if (Object.keys(apiData.MOCK_SALES_DATA).length === 0) {
+      return initialReportData;
+    }
+
     // 1. Determine the primary data set key
     const primaryKey = staffFilter !== 'all' ? staffFilter : (locationFilter !== 'all' ? locationFilter : timeFilter);
-    const dataSet = MOCK_SALES_DATA[primaryKey] || MOCK_SALES_DATA.default;
+    const dataSet = apiData.MOCK_SALES_DATA[primaryKey] || apiData.MOCK_SALES_DATA.default;
+
+    // Use default if the selected filter doesn't have specific mock data
+    if (!dataSet) return initialReportData;
+
 
     // 2. Calculate summary metrics
-    const totalRevenue = dataSet.revenue;
-    const quotesCreated = dataSet.quotes_created;
+    const totalRevenue = dataSet.revenue || 0;
+    const quotesCreated = dataSet.quotes_created || 0;
     const quotesApproved = dataSet.quotes_approved || 0;
-    const convertedToInvoices = dataSet.paid_invoices;
+    const convertedToInvoices = dataSet.paid_invoices || 0;
     const avgConversionRate = calculateConversionRate(convertedToInvoices, quotesCreated);
     const totalQuotesConverted = convertedToInvoices;
 
     // 3. Process staff performance (merge with static details and calculate conversion)
-    let staffData = dataSet.staff_performance.map(perf => {
-      const details = STAFF_DETAILS.find(s => s.id === perf.id);
+    let staffData = (dataSet.staff_performance || []).map(perf => {
+      const details = apiData.STAFF_DETAILS.find(s => s.id === perf.id) || { name: 'Unknown', role: 'N/A', initials: '??' };
       const conversionRate = calculateConversionRate(perf.converted, perf.quotes);
       const status = conversionRate > 20 ? 'Excellent' : conversionRate > 0 ? 'Improving' : 'Needs Improvement';
       const progress = parseFloat(conversionRate); // Use conversion rate for progress bar mock
@@ -202,12 +198,12 @@ const StaffPerformanceReport = () => {
       staffData,
       topPerformers,
     };
-  }, [timeFilter, locationFilter, staffFilter]);
+  }, [timeFilter, locationFilter, staffFilter, apiData]); // Added apiData as a dependency
 
   // --- RENDERING COMPONENTS ---
 
   const renderTopPerformers = (performers) => (
-    
+    // ... (rendering logic remains the same)
     <div className="p-6 mt-6 bg-indigo-900 rounded-xl shadow-xl">
       <div className="flex items-center text-white mb-6">
         <Trophy className="w-6 h-6 mr-3 text-yellow-400" />
@@ -246,6 +242,7 @@ const StaffPerformanceReport = () => {
   );
 
   const renderDetailedStaffPerformance = (staffList) => (
+    // ... (rendering logic remains the same)
     <div className="p-6 mt-6 bg-white rounded-xl shadow-md border border-gray-100">
       <h2 className="text-xl font-bold text-gray-800">Detailed Staff Performance</h2>
       <p className="text-sm text-gray-500 mb-6">Comprehensive metrics for all team members</p>
@@ -309,6 +306,7 @@ const StaffPerformanceReport = () => {
   );
 
   const renderConversionFunnel = (data) => (
+    // ... (rendering logic remains the same)
     <div className="p-6 mt-6 bg-white rounded-xl shadow-md border border-gray-100">
       <h2 className="text-xl font-bold text-gray-800">Quote-to-Invoice Conversion Funnel</h2>
       <p className="text-sm text-gray-500 mb-6">Overall conversion pipeline analysis</p>
@@ -365,6 +363,16 @@ const StaffPerformanceReport = () => {
   );
 
   // --- MAIN LAYOUT ---
+  if (loading) {
+    return (
+        <Layout>
+            <div className="min-h-screen bg-gray-50 p-8 flex justify-center items-center">
+                <div className="text-xl font-semibold text-indigo-600">Loading Report Data...</div>
+            </div>
+        </Layout>
+    );
+  }
+
   return (
     <Layout>
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8 font-sans">
@@ -396,7 +404,7 @@ const StaffPerformanceReport = () => {
         />
         <DropdownFilter
           Icon={Users}
-          options={STAFF_OPTIONS}
+          options={staffOptions} // Use the new dynamic options
           selected={staffFilter}
           setSelected={setStaffFilter}
         />
