@@ -1,0 +1,398 @@
+{
+  "title": "Channel Management (A2-7/A2-4)",
+  "subtitle": "Manage channel partners and BEAPOne Lite provisioning",
+  "integrationArchitecture": {
+    "title": "Three-Tier Integration Architecture",
+    "description": "Seamless integration between A2-7 (Channel Mgmt), A2-4 (Subscription Mgmt), and BEAPOne Lite instances for provisioning, usage tracking, and reporting.",
+    "channelPartners": 5,
+    "activeLiteInstances": 9
+  },
+  "metrics": {
+    "channelMRR": {
+      "label": "Channel MRR (CMRR)",
+      "value": 415.45,
+      "description": "Partner revenue share"
+    },
+    "newLiteUsers": {
+      "label": "New Lite Users (NLUP)",
+      "value": 4,
+      "description": "Last 30 days"
+    },
+    "provisioningSuccess": {
+      "label": "Provisioning Success (PSR)",
+      "value": "80.0%",
+      "target": "≥98.5%"
+    },
+    "avgProvisioningTime": {
+      "label": "Avg Provisioning Time",
+      "value": "3.04s",
+      "target": "≤5s (P95)"
+    }
+  },
+  "tabs": ["Overview", "Provisioning", "Usage Tracking", "Analytics"],
+   "cmrrRevenueTrend": [
+    { "date": "2025-11-08", "value": 9500 },
+    { "date": "2025-11-09", "value": 11000 },
+    { "date": "2025-11-10", "value": 9300 },
+    { "date": "2025-11-11", "value": 9400 },
+    { "date": "2025-11-12", "value": 9600 },
+    { "date": "2025-11-13", "value": 10000 },
+    { "date": "2025-11-14", "value": 11200 },
+    { "date": "2025-11-15", "value": 9400 },
+    { "date": "2025-11-16", "value": 9700 },
+    { "date": "2025-11-17", "value": 9000 },
+    { "date": "2025-11-18", "value": 11200 },
+    { "date": "2025-11-19", "value": 10800 },
+    { "date": "2025-11-20", "value": 10900 },
+    { "date": "2025-11-21", "value": 10700 },
+    { "date": "2025-11-22", "value": 9600 },
+    { "date": "2025-11-23", "value": 10000 },
+    { "date": "2025-11-24", "value": 10300 },
+    { "date": "2025-11-25", "value": 8900 },
+    { "date": "2025-11-26", "value": 10000 },
+    { "date": "2025-11-27", "value": 10400 },
+    { "date": "2025-11-28", "value": 9800 },
+    { "date": "2025-11-29", "value": 8500 },
+    { "date":  "2025-11-30", "value": 8600 },
+    { "date": "2025-12-01", "value": 9500 },
+    { "date": "2025-12-02", "value": 9300 },
+    { "date": "2025-12-03", "value": 8900 },
+    { "date": "2025-12-04", "value": 9600 },
+    { "date": "2025-12-05", "value": 9100 },
+    { "date": "2025-12-06", "value": 9400 },
+    { "date": "2025-12-07", "value": 9700 }
+  ],
+
+  "newLiteUserProvisioning": [
+    10, 12, 6, 11, 15, 10, 12, 14, 10, 9, 14, 16, 11, 12, 13, 15,
+    17, 12, 5, 14, 13, 10, 12, 11, 15, 12, 17, 19, 13, 18
+  ],
+
+  "activeUsersTrend": [
+    250, 260, 270, 275, 260, 275, 270, 265, 240, 230,
+    235, 230, 240, 250, 245, 230, 220, 235, 215, 210,
+    220, 225, 215, 230, 225, 210, 220, 215, 225, 205
+  ],
+
+  "dates": [
+    "2025-11-08", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12",
+    "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-17",
+    "2025-11-18", "2025-11-19", "2025-11-20", "2025-11-21", "2025-11-22",
+    "2025-11-23", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-27",
+    "2025-11-28", "2025-11-29", "2025-11-30", "2025-12-01", "2025-12-02",
+    "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-06", "2025-12-07"
+  ],
+   "kpis": [
+    {
+      "metric": "Channel MRR (CMRR)",
+      "currentValue": "$415.45",
+      "target": "Monitored",
+      "status": "On Track"
+    },
+    {
+      "metric": "Provisioning Success Rate (PSR)",
+      "currentValue": "80.0%",
+      "target": "≥98.5%",
+      "status": "Exceeds"
+    },
+    {
+      "metric": "Avg Days to Provision (ADTP)",
+      "currentValue": "0.2 days",
+      "target": "≤0.5 days",
+      "status": "Exceeds"
+    },
+    {
+      "metric": "Provisioning Latency (P95)",
+      "currentValue": "3.04s",
+      "target": "≤5s",
+      "status": "Meets"
+    },
+    {
+      "metric": "Lite Customer Churn (LCC)",
+      "currentValue": "2.1%",
+      "target": "≤3%",
+      "status": "Meets"
+    },
+    {
+      "metric": "Raw Usage Ingestion (Daily)",
+      "currentValue": "10,247",
+      "target": ">10,000",
+      "status": "Exceeds"
+    }
+  ],
+    "topStats": {
+    "totalActiveUsers": 200,
+    "totalTransactions": 4364,
+    "storageDensityGB": 515.1,
+    "o17Activities": 307
+  },
+  "clients": [
+    {
+      "client": "Adeola Consulting Ltd",
+      "email": "admin@adeolaconsulting.com",
+      "status": "Active",
+      "activeUsers": 12,
+      "storageGB": 24.5,
+      "mrr": 149,
+      "commission": 37.25
+    },
+    {
+      "client": "Lagos Fashion House",
+      "email": "info@lagosfashion.ng",
+      "status": "Active",
+      "activeUsers": 28,
+      "storageGB": 67.2,
+      "mrr": 299,
+      "commission": 74.75
+    },
+    {
+      "client": "Accra Construction Co",
+      "email": "accounts@accraconstruction.gh",
+      "status": "Active",
+      "activeUsers": 15,
+      "storageGB": 32.8,
+      "mrr": 149,
+      "commission": 29.80
+    },
+    {
+      "client": "Nairobi Logistics Ltd",
+      "email": "admin@nairobiogistics.ke",
+      "status": "Active",
+      "activeUsers": 35,
+      "storageGB": 89.4,
+      "mrr": 299,
+      "commission": 74.75
+    },
+    {
+      "client": "Abuja Tech Startup",
+      "email": "hello@abujatech.ng",
+      "status": "Active",
+      "activeUsers": 5,
+      "storageGB": 8.2,
+      "mrr": 49,
+      "commission": 12.25
+    },
+    {
+      "client": "Kumasi Retail Group",
+      "email": "finance@kumasiretail.gh",
+      "status": "Suspended",
+      "activeUsers": 0,
+      "storageGB": 18.5,
+      "mrr": 149,
+      "commission": 29.80
+    },
+    {
+      "client": "Mombasa Import Export",
+      "email": "admin@mombasaimprot.ke",
+      "status": "Active",
+      "activeUsers": 18,
+      "storageGB": 41.3,
+      "mrr": 149,
+      "commission": 37.25
+    },
+    {
+      "client": "Cape Town Services",
+      "email": "info@capetownservices.za",
+      "status": "Active",
+      "activeUsers": 42,
+      "storageGB": 124.7,
+      "mrr": 299,
+      "commission": 44.85
+    },
+    {
+      "client": "Abidjan Trading Co",
+      "email": "contact@abidjantrading.ci",
+      "status": "Active",
+      "activeUsers": 14,
+      "storageGB": 29.6,
+      "mrr": 149,
+      "commission": 29.80
+    },
+    {
+      "client": "Port Harcourt Manufacturing",
+      "email": "admin@phmfg.ng",
+      "status": "Active",
+      "activeUsers": 31,
+      "storageGB": 78.9,
+      "mrr": 299,
+      "commission": 74.75
+    }
+  ],
+  "usageIngestionHealth": {
+    "rawUsageIngestion": 10247,
+    "ingestionLatencyMs": 87,
+    "usageDiscrepancyPercent": 0.3
+  },
+    "provisionForm": {
+    "title": "Provision New BEAPOne Lite User (Flow 1)",
+    "subtitle": "Create a new Lite instance linked to your Channel Partner ID",
+    "fields": {
+      "clientEmail": "",
+      "clientName": "Adeola Business Solutions",
+      "country": "",
+      "initialTier": ""
+    },
+    "buttonText": "Provision Lite User"
+  },
+  "quota": {
+    "title": "Your Provisioning Quota",
+    "subtitle": "Current quota usage for your partner account",
+    "partnerName": "TechBridge Africa",
+    "partnerDetails": "Gold Partner - 25% Commission",
+    "quotaUsed": 387,
+    "quotaTotal": 500,
+    "percentageUsed": 77.4,
+    "remaining": 113
+  },
+  "recentRequests": {
+    "title": "Recent Provisioning Requests",
+    "subtitle": "Last 30 days of provisioning activity",
+    "entries": [
+      {
+        "email": "newclient1@example.com",
+        "timestamp": "11/25/2024 at 3:30:00 PM",
+        "status": "Success",
+        "duration": "3.20s"
+      },
+      {
+        "email": "newclient2@example.com",
+        "timestamp": "11/24/2024 at 10:15:00 AM",
+        "status": "Success",
+        "duration": "2.80s"
+      },
+      {
+        "email": "newclient3@example.com",
+        "timestamp": "11/23/2024 at 5:45:00 PM",
+        "status": "Failed",
+        "duration": "1.50s"
+      },
+      {
+        "email": "newclient4@example.com",
+        "timestamp": "11/22/2024 at 12:20:00 PM",
+        "status": "Success",
+        "duration": "4.10s"
+      },
+      {
+        "email": "newclient5@example.com",
+        "timestamp": "11/21/2024 at 2:00:00 PM",
+        "status": "Success",
+        "duration": "3.60s"
+      }
+    ]
+  },
+    "header": {
+    "title": "Channel Management Portal",
+    "subtitle": "Grow your business by reselling BEAPOne Lite to African SMEs",
+    "description": "Partner with BEAPOne to offer cloud-based business management software to small and medium enterprises across Africa. Provision new users, track their usage, and earn recurring revenue share—all from one central dashboard.",
+    "metrics": {
+      "monthly_partner_revenue": "$415.45",
+      "active_client_accounts": "9",
+      "provisioning_success_rate": "80%"
+    }
+  },
+  "why_become_partner": {
+    "title": "Why Become a BEAPOne Channel Partner?",
+    "subtitle": "Real benefits for technology partners, consultants, and business advisors",
+    "items": [
+      {
+        "title": "Recurring Revenue Model",
+        "text": "Earn 15–25% commission on every active subscription you provision. Your clients pay monthly, you get paid monthly. Build predictable, growing revenue."
+      },
+      {
+        "title": "Instant Provisioning",
+        "text": "Create new BEAPOne Lite accounts for your clients in seconds. No manual paperwork, no waiting days for approval. Click \"Provision\" and they're live immediately."
+      },
+      {
+        "title": "Real-Time Performance Dashboard",
+        "text": "Track every client's usage, revenue contribution, and activity in real-time. See exactly which accounts are growing and which need attention."
+      },
+      {
+        "title": "White-Label Ready",
+        "text": "Present BEAPOne Lite as your own solution. Your clients see your branding, you maintain the relationship, we handle the infrastructure and support."
+      },
+      {
+        "title": "Multi-Country Support",
+        "text": "Provision clients across Nigeria, Ghana, Kenya, South Africa, and more. BEAPOne supports local currencies, tax rules, and business regulations."
+      },
+      {
+        "title": "Expand Your Service Offering",
+        "text": "Consultants and IT firms: Add business management software to your portfolio without building it yourself. Increase client value and retention."
+      }
+    ]
+  },
+  "how_it_works": {
+    "title": "How Channel Management Works",
+    "subtitle": "From signing up as a partner to earning your first commission in 3 simple steps",
+    "steps": [
+      {
+        "step": "1",
+        "title": "Provision New Lite Users (Flow 1: A2-7 → Lite)",
+        "text": "When you find a client who needs business management software, log into this Channel Portal and click \"Provision New User\". Enter their email and basic info. The system instantly creates a BEAPOne Lite account linked to your Partner ID.",
+        "example": "Tunde in Lagos needs accounting software → You enter tunde@company.ng → Click Provision → Lite instance created in 3 seconds → Tunde receives login credentials → He's up and running in 5 minutes!"
+      },
+      {
+        "step": "2",
+        "title": "Automatic Usage Tracking (Flow 2: Lite → A2-4)",
+        "text": "Every hour, each Lite instance automatically reports usage metrics to our central billing system: active users, transactions processed, storage used. You don't do anything—it's completely automatic. This data calculates your revenue share.",
+        "behind_the_scenes": "Tunde's Lite instance sends: \"12 active users, 487 transactions, 24GB storage\" → A2-4 calculates: $149/month subscription → You earn 25% = $37.25/month for that one client."
+      },
+      {
+        "step": "3",
+        "title": "Real-Time Dashboard & Revenue (Flow 3: A2-7 ← Lite)",
+        "text": "This dashboard fetches aggregated performance data from all your provisioned Lite instances. See total active users, revenue trends, and which clients are growing. Your commission is automatically calculated monthly and paid via your preferred method.",
+        "dashboard_example": "Your dashboard shows: 10 active clients → Total revenue: $1,490/month → Your commission (25%): $372.50/month → Paid on the 5th of each month to your bank account."
+      }
+    ]
+  },
+  "real_story": {
+    "title": "Real Story: How TechBridge Africa Built $45K/Year Recurring Revenue",
+    "partner": "TechBridge Africa is an IT consulting firm in Lagos serving 200+ SME clients. They were already helping clients with technology but had no recurring revenue—only one-time project fees.",
+    "strategy": "They became a BEAPOne Gold Partner (25% commission rate) and started offering BEAPOne Lite as an add-on service. \"We install it for you, train your staff, and provide local support.\" Their value-add was implementation and training—BEAPOne handled the software.",
+    "results": "In 12 months, they provisioned 150 Lite users across their client base. Average subscription: $120/month. Total client revenue: $18,000/month. TechBridge commission (25%): $4,500/month = $54,000/year. Predictable, recurring income that grows every quarter.",
+    "quote": "\"We're not software developers, but now we earn like we built the product ourselves. Best business decision we made.\" - Chidi, TechBridge CEO"
+  },
+    "titles": "Technical Integration Architecture",
+  "subtitles": "Three-tier API integration: Provisioning, Metering, and Reporting",
+  "badge": "For IT/Technical Users",
+  "flows": [
+    {
+      "id": 1,
+      "title": "Flow 1: User Provisioning (A2-7 → Lite Onboarding Service)",
+      "method": "POST",
+      "endpoint": "/api/v1/provision-lite-user",
+      "notes": "Synchronous, mTLS secured",
+      "payload": "channelPartnerId, newUserId, userEmail, initialLiteConfig",
+      "response": "HTTP 201 with instanceId and setup token"
+    },
+    {
+      "id": 2,
+      "title": "Flow 2: Usage Tracking (Lite Metering → A2-4 Ingestion)",
+      "method": "POST",
+      "endpoint": "/api/v1/ingest/lite-usage",
+      "notes": "Asynchronous, hourly metering",
+      "payload": "instanceId, channelPartnerId, activeUsers, transactionVolume, storageGB, o17ActivityCount",
+      "billingNote": "A2-4 normalizes for billing"
+    },
+    {
+      "id": 3,
+      "title": "Flow 3: Partner Reporting (A2-7 Gateway ← Lite Reporting API)",
+      "method": "GET",
+      "endpoint": "/api/v1/partner-report?instanceId=...",
+      "notes": "Read-only aggregation",
+      "response": "totalActiveUsersLast30Days, totalTransactionsLast30Days, currentStorageGB, o17TrendData"
+    }
+  ],
+  "kpiTitle": "Key Performance Requirements",
+  "kpiss": [
+    "Provisioning Latency: ≤5s (P95)",
+    "Dashboard Aggregation: ≤3s total",
+    "Usage Discrepancy: <0.5%",
+    "Usage Commit: ≤100ms persistence",
+    "PSR Target: ≥98.5%",
+    "Exponential Backoff Retries (Flow 2)"
+  ],
+  "prototypeMode": {
+    "title": "Prototype Mode (Demo Data)",
+    "text": "This is a functional prototype demonstrating the Channel Management integration architecture. In production, this will connect to real A2-7 Partner Registry, A2-4 Subscription Management, and live BEAPOne Lite instances. All data shown is for demonstration purposes."
+  }
+}

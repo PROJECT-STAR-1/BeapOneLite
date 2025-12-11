@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import {
   Briefcase,
   CheckCircle,
@@ -8,194 +10,99 @@ import {
   Zap,
   TrendingUp,
   Scale,
-  Globe,
   Settings,
   Info,
   Layers,
-  BarChart2,
   DollarSign,
   Users,
+  Loader2,
 } from "lucide-react";
 
-// ====================================================================
-// 1. DATA DEFINITIONS
-// ====================================================================
+/* ============================================================
+    UI CONFIGURATION & MAPPINGS
+============================================================ */
 
-// Hero Metrics (from BPC OV1.png)
-const METRICS = [
-  { icon: Layers, value: "6", label: "Expert Services Available" },
-  { icon: DollarSign, value: "$12K - $22K", label: "Typical Engagement Range" },
-  { icon: Clock, value: "6-12 Weeks", label: "Average Project Duration" },
-];
+const ICON_MAP = {
+  layers: Layers,
+  "dollar-sign": DollarSign,
+  clock: Clock,
+  users: Users,
+  "check-circle": CheckCircle,
+  zap: Zap,
+  "file-text": FileText,
+  scale: Scale,
+  "trending-up": TrendingUp,
+  clipboard: Clipboard,
+  briefcase: Briefcase,
+};
 
-// Why Use features (from BPC OV1.png)
-const FEATURES = [
-  {
-    title: "Africa-Focused Expertise",
-    icon: Users,
-    color: "green",
-    description:
-      "Consultants with deep experience in African markets, regulations, and business culture across Nigeria, Ghana, Kenya, and beyond.",
+const COLOR_MAP = {
+  green: {
+    text: "text-green-500",
+    bg: "bg-green-50",
+    border: "border-green-200",
+    borderStrong: "border-green-300",
+    textStrong: "text-green-800",
   },
-  {
-    title: "Proven Methodologies",
-    icon: CheckCircle,
-    color: "yellow",
-    description:
-      "International best practices adapted for local markets. Get actionable strategies, not generic advice.",
+  yellow: {
+    text: "text-yellow-500",
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
+    borderStrong: "border-yellow-300",
+    textStrong: "text-yellow-800",
   },
-  {
-    title: "Seamless Integration",
-    icon: Zap,
-    color: "blue",
-    description:
-      "Request consulting directly from your project dashboard. Your project data (budget, timeline, scope) is automatically shared—no need to re-explain your situation.",
+  blue: {
+    text: "text-blue-500",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+    borderStrong: "border-blue-300",
+    textStrong: "text-blue-800",
   },
-  {
-    title: "Clear Deliverables",
-    icon: FileText,
-    color: "teal",
-    description:
-      "Every service includes specific deliverables—reports, models, roadmaps, and implementation support. You know exactly what you’re getting.",
+  teal: {
+    text: "text-teal-500",
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    borderStrong: "border-teal-300",
+    textStrong: "text-teal-800",
   },
-  {
-    title: "Simple Billing",
-    icon: Scale,
-    color: "purple",
-    description:
-      "All consulting fees are billed through your existing BEAPOne subscription. One invoice, one payment process.",
+  purple: {
+    text: "text-purple-500",
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    borderStrong: "border-purple-300",
+    textStrong: "text-purple-800",
   },
-  {
-    title: "Post-Engagement Support",
-    icon: TrendingUp,
-    color: "red",
-    description:
-      "Most services include follow-up sessions to help you implement recommendations and track progress.",
+  red: {
+    text: "text-red-500",
+    bg: "bg-red-50",
+    border: "border-red-200",
+    borderStrong: "border-red-300",
+    textStrong: "text-red-800",
   },
-];
+  default: {
+    text: "text-gray-500",
+    bg: "bg-gray-50",
+    border: "border-gray-200",
+    borderStrong: "border-gray-300",
+    textStrong: "text-gray-800",
+  },
+};
 
-// How It Works steps (from BPC OV2.png)
-const HOW_IT_WORKS = [
-  {
-    step: 1,
-    title: "Browse Services & Request Help",
-    content:
-      'Go to the <span class="font-bold">Service Catalog</span> tab and browse available consulting services. When you find what you need, click "Request Consultation." If you\'re working on a specific project in BEAPOne, your project details are automatically shared with the consultant.',
-    example: {
-      color: "blue",
-      text: 'You\'re planning to expand into Ghana. From your "Ghana Expansion" project, click Request Consultation → Select "Market Entry Strategy" → Your project budget, timeline, and scope are automatically sent.',
-    },
-  },
-  {
-    step: 2,
-    title: "Consultant Reviews & Proposes",
-    content:
-      "A specialized consultant reviews your request and project context. Within 48 hours, they'll contact you to discuss your needs, clarify scope, and provide a detailed proposal with timeline and final pricing.",
-    example: {
-      color: "green",
-      text: "What happens? You'll receive a call/email to discuss your specific challenges. The consultant will explain their approach, share similar case studies, and answer your questions before you commit.",
-    },
-  },
-  {
-    step: 3,
-    title: "Agreement, Work & Billing",
-    content:
-      "Once you agree to the proposal, the consultant starts work. You'll receive regular updates and deliverables according to the agreed timeline. The consulting fee is automatically added to your next BEAPOne subscription invoice.",
-    example: {
-      color: "purple",
-      text: "Billing example: $15,000 Growth Strategy Consulting added to your subscription invoice. Payment terms: Net 30 days. All tracked in your BEAPOne account.",
-    },
-  },
-];
+/* ============================================================
+    SUB-COMPONENTS
+============================================================ */
 
-// Available Services (from BPC OV3.png)
-const SERVICES = [
-  {
-    name: "Growth Strategy Consulting",
-    description: "Comprehensive growth strategy development for African SMEs",
-    price: "$15K",
-    duration: "8 weeks",
-    deliverables: "5 deliverables",
-  },
-  {
-    name: "Financial Restructuring Advisory",
-    description:
-      "Expert guidance on financial optimization and debt restructuring",
-    price: "$22K",
-    duration: "12 weeks",
-    deliverables: "5 deliverables",
-  },
-  {
-    name: "Market Entry Strategy (New Geography)",
-    description: "Strategic planning for expansion into new African markets",
-    price: "$19K",
-    duration: "10 weeks",
-    deliverables: "5 deliverables",
-  },
-  {
-    name: "Operations Excellence Program",
-    description: "Process optimization and operational efficiency improvement",
-    price: "$13K",
-    duration: "6 weeks",
-    deliverables: "5 deliverables",
-  },
-];
-
-// Technical Steps (from BPC OV4.png)
-const TECHNICAL_STEPS = [
-  {
-    step: 1,
-    title: "Service Catalog API (BEAPOne Lite — BPC Portal)",
-    method: "GET",
-    endpoint: "/api/bpc/v1/catalog",
-    description:
-      "BEAPOne Lite fetches available services with real-time pricing and availability",
-    details: null,
-  },
-  {
-    step: 2,
-    title: "Context Transfer (BEAPOne Lite — BPC Portal)",
-    method: "POST",
-    endpoint: "/api/bpc/v1/context",
-    description:
-      "Securely transfers project metadata with audit trail and mandatory justification note",
-    details:
-      "Security: JWT/OAuth 2.0, TLS 1.2+, 60-minute context token expiry",
-  },
-  {
-    step: 3,
-    title: "Billing Event (BPC Portal — Subscription Management)",
-    method: "POST",
-    endpoint: "/api/financial/v1/billing-event",
-    description: "Automatically creates invoice upon agreement finalization",
-    details:
-      "Includes: Service fee, currency, transaction ID, audit correlation ID",
-  },
-];
-
-// ====================================================================
-// 2. REUSABLE COMPONENTS
-// ====================================================================
-
-/**
- * Renders an example box with dynamic background/text colors.
- */
-const ExampleBox = ({ text, color }) => {
-  const bgColor = `bg-${color}-50`;
-  const borderColor = `border-${color}-300`;
-  const textColor = `text-${color}-800`;
+const ExampleBox = ({ text, colorId }) => {
+  const styles = COLOR_MAP[colorId] || COLOR_MAP.default;
 
   return (
     <div
-      className={`p-4 mt-3 rounded-xl border-l-4 ${borderColor} ${bgColor} ${textColor} text-sm`}>
+      className={`p-4 mt-3 rounded-xl border-l-4 ${styles.borderStrong} ${styles.bg} ${styles.textStrong} text-sm`}>
       <span dangerouslySetInnerHTML={{ __html: `Example: ${text}` }} />
     </div>
   );
 };
 
-/**
- * Renders a standard section header (e.g., Why Use, How It Works)
- */
 const SectionHeader = ({ title, subtitle, icon: Icon }) => (
   <div className="mb-6 mt-12">
     <h2 className="text-xl font-bold text-gray-900 flex items-center mb-1">
@@ -206,41 +113,50 @@ const SectionHeader = ({ title, subtitle, icon: Icon }) => (
   </div>
 );
 
-// ====================================================================
-// 3. SECTIONS
-// ====================================================================
+const HeroSection = ({ metrics }) => {
+  // Mapping for specific hero metrics icons if needed, or fallback
+  const getHeroIcon = (id) => {
+    if (id === "services-count") return Layers;
+    if (id === "engagement-range") return DollarSign;
+    if (id === "project-duration") return Clock;
+    return Layers;
+  };
 
-const HeroSection = () => (
-  <div className="bg-indigo-900 rounded-xl p-6 sm:p-8 text-white shadow-xl mb-10">
-    <div className="flex items-center space-x-3 mb-4">
-      <Briefcase size={28} className="text-yellow-400" />
-      {/* Reduced boldness to font-semibold */}
-      <h1 className="text-2xl sm:text-3xl font-semibold">
-        Business & Project Consulting Portal
-      </h1>
+  return (
+    <div className="bg-indigo-900 rounded-xl p-6 sm:p-8 text-white shadow-xl mb-10">
+      <div className="flex items-center space-x-3 mb-4">
+        <Briefcase size={28} className="text-yellow-400" />
+        <h1 className="text-2xl sm:text-3xl font-semibold">
+          Business & Project Consulting Portal
+        </h1>
+      </div>
+      <p className="mb-8 text-indigo-200">
+        Expert guidance on financial planning, market expansion, and more—all
+        billed seamlessly through your existing BEAPOne subscription.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {metrics?.map((metric, index) => {
+          // const Icon = getHeroIcon(metric.id); // Icon logic can be added if needed in UI
+          return (
+            <div
+              key={index}
+              className="bg-indigo-700/50 backdrop-blur-sm rounded-lg p-5 text-center transition hover:bg-indigo-700">
+              <p className="text-3xl font-bold text-yellow-400 mb-1">
+                {metric.value}
+              </p>
+              <p className="text-sm font-medium text-indigo-200">
+                {metric.label}
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
-    <p className="mb-8 text-indigo-200">
-      Expert guidance on financial planning, market expansion, and more—all
-      billed seamlessly through your existing BEAPOne subscription.
-    </p>
+  );
+};
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {METRICS.map((metric, index) => (
-        <div
-          key={index}
-          className="bg-indigo-700/50 backdrop-blur-sm rounded-lg p-5 text-center transition hover:bg-indigo-700">
-          {/* Reduced boldness to font-bold and changed color to text-yellow-400 */}
-          <p className="text-3xl font-bold text-yellow-400 mb-1">
-            {metric.value}
-          </p>
-          <p className="text-sm font-medium text-indigo-200">{metric.label}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const WhyUseSection = () => (
+const WhyUseSection = ({ features }) => (
   <section className="mt-12">
     <SectionHeader
       title="Why Use Our Consulting Services?"
@@ -248,16 +164,15 @@ const WhyUseSection = () => (
       icon={TrendingUp}
     />
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {FEATURES.map((feature, index) => {
-        const Icon = feature.icon;
-        const iconClass = `text-${feature.color}-500`;
-        const borderClass = `border-${feature.color}-200`;
+      {features?.map((feature, index) => {
+        const Icon = ICON_MAP[feature.iconId] || CheckCircle;
+        const styles = COLOR_MAP[feature.colorId] || COLOR_MAP.default;
 
         return (
           <div
             key={index}
-            className={`flex space-x-4 p-5 bg-white border-l-4 ${borderClass} rounded-lg shadow-sm transition hover:shadow-md`}>
-            <Icon size={24} className={`flex-shrink-0 ${iconClass}`} />
+            className={`flex space-x-4 p-5 bg-white border-l-4 ${styles.border} rounded-lg shadow-sm transition hover:shadow-md`}>
+            <Icon size={24} className={`flex-shrink-0 ${styles.text}`} />
             <div>
               <h3 className="font-semibold text-gray-800 mb-1">
                 {feature.title}
@@ -271,7 +186,7 @@ const WhyUseSection = () => (
   </section>
 );
 
-const HowItWorksSection = () => (
+const HowItWorksSection = ({ steps }) => (
   <section className="mt-12">
     <SectionHeader
       title="How It Works"
@@ -279,11 +194,10 @@ const HowItWorksSection = () => (
       icon={Clipboard}
     />
     <div className="space-y-6">
-      {HOW_IT_WORKS.map((step, index) => (
+      {steps?.map((step, index) => (
         <div
           key={step.step}
           className="relative pl-10 md:pl-12 py-4 border-l-2 border-indigo-200">
-          {/* Step Number Circle */}
           <div className="absolute left-0 top-4 w-7 h-7 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm transform -translate-x-1/2 shadow-lg">
             {step.step}
           </div>
@@ -295,24 +209,26 @@ const HowItWorksSection = () => (
             className="text-gray-600"
             dangerouslySetInnerHTML={{ __html: step.content }}
           />
-          <ExampleBox
-            text={step.example.text}
-            color={index === 1 ? "green" : step.example.color}
-          />
+          {step.example && (
+            <ExampleBox
+              text={step.example.text}
+              colorId={step.example.colorId}
+            />
+          )}
         </div>
       ))}
     </div>
   </section>
 );
 
-const ServicesSection = () => (
+const ServicesSection = ({ services }) => (
   <section className="mt-12">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold text-gray-900">
         Available Consulting Services
       </h2>
       <span className="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
-        {SERVICES.length} Services Active
+        {services?.length || 0} Services Active
       </span>
     </div>
     <p className="text-gray-500 text-sm mb-6">
@@ -321,7 +237,7 @@ const ServicesSection = () => (
     </p>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {SERVICES.map((service) => (
+      {services?.map((service) => (
         <div
           key={service.name}
           className="bg-white rounded-xl p-6 shadow-md border border-gray-100 transition hover:ring-2 hover:ring-purple-400">
@@ -347,7 +263,7 @@ const ServicesSection = () => (
   </section>
 );
 
-const TechnicalSection = () => (
+const TechnicalSection = ({ steps }) => (
   <section className="mt-12">
     <div className="flex items-center space-x-3 mb-4">
       <h2 className="text-xl font-bold text-gray-900">
@@ -362,7 +278,7 @@ const TechnicalSection = () => (
     </p>
 
     <div className="space-y-4">
-      {TECHNICAL_STEPS.map((step) => (
+      {steps?.map((step) => (
         <div
           key={step.step}
           className="bg-white rounded-lg p-5 shadow-sm border border-gray-200">
@@ -403,20 +319,58 @@ const TechnicalSection = () => (
   </section>
 );
 
-// ====================================================================
-// 4. MAIN EXPORT
-// ====================================================================
+/* ============================================================
+    MAIN COMPONENT
+============================================================ */
 
 export default function BpcOverview() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/bpc");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch BPC overview data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 min-h-[400px]">
+        <Loader2 className="w-10 h-10 text-indigo-700 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Overview...</p>
+      </div>
+    );
+  }
+
+  // Safe Data Access
+  const heroMetrics = data?.heroMetrics ?? [];
+  const features = data?.features ?? [];
+  const howItWorks = data?.howItWorks ?? [];
+  const services = data?.services ?? [];
+  const technicalSteps = data?.technicalSteps ?? [];
+
   return (
-    // Reduced padding from p-3 sm:p-6 lg:p-8 to p-2 sm:p-4 lg:p-6 for a tighter fit
     <div className="p-2 sm:p-4 lg:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <HeroSection />
-        <WhyUseSection />
-        <HowItWorksSection />
-        <ServicesSection />
-        <TechnicalSection />
+        <HeroSection metrics={heroMetrics} />
+        <WhyUseSection features={features} />
+        <HowItWorksSection steps={howItWorks} />
+        <ServicesSection services={services} />
+        <TechnicalSection steps={technicalSteps} />
       </div>
     </div>
   );

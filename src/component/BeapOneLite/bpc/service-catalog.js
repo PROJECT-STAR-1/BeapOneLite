@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   CheckCircle,
@@ -14,179 +16,70 @@ import {
   DollarSign,
   ShieldCheck,
   Globe,
+  Loader2,
 } from "lucide-react";
 
-// --- Mock Data ---
+// --- UI CONFIGURATION & MAPPINGS ---
 
-// Define categories with specific colors based on the images
-const CATEGORIES = [
-  {
-    id: "all",
-    name: "All Categories",
+const CATEGORY_UI_MAP = {
+  all: {
     icon: LayoutGrid,
     color: "text-gray-900",
     tagClass: "bg-gray-100 text-gray-700",
   },
-  {
-    id: "strategy",
-    name: "Strategy",
+  strategy: {
     icon: TrendingUp,
     color: "text-purple-600",
     tagClass: "bg-purple-100 text-purple-700",
   },
-  {
-    id: "growth",
-    name: "Growth",
+  growth: {
     icon: DollarSign,
     color: "text-green-600",
     tagClass: "bg-green-100 text-green-700",
   },
-  {
-    id: "financial",
-    name: "Financial Advisory",
+  financial: {
     icon: ShieldCheck,
     color: "text-blue-600",
     tagClass: "bg-blue-100 text-blue-700",
   },
-  {
-    id: "operations",
-    name: "Operations",
+  operations: {
     icon: Trello,
     color: "text-orange-600",
     tagClass: "bg-orange-100 text-orange-700",
   },
-  {
-    id: "market",
-    name: "Market Expansion",
+  market: {
     icon: Globe,
     color: "text-yellow-600",
     tagClass: "bg-yellow-100 text-yellow-700",
   },
-  {
-    id: "compliance",
-    name: "Compliance",
+  compliance: {
     icon: Tag,
     color: "text-red-600",
     tagClass: "bg-red-100 text-red-700",
   },
-];
+  default: {
+    icon: LayoutGrid,
+    color: "text-gray-600",
+    tagClass: "bg-gray-100 text-gray-700",
+  },
+};
 
-// Combine data from BPC SC1, SC3, SC4
-const SERVICE_CATALOG_DATA = [
-  {
-    id: 1,
-    title: "Growth Strategy Consulting",
-    category: "growth",
-    description: "Comprehensive growth strategy development for African SMEs",
-    detail:
-      "Our Growth Strategy Consulting service helps African SMEs identify market opportunities, develop competitive positioning, and create actionable growth roadmaps. We leverage local market intelligence and international best practices.",
-    price: "$15,000",
-    duration: "8 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Market Analysis Report",
-      "Competitive Landscape Assessment",
-      "Growth Strategy Roadmap",
-    ],
-  },
-  {
-    id: 2,
-    title: "Financial Restructuring Advisory",
-    category: "financial",
-    description:
-      "Expert guidance on financial optimization and debt restructuring",
-    detail:
-      "Specialized financial advisory for businesses facing cash flow challenges or seeking to optimize their capital structure. Includes debt negotiation support and financial modeling.",
-    price: "$22,000",
-    duration: "12 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Financial Health Assessment",
-      "Restructuring Options Analysis",
-      "Creditor Negotiation Support",
-    ],
-  },
-  {
-    id: 3,
-    title: "Market Entry Strategy (New Geography)",
-    category: "market",
-    description: "Strategic planning for expansion into new African markets",
-    detail:
-      "End-to-end market entry consulting for SMEs looking to expand across African borders. Covers regulatory compliance, market sizing, partner identification, and go-to-market strategy.",
-    price: "$18,500",
-    duration: "10 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Target Market Analysis (3 countries)",
-      "Regulatory & Compliance Roadmap",
-      "Partnership & Distribution Strategy",
-    ],
-  },
-  {
-    id: 4,
-    title: "Operations Excellence Program",
-    category: "operations",
-    description: "Process optimization and operational efficiency improvement",
-    detail:
-      "Comprehensive operational assessment and improvement program focusing on process efficiency, cost reduction, and quality enhancement for manufacturing and service businesses.",
-    price: "$12,500",
-    duration: "6 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Current State Assessment",
-      "Process Mapping & Bottleneck Analysis",
-      "Efficiency Improvement Recommendations",
-    ],
-  },
-  {
-    id: 5,
-    title: "Tax & Compliance Strategy",
-    category: "compliance",
-    description: "Multi-jurisdiction tax planning and regulatory compliance",
-    detail:
-      "Strategic tax planning for businesses operating across multiple African jurisdictions. Includes transfer pricing guidance, VAT optimization, and regulatory compliance roadmaps.",
-    price: "$16,000",
-    duration: "8 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Multi-Jurisdiction Tax Analysis",
-      "Transfer Pricing Framework",
-      "VAT Optimization Strategy",
-    ],
-  },
-  {
-    id: 6,
-    title: "Digital Transformation Roadmap",
-    category: "strategy",
-    description: "Technology adoption and digital business transformation",
-    detail:
-      "Strategic consulting for SMEs seeking to digitize operations, adopt cloud technologies, and leverage data analytics for competitive advantage.",
-    price: "$14,000",
-    duration: "7 weeks",
-    deliverablesCount: 5,
-    keyDeliverables: [
-      "Digital Maturity Assessment",
-      "Technology Stack Recommendations",
-      "Phased Implementation Roadmap",
-    ],
-  },
-];
-
-// --- Sub-Components ---
+// --- REUSABLE COMPONENTS ---
 
 /**
- * Tag component mirroring the style on the service cards (e.g., GROWTH tag).
- * Uses a specific category's styling.
+ * Tag component mirroring the style on the service cards.
  */
-const CategoryTag = ({ categoryId }) => {
-  const category = CATEGORIES.find((c) => c.id === categoryId);
-  if (!category || category.id === "all") return null;
+const CategoryTag = ({ categoryId, categoryName }) => {
+  const uiConfig = CATEGORY_UI_MAP[categoryId] || CATEGORY_UI_MAP.default;
+  const Icon = uiConfig.icon;
+
+  if (categoryId === "all") return null;
 
   return (
     <span
-      className={`absolute top-0 left-0 mt-5 ml-5 px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider flex items-center shadow-sm ${category.tagClass}`}>
-      <category.icon size={12} className="mr-1" />
-      {category.name}
+      className={`absolute top-0 left-0 mt-5 ml-5 px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider flex items-center shadow-sm ${uiConfig.tagClass}`}>
+      <Icon size={12} className="mr-1" />
+      {categoryName}
     </span>
   );
 };
@@ -194,20 +87,23 @@ const CategoryTag = ({ categoryId }) => {
 /**
  * Service Card component for a single consulting service.
  */
-const ServiceCard = ({ service }) => {
-  // Find the category object for color mapping
-  const category = CATEGORIES.find((c) => c.id === service.category);
-  const priceColor = category ? category.color : "text-purple-600"; // Default to purple
+const ServiceCard = ({ service, categories }) => {
+  // Find category name for display in tag
+  const categoryObj = categories.find((c) => c.id === service.category);
+  const categoryName = categoryObj ? categoryObj.name : service.category;
+
+  // Resolve UI styling
+  const uiConfig = CATEGORY_UI_MAP[service.category] || CATEGORY_UI_MAP.default;
 
   return (
     <div className="relative bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col hover:shadow-xl transition-shadow duration-300">
       {/* Category Tag */}
-      <CategoryTag categoryId={service.category} />
+      <CategoryTag categoryId={service.category} categoryName={categoryName} />
 
       {/* Price Tag (Top Right) */}
       <div className="absolute top-0 right-0 mt-5 mr-5 text-right flex flex-col items-end">
         <span className="text-xs text-gray-500 uppercase">From</span>
-        <span className={`text-xl font-bold ${priceColor}`}>
+        <span className={`text-xl font-bold ${uiConfig.color}`}>
           {service.price}
         </span>
       </div>
@@ -239,7 +135,7 @@ const ServiceCard = ({ service }) => {
             Key Deliverables:
           </h3>
           <ul className="space-y-1 text-sm text-gray-700">
-            {service.keyDeliverables.map((item, index) => (
+            {service.keyDeliverables?.map((item, index) => (
               <li key={index} className="flex items-center">
                 <CheckCircle
                   size={14}
@@ -255,7 +151,7 @@ const ServiceCard = ({ service }) => {
         </div>
       </div>
 
-      {/* Request Consultation Button - UPDATED */}
+      {/* Request Consultation Button */}
       <button
         onClick={() =>
           console.log(`Requesting consultation for: ${service.title}`)
@@ -287,23 +183,51 @@ const SeamlessIntegrationInfo = () => (
   </div>
 );
 
-// --- Main Component ---
+// --- MAIN COMPONENT: ServiceCatalog ---
 
 export default function ServiceCatalog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Ref for the dropdown container to detect outside clicks
   const dropdownRef = useRef(null);
 
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/bpc");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch service catalog data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Safe Data Access
+  const categories = data?.categories ?? [];
+  // Using services_1 as per requirement
+  const services = data?.services_1 ?? [];
+
   // Filter and Search Logic
   const filteredServices = useMemo(() => {
-    let services = SERVICE_CATALOG_DATA;
+    let filtered = services;
 
     // 1. Filter by Category
     if (selectedCategory !== "all") {
-      services = services.filter(
+      filtered = filtered.filter(
         (service) => service.category === selectedCategory
       );
     }
@@ -311,7 +235,7 @@ export default function ServiceCatalog() {
     // 2. Filter by Search Term
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
-      services = services.filter(
+      filtered = filtered.filter(
         (service) =>
           service.title.toLowerCase().includes(lowerCaseSearch) ||
           service.description.toLowerCase().includes(lowerCaseSearch) ||
@@ -319,40 +243,44 @@ export default function ServiceCatalog() {
       );
     }
 
-    return services;
-  }, [selectedCategory, searchTerm]);
+    return filtered;
+  }, [selectedCategory, searchTerm, services]);
 
-  // Effect to handle clicks outside the dropdown to close it
+  // Handle clicks outside the dropdown
   useEffect(() => {
     function handleClickOutside(event) {
-      // Check if the click is outside the dropdown component
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     }
-
-    // Only attach listener if the dropdown is open
     if (isDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
-    // Cleanup function to remove event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropdownOpen]); // Re-run effect when dropdown state changes
+  }, [isDropdownOpen]);
 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId);
     setIsDropdownOpen(false);
   };
 
-  const currentCategory = CATEGORIES.find((c) => c.id === selectedCategory);
+  const currentCategory = categories.find((c) => c.id === selectedCategory);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 min-h-[400px]">
+        <Loader2 className="w-10 h-10 text-indigo-700 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Services...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen font-sans">
       <div className="max-w-7xl mx-auto">
-        {/* Header and Title (Updated Font Size and Boldness) */}
+        {/* Header and Title */}
         <h1 className="text-xl sm:text-2xl font-semibold text-blue-700 mb-2">
           BPC Service Catalog
         </h1>
@@ -363,7 +291,7 @@ export default function ServiceCatalog() {
 
         {/* Search and Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-10">
-          {/* Search Input (with Dark Mode Placeholder Fix) */}
+          {/* Search Input */}
           <div className="relative flex-grow">
             <Search
               size={20}
@@ -374,18 +302,16 @@ export default function ServiceCatalog() {
               placeholder="Search services..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              // Added placeholder-gray-700 for better visibility in Dark Mode
               className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 shadow-sm placeholder-gray-700"
             />
           </div>
 
-          {/* Category Dropdown (with Ref and Dark Mode Fixes) */}
+          {/* Category Dropdown */}
           <div
             ref={dropdownRef}
             className="relative w-full sm:w-56 flex-shrink-0">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              // Explicitly using text-gray-900 for high contrast
               className="w-full flex justify-between items-center px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 font-medium hover:bg-gray-50 shadow-sm transition-colors">
               <span className="truncate">
                 {currentCategory?.name || "All Categories"}
@@ -400,11 +326,10 @@ export default function ServiceCatalog() {
 
             {isDropdownOpen && (
               <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto">
-                {CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <div
                     key={category.id}
                     onClick={() => handleCategorySelect(category.id)}
-                    // Explicitly using text-gray-900 for high contrast
                     className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-indigo-50 text-sm text-gray-900 ${
                       selectedCategory === category.id
                         ? "bg-indigo-100 font-semibold"
@@ -425,7 +350,11 @@ export default function ServiceCatalog() {
         {filteredServices.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+              <ServiceCard
+                key={service.id}
+                service={service}
+                categories={categories}
+              />
             ))}
           </div>
         ) : (
