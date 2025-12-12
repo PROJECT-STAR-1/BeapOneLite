@@ -10,21 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { TrendingUp } from "lucide-react";
-
-/* ============================================================
-    MOCK DATA
-
-// Mock data for the Transaction Trends Line Chart (7 days)
-const TRANSACTION_TRENDS_DATA = [
-  { date: "2025-11-27", credits: 1, debits: 2 },
-  { date: "2025-11-28", credits: 3, debits: 1 },
-  { date: "2025-11-29", credits: 2, debits: 4 },
-  { date: "2025-11-30", credits: 5, debits: 3 },
-  { date: "2025-12-01", credits: 4, debits: 2 },
-  { date: "2025-12-02", credits: 6, debits: 5 },
-  { date: "2025-12-03", credits: 7, debits: 3 },
-];
 import { TrendingUp, Loader2 } from "lucide-react";
 
 /* ============================================================
@@ -54,12 +39,8 @@ const CustomTrendsTooltip = ({ active, payload, label }) => {
 };
 
 /* ============================================================
-
-/**
- * Renders the Transaction Trends Line Chart Card.
- */
-const TransactionTrendsCard = () => (
     ANALYTICS CARD COMPONENT
+============================================================ */
 
 const TransactionTrendsCard = ({ data }) => (
   <div className="bg-white rounded-xl shadow-lg p-6 h-full min-h-[400px]">

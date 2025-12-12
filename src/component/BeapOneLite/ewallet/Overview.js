@@ -21,16 +21,93 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Link,
-  LineChart, // Lucide Icon (used for headings)
-  PieChart, // Lucide Icon (used for headings)
-  Scale,
-  FileText,
-  Download,
-  Upload,
+  LineChart,
+  PieChart,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    CONSTANTS & MOCK DATA
+    CONSTANTS & UI MAPPINGS
+============================================================ */
+
+const BRAND_COLOR = "text-indigo-700";
+const ICON_SIZE = 20;
+
+// KPI UI Configuration Map
+const KPI_CONFIG = {
+  credits: {
+    icon: TrendingUp,
+    iconBg: "bg-green-100",
+    iconText: "text-green-600",
+    badgeBg: "bg-green-100",
+    badgeText: "text-green-600",
+  },
+  debits: {
+    icon: TrendingDown,
+    iconBg: "bg-red-100",
+    iconText: "text-red-600",
+    badgeBg: "bg-red-100",
+    badgeText: "text-red-600",
+  },
+  balance: {
+    icon: Banknote,
+    iconBg: "bg-blue-100",
+    iconText: "text-blue-600",
+    badgeBg: "bg-blue-100",
+    badgeText: "text-blue-600",
+  },
+  fees: {
+    icon: DollarSign,
+    iconBg: "bg-purple-100",
+    iconText: "text-purple-600",
+    badgeBg: "bg-purple-100",
+    badgeText: "text-purple-600",
+  },
+};
+
+// Spending Chart Colors Map
+const SPENDING_COLORS = {
+  payment: "#3b82f6", // Blue
+  withdrawal: "#f97316", // Orange
+  transfer: "#ef4444", // Red
+  deposit: "#6b7280", // Gray
+  other: "#a855f7", // Purple
+};
+
+// Formatter for currency
+const formatNaira = (amount) => {
+  return `₦ ${new Intl.NumberFormat("en-NG").format(Math.abs(amount))}`;
+};
+
+const currencyFormatter = (value) => `${value}M`;
+
+/* ============================================================
+    SUB-COMPONENTS
+============================================================ */
+
+const KpiCard = ({ data }) => {
+  const config = KPI_CONFIG[data.id] || KPI_CONFIG.credits;
+  const Icon = config.icon;
+
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="flex justify-between items-start mb-4">
+        <div
+          className={`w-10 h-10 rounded-lg flex items-center justify-center ${config.iconBg} ${config.iconText}`}>
+          <Icon size={ICON_SIZE} />
+        </div>
+        {/* Render Change Percentage if exists */}
+        {data.changeValue && (
+          <span
+            className={`text-xs font-bold px-2 py-1 rounded-lg ${config.badgeBg} ${config.badgeText}`}>
+            {data.changeValue}
+          </span>
+        )}
+        {/* Render Badge Label (e.g., "3 Banks") if exists */}
+        {data.badgeLabel && (
+          <span
+            className={`text-xs font-bold px-2 py-1 rounded-lg ${config.badgeBg} ${config.badgeText}`}>
+            {data.badgeLabel}
           </span>
         )}
       </div>
@@ -44,13 +121,6 @@ import {
   );
 };
 
-
-const TransactionItem = ({ type, description, date, amount, status }) => {
-  const isCredit = type === "Credit";
-  // ArrowUpRight for money going *out* (Debit), ArrowDownLeft for money coming *in* (Credit)
-  const Icon = isCredit ? ArrowDownLeft : ArrowUpRight;
-
-  // Determine color based on transaction type
 const TransactionItem = ({ data }) => {
   const isCredit = data.type === "Credit";
   const Icon = isCredit ? ArrowDownLeft : ArrowUpRight;
@@ -84,11 +154,6 @@ const TransactionItem = ({ data }) => {
   );
 };
 
-
-const LinkedBankAccount = ({ bank, account, balance, isPrimary, currency }) => {
-  const formatCustomCurrency = (amount, cur) => {
-    if (cur === "₦") return formatNaira(amount);
-    // Fallback for other currencies like KSh
 const LinkedBankAccount = ({ data }) => {
   const formatCustomCurrency = (amount, cur) => {
     if (cur === "₦") return formatNaira(amount);
@@ -126,12 +191,6 @@ const LinkedBankAccount = ({ data }) => {
   );
 };
 
-
-// Formatter for Y-Axis and Tooltip (in Millions, M)
-const currencyFormatter = (value) => `${value}M`;
-
-// Line Chart (Transaction Flow)
-const TransactionFlowChart = () => (
 const TransactionFlowChart = ({ data }) => (
   <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 h-[350px] flex flex-col">
     <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">

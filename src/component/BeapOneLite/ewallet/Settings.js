@@ -8,10 +8,31 @@ import {
   Lock,
   DollarSign,
   Repeat,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    MOCK DATA & CONSTANTS
+    CONSTANTS & UI MAPPINGS
+============================================================ */
+
+const PRIMARY_COLOR = "text-indigo-600";
+const ICON_SIZE_SM = 18;
+
+// Maps setting IDs to specific icons
+const SETTING_ICON_MAP = {
+  "2fa": Lock,
+  autoSweep: Repeat,
+  lowBalanceAlerts: Bell,
+  largeTxnAlerts: DollarSign,
+  default: Shield,
+};
+
+/* ============================================================
+    SUB-COMPONENTS
+============================================================ */
+
+/**
+ * Custom Toggle Switch
  */
 const ToggleSwitch = ({ id, checked, onChange }) => (
   <label

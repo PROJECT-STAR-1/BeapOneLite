@@ -9,19 +9,16 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    CONSTANTS & MOCK DATA
+    CONSTANTS & UI MAPPINGS
 ============================================================ */
 
 const BRAND_COLOR = "text-indigo-700";
 const ICON_SIZE = 16;
 
-
-/**
- * Renders the small badge for transaction category or processor.
- */
 const formatNaira = (amount) => {
   return `₦ ${new Intl.NumberFormat("en-NG").format(Math.abs(amount))}`;
 };
@@ -51,6 +48,7 @@ const STATUS_STYLE_MAP = {
 
 /* ============================================================
     SUB-COMPONENTS
+============================================================ */
 
 const TransactionBadge = ({ label, isPrimary = false }) => {
   return (
@@ -70,36 +68,10 @@ const TransactionRow = ({ transaction }) => {
   const amountSign = isCredit ? "+" : "–";
   const amountColor = isCredit ? "text-green-600" : "text-red-600";
 
-  // Icon and background based on type
   const Icon = isCredit ? ArrowDownLeft : ArrowUpRight;
   const iconColor = isCredit ? "text-green-600" : "text-red-600";
   const iconBg = isCredit ? "bg-green-50" : "bg-red-50";
 
-  // Status chip
-  let StatusIcon, statusColor, statusBg;
-  switch (transaction.status) {
-    case "COMPLETED":
-      StatusIcon = CheckCircle;
-      statusColor = "text-green-600";
-      statusBg = "bg-green-100";
-      break;
-    case "PENDING":
-      StatusIcon = Clock;
-      statusColor = "text-yellow-600";
-      statusBg = "bg-yellow-100";
-      break;
-    case "FAILED":
-      StatusIcon = XCircle;
-      statusColor = "text-red-600";
-      statusBg = "bg-red-100";
-      break;
-    default:
-      StatusIcon = AlertTriangle;
-      statusColor = "text-gray-600";
-      statusBg = "bg-gray-100";
-  }
-
-  // Determine secondary detail text (User/Client/System)
   const statusStyle =
     STATUS_STYLE_MAP[transaction.status] || STATUS_STYLE_MAP.default;
   const StatusIcon = statusStyle.icon;

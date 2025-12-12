@@ -71,7 +71,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
-
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -163,7 +162,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const salesOrdersItems = [
-    { href: "/sales-orders-overview", icon: Clipboard, label: "Overview" },
+    {
+      href: "/beapOneLite/sales-order-dashboard",
+      icon: Clipboard,
+      label: "Sales Order Management",
+    },
     { href: "/sales-orders-history", icon: Calendar, label: "History" },
   ];
 
