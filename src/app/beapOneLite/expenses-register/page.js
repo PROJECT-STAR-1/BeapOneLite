@@ -16,182 +16,30 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronUp,
+  Loader2,
 } from "lucide-react";
+import Layout from "@/component/BeapOneLite/Layout";
 
 // The NGN symbol
 const CURRENCY = "₦";
 
-import Layout from "@/component/BeapOneLite/Layout";
-
 /* ============================================================
-    MOCK DATA & CONFIGURATION
+    UI CONFIGURATION & MAPPINGS
 ============================================================ */
 
-const EXPENSE_LIST = [
-  {
-    id: "EXP-2025028",
-    vendor: "Office Depot",
-    date: "11/25/2025",
-    submittedBy: "Fatima Yusuf",
-    purpose: "Printing paper and ink cartridges",
-    category: "Small Supplies",
-    amount: "6,500.00",
-    status: "Submitted",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: false,
-  },
-  {
-    id: "EXP-2025019",
-    vendor: "Shoprite",
-    date: "11/25/2025",
-    submittedBy: "Adebayao Okonkwo",
-    purpose: "Office refreshments - Tea, coffee, sugar",
-    category: "Small Supplies",
-    amount: "8,500.00",
-    status: "Pending Review",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: true,
-  },
-  {
-    id: "EXP-2025022",
-    vendor: "Market Levy Officer",
-    date: "11/25/2025",
-    submittedBy: "Fatima Yusuf",
-    purpose: "Daily market levy payment",
-    category: "Market Levy",
-    amount: "3,000.00",
-    status: "Pending Review",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: false,
-  },
-  {
-    id: "EXP-2025024",
-    vendor: "Social Media Agency",
-    date: "11/25/2025",
-    submittedBy: "Fatima Yusuf",
-    purpose: "Instagram ad campaign - November",
-    category: "Marketing & Advertising",
-    amount: "22,000.00",
-    status: "Pending Review",
-    tags: [],
-    paymentMethod: "Card",
-    hasReceipt: false,
-  },
-  {
-    id: "EXP-2025001",
-    vendor: "Mobil Petrol Station",
-    date: "11/25/2025",
-    submittedBy: "Adebayao Okonkwo",
-    approvedBy: "Chioma Nwosu",
-    purpose: "Fuel for company vehicle - Logistics delivery",
-    category: "Fuel & Transportation",
-    amount: "15,000.00",
-    status: "Approved",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: true,
-  },
-  {
-    id: "EXP-2025026",
-    vendor: "UBA",
-    date: "11/24/2025",
-    submittedBy: "Fatima Yusuf",
-    purpose: "ATM withdrawal charges",
-    category: "Bank Charges",
-    amount: "1,500.00",
-    status: "Pending Review",
-    tags: [],
-    paymentMethod: "Other",
-    hasReceipt: false,
-  },
-  {
-    id: "EXP-2025029",
-    vendor: "Luxury Restaurant",
-    date: "11/24/2025",
-    submittedBy: "Adebayao Okonkwo",
-    approvedBy: "Chioma Nwosu",
-    purpose: "Team outing lunch",
-    category: "Staff Welfare",
-    amount: "45,000.00",
-    status: "Rejected",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: false,
-    rejectionReason:
-      "Amount exceeds approved staff welfare budget for casual lunches. Please submit a formal request for team outings exceeding ₦30,000.",
-  },
-  {
-    id: "EXP-2025004",
-    vendor: "Computer Village - Ikeja",
-    date: "11/24/2025",
-    submittedBy: "Fatima Yusuf",
-    approvedBy: "Chioma Nwosu",
-    purpose: "Office supplies: pens, notebooks, staplers",
-    category: "Small Supplies",
-    amount: "12,500.00",
-    status: "Approved",
-    tags: ["Petty Cash"],
-    paymentMethod: "Cash",
-    hasReceipt: false,
-  },
-  {
-    id: "EXP-2025007",
-    vendor: "Legal Associates Ltd",
-    date: "11/22/2025",
-    submittedBy: "Adebayao Okonkwo",
-    approvedBy: "Chioma Nwosu",
-    purpose: "Legal consultation - Business registration renewal",
-    category: "Professional Fees",
-    amount: "50,000.00",
-    status: "Approved",
-    tags: ["Petty Cash"],
-    paymentMethod: "Card",
-    hasReceipt: true,
-  },
-  {
-    id: "EXP-2025008",
-    vendor: "GTBank",
-    date: "11/22/2025",
-    submittedBy: "Adebayao Okonkwo",
-    approvedBy: "Chioma Nwosu",
-    purpose: "Bank transfer charges - Vendor payment",
-    category: "Bank Charges",
-    amount: "2,500.00",
-    status: "Approved",
-    tags: [],
-    paymentMethod: "Other",
-    hasReceipt: false,
-  },
-];
-
-const CATEGORY_OPTIONS = [
-  "Fuel & Transportation",
-  "Market Levy",
-  "Utilities (Power, Water, Data)",
-  "Small Supplies",
-  "Staff Welfare",
-  "Repairs & Maintenance",
-  "Professional Fees",
-  "Bank Charges",
-  "Marketing & Advertising",
-  "Other Operating Expenses",
-];
-const STATUS_OPTIONS = ["Approved", "Pending Review", "Submitted", "Rejected"];
-const METHOD_OPTIONS = ["Cash", "Card", "Other"];
-const EXPORT_OPTIONS = ["CSV", "PDF"];
+const STATUS_STYLE_MAP = {
+  Approved: { color: "text-green-800", bg: "bg-green-100" },
+  "Pending Review": { color: "text-amber-800", bg: "bg-amber-100" },
+  Rejected: { color: "text-red-800", bg: "bg-red-100" },
+  Submitted: { color: "text-blue-800", bg: "bg-blue-100" },
+  default: { color: "text-gray-900", bg: "bg-gray-200" },
+};
 
 /* ============================================================
     HELPER FUNCTIONS
 ============================================================ */
 
-const calculateSummary = (expenses, activeTab) => {
-  const filtered = expenses.filter(
-    (expense) => activeTab === "all" || expense.tags.includes("Petty Cash")
-  );
-
+const calculateSummary = (expenses) => {
   let finalSummary = {
     total: 0,
     approved: 0,
@@ -200,7 +48,8 @@ const calculateSummary = (expenses, activeTab) => {
     totalCount: 0,
   };
 
-  filtered.forEach((expense) => {
+  expenses.forEach((expense) => {
+    // Assuming amount comes as string with commas
     const amount = parseFloat(expense.amount.replace(/,/g, ""));
     finalSummary.total += amount;
     finalSummary.totalCount += 1;
@@ -231,13 +80,12 @@ const calculateSummary = (expenses, activeTab) => {
 ============================================================ */
 
 /**
- * Custom Dropdown Component (Select/Filter) with Click-Away closing logic
+ * Custom Dropdown Component
  */
 const CustomDropdown = ({ title, options, selected, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Logic to close the dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -245,21 +93,16 @@ const CustomDropdown = ({ title, options, selected, onSelect }) => {
       }
     };
 
-    // Bind the event listener
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    // Cleanup the event listener on component unmount or when dropdown closes
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
-  // Determine the label to display
   const label = selected || title;
-
-  // Tailwind classes for the Chevron icon
   const Chevron = isOpen ? ChevronUp : ChevronDown;
 
   return (
@@ -272,17 +115,14 @@ const CustomDropdown = ({ title, options, selected, onSelect }) => {
       </button>
 
       {isOpen && (
-        // Use z-50 and explicit white BG/dark text for high contrast in all environments
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
           <div
-            key="all"
-            // Added text-gray-800 for explicit contrast
             className={`px-4 py-2 text-sm cursor-pointer text-gray-800 hover:bg-indigo-50 hover:text-indigo-700 transition
-                    ${
-                      selected === null
-                        ? "bg-indigo-100 font-semibold text-indigo-700"
-                        : ""
-                    }`}
+                  ${
+                    selected === null
+                      ? "bg-indigo-100 font-semibold text-indigo-700"
+                      : ""
+                  }`}
             onClick={() => {
               onSelect(null);
               setIsOpen(false);
@@ -295,13 +135,12 @@ const CustomDropdown = ({ title, options, selected, onSelect }) => {
           {options.map((option) => (
             <div
               key={option}
-              // Added text-gray-800 for explicit contrast
               className={`px-4 py-2 text-sm cursor-pointer text-gray-800 hover:bg-indigo-50 hover:text-indigo-700 transition
-                    ${
-                      selected === option
-                        ? "bg-indigo-100 font-semibold text-indigo-700"
-                        : ""
-                    }`}
+                  ${
+                    selected === option
+                      ? "bg-indigo-100 font-semibold text-indigo-700"
+                      : ""
+                  }`}
               onClick={() => {
                 onSelect(option);
                 setIsOpen(false);
@@ -325,7 +164,6 @@ const ExportDropdown = ({ options, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Logic to close the dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -353,15 +191,12 @@ const ExportDropdown = ({ options, onSelect }) => {
       </button>
 
       {isOpen && (
-        // Use z-50 and explicit white BG/dark text for high contrast in all environments
         <div className="absolute right-0 z-50 w-32 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl overflow-y-auto">
           {options.map((option) => (
             <div
               key={option}
               className="px-4 py-2 text-sm cursor-pointer text-gray-800 hover:bg-indigo-50 hover:text-indigo-700 transition"
               onClick={() => {
-                // Placeholder for actual export logic
-                console.log(`Exporting ${option}...`);
                 onSelect(option);
                 setIsOpen(false);
               }}>
@@ -375,15 +210,7 @@ const ExportDropdown = ({ options, onSelect }) => {
 };
 
 const StatusBadge = ({ status }) => {
-  let style = { color: "text-gray-900", bg: "bg-gray-200" };
-  if (status === "Approved")
-    style = { color: "text-green-800", bg: "bg-green-100" };
-  if (status === "Pending Review")
-    style = { color: "text-amber-800", bg: "bg-amber-100" };
-  if (status === "Rejected")
-    style = { color: "text-red-800", bg: "bg-red-100" };
-  if (status === "Submitted")
-    style = { color: "text-blue-800", bg: "bg-blue-100" };
+  const style = STATUS_STYLE_MAP[status] || STATUS_STYLE_MAP.default;
 
   return (
     <span
@@ -399,9 +226,6 @@ const TagBadge = ({ tag }) => (
   </span>
 );
 
-/**
- * 1. Metric Status Card Component
- */
 const StatusMetricCard = ({
   title,
   value,
@@ -431,20 +255,16 @@ const StatusMetricCard = ({
   </div>
 );
 
-/**
- * 2. Expense List Item Component
- */
 const ExpenseListItem = ({ expense }) => {
   const isRejected = expense.status === "Rejected";
 
   return (
     <div
-      // MODIFIED HOVER EFFECT: Removed shadow, added subtle background, and thin ring/outline
       className={`relative p-4 sm:p-6 bg-white rounded-xl shadow-sm border border-gray-100 mb-4 transition duration-200 
       hover:bg-gray-50 hover:ring-2 hover:ring-indigo-300
       ${isRejected ? "border-red-300 ring-1 ring-red-100" : ""}`}>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-y-3 md:gap-x-6 items-center">
-        {/* Left Section: ID, Vendor, Status, Date */}
+        {/* Left Section */}
         <div className="md:col-span-4 flex flex-col space-y-2">
           <div className="flex items-center space-x-3">
             <span className="text-sm font-semibold text-indigo-700">
@@ -469,7 +289,7 @@ const ExpenseListItem = ({ expense }) => {
           </div>
         </div>
 
-        {/* Center Section: Purpose and Category */}
+        {/* Center Section */}
         <div className="md:col-span-5 flex flex-col space-y-2 text-sm">
           <p className="text-gray-700">
             <span className="font-medium text-gray-600">Purpose</span>:{" "}
@@ -489,7 +309,7 @@ const ExpenseListItem = ({ expense }) => {
           </div>
         </div>
 
-        {/* Right Section: Amount and Actions */}
+        {/* Right Section */}
         <div className="md:col-span-3 flex justify-between items-center md:justify-end md:items-start text-right">
           <div className="flex flex-col items-end">
             <p className="text-xl font-semibold text-gray-900 leading-none">
@@ -508,7 +328,6 @@ const ExpenseListItem = ({ expense }) => {
         </div>
       </div>
 
-      {/* Rejection Reason (Only for Rejected status) */}
       {isRejected && expense.rejectionReason && (
         <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
           <span className="font-semibold mr-2">Rejection Reason:</span>
@@ -527,8 +346,10 @@ const ExpensesRegister = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // State for Filters
+  // Filters State
   const [filters, setFilters] = useState({
     status: null,
     category: null,
@@ -538,27 +359,39 @@ const ExpensesRegister = () => {
     exportFormat: null,
   });
 
-  // ----------------------------------------------------
-  // *** NEW: Filter Logic (Fixes the non-functional dropdown issue) ***
-  // ----------------------------------------------------
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/expenseRegister");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch expense register data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filter Logic
   const filteredExpenses = useMemo(() => {
-    return EXPENSE_LIST.filter((expense) => {
-      // 1. Tab Filtering (Petty Cash Tag)
+    if (!data?.expenseList) return [];
+
+    return data.expenseList.filter((expense) => {
       const tabMatch =
         activeTab === "all" || expense.tags.includes("Petty Cash");
-
-      // 2. Status Filter
       const statusMatch = !filters.status || expense.status === filters.status;
-
-      // 3. Category Filter
       const categoryMatch =
         !filters.category || expense.category === filters.category;
-
-      // 4. Method Filter
       const methodMatch =
         !filters.method || expense.paymentMethod === filters.method;
-
-      // 5. Search Query Filter (Vendor or Purpose or ID)
       const queryLower = searchQuery.toLowerCase();
       const searchMatch =
         !queryLower ||
@@ -566,230 +399,229 @@ const ExpensesRegister = () => {
         expense.purpose.toLowerCase().includes(queryLower) ||
         expense.id.toLowerCase().includes(queryLower);
 
-      // NOTE: Date filtering logic would be added here if full date functionality was required.
-
       return (
         tabMatch && statusMatch && categoryMatch && methodMatch && searchMatch
       );
     });
-  }, [EXPENSE_LIST, activeTab, filters, searchQuery]);
-  // ----------------------------------------------------
+  }, [data, activeTab, filters, searchQuery]);
 
   const currentSummary = useMemo(
-    () => calculateSummary(filteredExpenses, activeTab),
-    [filteredExpenses, activeTab]
+    () => calculateSummary(filteredExpenses),
+    [filteredExpenses]
   );
 
-  // Custom container for Canvas display
-  const containerClasses =
-    "w-full font-sans bg-gray-50 min-h-screen p-4 sm:p-6 lg:px-8 lg:pt-8";
-
-  const content = (
-    <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
-      {/* 1. Header Section */}
-      <header className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
-        <div className="flex items-center mb-4 md:mb-0">
-          <button className="md:hidden p-2 mr-2 text-gray-600 rounded-lg hover:bg-gray-100">
-            <ArrowLeft size={24} /> {/* Back button for mobile */}
-          </button>
-          <Menu size={30} className="mr-3 text-indigo-700 hidden md:block" />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Expense Register
-            </h1>
-            <p className="text-sm text-gray-600 mt-0.5">
-              Comprehensive expense ledger for Lagos Main Branch
-            </p>
-          </div>
+  // Loading State
+  if (loading) {
+    return (
+      <Layout>
+        <div className="w-full h-screen flex flex-col items-center justify-center">
+          <Loader2 className="h-10 w-10 text-indigo-700 animate-spin mb-4" />
+          <p className="text-gray-600 font-medium">Loading Expenses...</p>
         </div>
-      </header>
+      </Layout>
+    );
+  }
 
-      {/* 2. Tabs */}
-      <div className="flex items-center mb-6 space-x-4">
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition duration-150
+  // Safe Data Access
+  const options = data?.options ?? {
+    categories: [],
+    statuses: [],
+    paymentMethods: [],
+    exportFormats: [],
+  };
+
+  return (
+    <Layout>
+      <div className="w-full font-sans p-2 sm:p-4 lg:px-6 pt-0">
+        {/* 1. Header Section */}
+        <header className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
+          <div className="flex items-center mb-4 md:mb-0">
+            <button className="md:hidden p-2 mr-2 text-gray-600 rounded-lg hover:bg-gray-100">
+              <ArrowLeft size={24} />
+            </button>
+            <Menu size={30} className="mr-3 text-indigo-700 hidden md:block" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Expense Register
+              </h1>
+              <p className="text-sm text-gray-600 mt-0.5">
+                Comprehensive expense ledger for Lagos Main Branch
+              </p>
+            </div>
+          </div>
+        </header>
+
+        {/* 2. Tabs */}
+        <div className="flex items-center mb-6 space-x-4">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition duration-150
             ${
               activeTab === "all"
                 ? "bg-indigo-700 text-white shadow-md"
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
             }`}>
-          <FileText size={18} className="mr-2" />
-          All Expenses
-        </button>
-        <button
-          onClick={() => setActiveTab("petty_cash")}
-          className={`flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition duration-150
+            <FileText size={18} className="mr-2" />
+            All Expenses
+          </button>
+          <button
+            onClick={() => setActiveTab("petty_cash")}
+            className={`flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition duration-150
             ${
               activeTab === "petty_cash"
                 ? "bg-indigo-700 text-white shadow-md"
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
             }`}>
-          <DollarSign size={18} className="mr-2" />
-          Petty Cash Log
-        </button>
-      </div>
+            <DollarSign size={18} className="mr-2" />
+            Petty Cash Log
+          </button>
+        </div>
 
-      {/* 3. Status/Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <StatusMetricCard
-          title="Total Amount"
-          value={currentSummary.total}
-          icon={DollarSign}
-          color="text-gray-900"
-          isTotal={true}
-          totalCount={currentSummary.totalCount}
-        />
-        <StatusMetricCard
-          title="Approved"
-          value={currentSummary.approved}
-          icon={CheckCircle}
-          color="text-green-600"
-        />
-        <StatusMetricCard
-          title="Pending"
-          value={currentSummary.pending}
-          icon={Clock}
-          color="text-amber-500"
-        />
-        <StatusMetricCard
-          title="Rejected"
-          value={currentSummary.rejected}
-          icon={XCircle}
-          color="text-red-500"
-        />
-      </div>
+        {/* 3. Status/Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatusMetricCard
+            title="Total Amount"
+            value={currentSummary.total}
+            icon={DollarSign}
+            color="text-gray-900"
+            isTotal={true}
+            totalCount={currentSummary.totalCount}
+          />
+          <StatusMetricCard
+            title="Approved"
+            value={currentSummary.approved}
+            icon={CheckCircle}
+            color="text-green-600"
+          />
+          <StatusMetricCard
+            title="Pending"
+            value={currentSummary.pending}
+            icon={Clock}
+            color="text-amber-500"
+          />
+          <StatusMetricCard
+            title="Rejected"
+            value={currentSummary.rejected}
+            icon={XCircle}
+            color="text-red-500"
+          />
+        </div>
 
-      {/* 4. Search and Filter Bar Container */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-100 mb-6">
-        {/* Search and Action Row */}
-        <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 p-4">
-          <div className="flex-grow relative w-full sm:w-auto">
-            <Search
-              size={20}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            />
-            {/* === Dark Mode Fix: Added bg-white and text-gray-900 for high contrast === */}
-            <input
-              type="text"
-              placeholder="Search by vendor, purpose, or expense ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm placeholder:text-gray-500 bg-white text-gray-900"
-            />
-          </div>
+        {/* 4. Search and Filter Bar */}
+        <div className="bg-white rounded-xl shadow-md border border-gray-100 mb-6">
+          <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 p-4">
+            <div className="flex-grow relative w-full sm:w-auto">
+              <Search
+                size={20}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
+              <input
+                type="text"
+                placeholder="Search by vendor, purpose, or expense ID..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm placeholder:text-gray-500 bg-white text-gray-900"
+              />
+            </div>
 
-          <div className="flex space-x-3 w-full sm:w-auto justify-end">
-            <button
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg shadow-sm transition
+            <div className="flex space-x-3 w-full sm:w-auto justify-end">
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg shadow-sm transition
                   ${
                     isFilterOpen
                       ? "bg-indigo-50 text-indigo-700 border border-indigo-300"
                       : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                   }`}>
-              <Settings2 size={18} className="mr-2" />
-              Filters
-              {isFilterOpen ? (
-                <ChevronUp size={16} className="ml-2" />
-              ) : (
-                <ChevronDown size={16} className="ml-2" />
-              )}
-            </button>
+                <Settings2 size={18} className="mr-2" />
+                Filters
+                {isFilterOpen ? (
+                  <ChevronUp size={16} className="ml-2" />
+                ) : (
+                  <ChevronDown size={16} className="ml-2" />
+                )}
+              </button>
 
-            {/* Export Dropdown */}
-            <ExportDropdown
-              options={EXPORT_OPTIONS}
-              onSelect={(format) =>
-                setFilters((f) => ({ ...f, exportFormat: format }))
-              }
-            />
+              <ExportDropdown
+                options={options.exportFormats}
+                onSelect={(format) =>
+                  setFilters((f) => ({ ...f, exportFormat: format }))
+                }
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Filter Dropdown Panel */}
-        <div
-          className={`px-4 pb-4 transition-all duration-300 ease-in-out
+          <div
+            className={`px-4 pb-4 transition-all duration-300 ease-in-out
             ${
               isFilterOpen
-                ? "max-h-96 opacity-100 border-t border-gray-200 pt-4" // Open: allow content to overflow visually
-                : "max-h-0 opacity-0 overflow-hidden pt-0" // Closed: clip content
+                ? "max-h-96 opacity-100 border-t border-gray-200 pt-4"
+                : "max-h-0 opacity-0 overflow-hidden pt-0"
             }`}>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {/* Status Dropdown (Now Functional) */}
-            <CustomDropdown
-              title="All Statuses"
-              options={STATUS_OPTIONS}
-              selected={filters.status}
-              onSelect={(status) => setFilters((f) => ({ ...f, status }))}
-            />
-
-            {/* Category Dropdown (Now Functional) */}
-            <CustomDropdown
-              title="All Categories"
-              options={CATEGORY_OPTIONS}
-              selected={filters.category}
-              onSelect={(category) => setFilters((f) => ({ ...f, category }))}
-            />
-
-            {/* Method Dropdown (Now Functional) */}
-            <CustomDropdown
-              title="All Methods"
-              options={METHOD_OPTIONS}
-              selected={filters.method}
-              onSelect={(method) => setFilters((f) => ({ ...f, method }))}
-            />
-
-            {/* Date From Picker */}
-            <div className="relative w-full">
-              <input
-                type="date"
-                placeholder="mm/dd/yyyy"
-                value={filters.dateFrom}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, dateFrom: e.target.value }))
-                }
-                className="w-full pl-16 pr-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <CustomDropdown
+                title="All Statuses"
+                options={options.statuses}
+                selected={filters.status}
+                onSelect={(status) => setFilters((f) => ({ ...f, status }))}
               />
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none text-xs">
-                From:
-              </span>
-            </div>
-
-            {/* Date To Picker */}
-            <div className="relative w-full">
-              <input
-                type="date"
-                placeholder="mm/dd/yyyy"
-                value={filters.dateTo}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, dateTo: e.target.value }))
-                }
-                className="w-full pl-16 pr-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+              <CustomDropdown
+                title="All Categories"
+                options={options.categories}
+                selected={filters.category}
+                onSelect={(category) => setFilters((f) => ({ ...f, category }))}
               />
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none text-xs">
-                To:
-              </span>
+              <CustomDropdown
+                title="All Methods"
+                options={options.paymentMethods}
+                selected={filters.method}
+                onSelect={(method) => setFilters((f) => ({ ...f, method }))}
+              />
+              {/* Date Inputs */}
+              <div className="relative w-full">
+                <input
+                  type="date"
+                  value={filters.dateFrom}
+                  onChange={(e) =>
+                    setFilters((f) => ({ ...f, dateFrom: e.target.value }))
+                  }
+                  className="w-full pl-16 pr-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none text-xs">
+                  From:
+                </span>
+              </div>
+              <div className="relative w-full">
+                <input
+                  type="date"
+                  value={filters.dateTo}
+                  onChange={(e) =>
+                    setFilters((f) => ({ ...f, dateTo: e.target.value }))
+                  }
+                  className="w-full pl-16 pr-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none text-xs">
+                  To:
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 5. Expense List - Filtered by activeTab and filters state */}
-      <div className="expense-list">
-        {filteredExpenses.map((expense) => (
-          <ExpenseListItem key={expense.id} expense={expense} />
-        ))}
-        {filteredExpenses.length === 0 && (
-          <div className="text-center p-12 bg-white rounded-xl text-gray-500 border-2 border-dashed border-gray-300">
-            No expenses found matching the current criteria.
-          </div>
-        )}
+        {/* 5. Expense List */}
+        <div className="expense-list">
+          {filteredExpenses.map((expense) => (
+            <ExpenseListItem key={expense.id} expense={expense} />
+          ))}
+          {filteredExpenses.length === 0 && (
+            <div className="text-center p-12 bg-white rounded-xl text-gray-500 border-2 border-dashed border-gray-300">
+              No expenses found matching the current criteria.
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
-
-  return <Layout>{content}</Layout>;
 };
 
 export default ExpensesRegister;

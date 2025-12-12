@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   CreditCard,
   Zap,
@@ -8,59 +9,22 @@ import {
   Info,
   CheckCircle,
   BadgeDollarSign,
+  Loader2,
+  PlusCircle,
 } from "lucide-react";
 
 /* ============================================================
-    CONSTANTS & MOCK DATA
+    CONSTANTS & UI LOGIC
 ============================================================ */
 
 const PRIMARY_COLOR = "text-indigo-600";
 const ICON_SIZE_SM = 18;
 const ICON_SIZE_LG = 28;
 
-const MOCK_GATEWAYS = [
-  {
-    id: 1,
-    name: "Paystack Nigeria",
-    code: "PAYSTACK",
-    status: "ACTIVE",
-    fee: "1.5% + ₦ 100",
-    currencies: "4 currencies",
-    publicKey: "pk_live_xxxxxxxxxxxx...",
-    lastUsed: "11/27/2024, 10:15:00 AM",
-    isTestMode: false,
-  },
-  {
-    id: 2,
-    name: "Flutterwave Africa",
-    code: "FLUTTERWAVE",
-    status: "ACTIVE",
-    fee: "1.4% + ₦ 0",
-    currencies: "6 currencies",
-    publicKey: "FLWPUBK_TEST-xxxxxxxx...",
-    lastUsed: "11/25/2024, 12:20:00 PM",
-    isTestMode: true,
-  },
-  {
-    id: 3,
-    name: "Stripe International",
-    code: "STRIPE",
-    status: "INACTIVE",
-    fee: "2.9% + ₦ 30",
-    currencies: "3 currencies",
-    publicKey: "pk_test_xxxxxxxxxxxx...",
-    lastUsed: "11/27/2024, 9:00:00 AM",
-    isTestMode: true,
-  },
-];
-
 /* ============================================================
-    HELPER COMPONENTS
+    SUB-COMPONENTS
 ============================================================ */
 
-/**
- * Renders the status badge (Active/Inactive).
- */
 const StatusBadge = ({ status }) => {
   const isActive = status === "ACTIVE";
   const bgColor = isActive ? "bg-green-100" : "bg-gray-200";
@@ -74,9 +38,6 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-/**
- * Renders a specific key-value pair row.
- */
 const DetailRow = ({ label, value, icon: Icon }) => (
   <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
     <div className="flex items-center space-x-2">
@@ -87,9 +48,6 @@ const DetailRow = ({ label, value, icon: Icon }) => (
   </div>
 );
 
-/**
- * Renders the Test Mode warning banner.
- */
 const TestModeWarning = () => (
   <div className="flex items-center p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg text-yellow-800 mb-4">
     <Info size={ICON_SIZE_SM} className="flex-shrink-0 mr-3" />
@@ -100,9 +58,6 @@ const TestModeWarning = () => (
   </div>
 );
 
-/**
- * Renders a single payment gateway card.
- */
 const GatewayCard = ({ gateway }) => {
   const isActive = gateway.status === "ACTIVE";
   const borderColor = isActive ? "border-green-400" : "border-gray-200";
@@ -162,9 +117,7 @@ const GatewayCard = ({ gateway }) => {
 
       {/* Actions */}
       <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
-        <button
-          className="flex items-center space-x-2 text-sm font-semibold text-gray-600 bg-gray-50 py-2 px-4 rounded-xl shadow-sm border border-gray-300 hover:bg-indigo-50 hover:text-indigo-700 transition-colors" // Added thin gray border
-        >
+        <button className="flex items-center space-x-2 text-sm font-semibold text-gray-600 bg-gray-50 py-2 px-4 rounded-xl shadow-sm border border-gray-300 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
           <Settings size={ICON_SIZE_SM} />
           <span>Configure</span>
         </button>
@@ -185,23 +138,78 @@ const GatewayCard = ({ gateway }) => {
   );
 };
 
+// Production-ready Empty State Component
+const EmptyState = () => (
+  <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center p-12 text-center bg-white rounded-xl border border-dashed border-gray-300">
+    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+      <Shield size={32} className="text-gray-400" />
+    </div>
+    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+      No Gateways Configured
+    </h3>
+    <p className="text-sm text-gray-500 mb-6 max-w-sm">
+      You haven't set up any payment gateways yet. Connect a provider to start
+      accepting payments.
+    </p>
+    <button className="flex items-center space-x-2 bg-indigo-600 text-white font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
+      <PlusCircle size={18} />
+      <span>Add New Gateway</span>
+    </button>
+  </div>
+);
+
 /* ============================================================
     MAIN COMPONENT
 ============================================================ */
 
-export function GatewayComponent() {
+export default function GatewayComponent() {
+  const [gateways, setGateways] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/ewallet");
+        if (response.ok) {
+          const data = await response.json();
+          // Access specific gateways key, defaulting to empty array if missing
+          setGateways(data.gateways ?? []);
+        } else {
+          console.error("Failed to fetch gateway data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Gateways...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen p-0 lg:p-0 font-sans">
       <div className="w-full mx-auto">
-        {/* Gateway Cards Grid (2 columns for tablet/desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 lg:p-8">
-          {MOCK_GATEWAYS.map((gateway) => (
-            <GatewayCard key={gateway.id} gateway={gateway} />
-          ))}
+          {gateways.length > 0 ? (
+            gateways.map((gateway) => (
+              <GatewayCard key={gateway.id} gateway={gateway} />
+            ))
+          ) : (
+            <EmptyState />
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-export default GatewayComponent;

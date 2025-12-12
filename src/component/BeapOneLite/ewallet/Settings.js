@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   Shield,
   Bell,
@@ -7,62 +8,31 @@ import {
   Lock,
   DollarSign,
   Repeat,
+  Loader2,
 } from "lucide-react";
 
 /* ============================================================
-    MOCK DATA & CONSTANTS
+    CONSTANTS & UI MAPPINGS
 ============================================================ */
 
 const PRIMARY_COLOR = "text-indigo-600";
-// FIX: Define ICON_SIZE_SM which was causing a ReferenceError
 const ICON_SIZE_SM = 18;
 
-// Mock state structure for settings
-const MOCK_SETTINGS = [
-  {
-    id: "2fa",
-    icon: Lock,
-    title: "Two-Factor Authentication",
-    description: "Require 2FA for all transactions.",
-    // EDITED: Set value to false (off)
-    value: false,
-    type: "toggle",
-  },
-  {
-    id: "autoSweep",
-    icon: Repeat,
-    title: "Auto-Sweep to Bank",
-    description: "Automatically sweep funds above ₦ 5,000,000.",
-    // EDITED: Set value to false (off)
-    value: false,
-    type: "toggle",
-  },
-  {
-    id: "lowBalanceAlerts",
-    icon: Bell,
-    title: "Low Balance Alerts",
-    description: "Notify when balance falls below ₦ 500,000.",
-    // RETAINED: value is already false
-    value: false,
-    type: "toggle",
-  },
-  {
-    id: "largeTxnAlerts",
-    icon: DollarSign,
-    title: "Large Transaction Alerts",
-    description: "Notify for transactions above ₦ 1,000,000.",
-    // EDITED: Set value to false (off)
-    value: false,
-    type: "toggle",
-  },
-];
+// Maps setting IDs to specific icons
+const SETTING_ICON_MAP = {
+  "2fa": Lock,
+  autoSweep: Repeat,
+  lowBalanceAlerts: Bell,
+  largeTxnAlerts: DollarSign,
+  default: Shield,
+};
 
 /* ============================================================
-    HELPER COMPONENTS
+    SUB-COMPONENTS
 ============================================================ */
 
 /**
- * Custom Toggle Switch (mimics native look, styled with Tailwind)
+ * Custom Toggle Switch
  */
 const ToggleSwitch = ({ id, checked, onChange }) => (
   <label
@@ -86,10 +56,9 @@ const ToggleSwitch = ({ id, checked, onChange }) => (
  * Renders a single security/automation item card.
  */
 const SettingItem = ({ item, handleToggle }) => {
-  const Icon = item.icon;
+  const Icon = SETTING_ICON_MAP[item.id] ?? SETTING_ICON_MAP.default;
 
   return (
-    // EDITED: Changed hover:shadow-md to hover:bg-gray-100 for color change effect
     <div className="flex justify-between items-center p-4 md:p-6 bg-white border border-gray-100 rounded-xl transition-colors hover:bg-gray-100">
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
@@ -130,8 +99,31 @@ const ApprovalRequiredBanner = () => (
     MAIN COMPONENT
 ============================================================ */
 
-export function SettingsComponent() {
-  const [settings, setSettings] = useState(MOCK_SETTINGS);
+export default function SettingsComponent() {
+  const [settings, setSettings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/ewallet");
+        if (response.ok) {
+          const data = await response.json();
+          // Assuming the API returns a 'settings' key containing the array
+          setSettings(data.settings ?? []);
+        } else {
+          console.error("Failed to fetch settings data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleToggle = (id) => {
     setSettings((prevSettings) =>
@@ -140,6 +132,15 @@ export function SettingsComponent() {
       )
     );
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Settings...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen p-0 lg:p-0 font-sans">
@@ -166,7 +167,7 @@ export function SettingsComponent() {
         {/* Alert/Configuration Section */}
         <ApprovalRequiredBanner />
 
-        {/* Additional Settings/Save Button (Placeholder for comprehensive view) */}
+        {/* Save Button */}
         <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
           <button className="flex items-center space-x-2 bg-indigo-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors">
             <CheckCircle size={ICON_SIZE_SM} />
@@ -177,5 +178,3 @@ export function SettingsComponent() {
     </div>
   );
 }
-
-export default SettingsComponent;

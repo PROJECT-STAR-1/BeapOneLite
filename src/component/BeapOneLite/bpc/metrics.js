@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import {
   Briefcase,
   TrendingUp,
@@ -12,6 +14,7 @@ import {
   Activity,
   Layers,
   Info,
+  Loader2,
 } from "lucide-react";
 import {
   LineChart,
@@ -29,14 +32,11 @@ import {
   Bar,
 } from "recharts";
 
-// ====================================================================
-// 1. DATA DEFINITIONS & STYLES (FIX: Static color map for Tailwind)
-// ====================================================================
+/* ============================================================
+    UI CONFIGURATION & MAPPINGS
+============================================================ */
 
-/**
- * Static map of full Tailwind classes to ensure correct compilation.
- */
-const colorStyleMap = {
+const COLOR_STYLE_MAP = {
   green: {
     border: "border-green-600",
     text: "text-green-600",
@@ -67,144 +67,60 @@ const colorStyleMap = {
     text: "text-cyan-600",
     icon: "text-cyan-500",
   },
+  default: {
+    border: "border-gray-500",
+    text: "text-gray-900",
+    icon: "text-gray-500",
+  },
 };
 
-// --- Data for Top Row (BPC MT1.png) ---
-const TOP_METRICS = [
-  {
-    title: "Context Transfer Success Rate",
-    icon: CheckCircle,
-    color: "green",
-    value: "100.0%",
-    target: "> 99.5%",
-    trend: "+0.5% since 5Y",
-    status: "Success",
-  },
-  {
-    title: "Integration Error Rate",
-    icon: AlertTriangle,
-    color: "indigo",
-    value: "0.00%",
-    target: "< 0.1%",
-    trend: "-0.5% since 5Y",
-    status: "Success",
-  },
-  {
-    title: "BPC Service Adoption",
-    icon: Layers,
-    color: "purple",
-    value: "8.9%",
-    target: "Of active projects",
-    trend: "+1.8% since 5Y",
-    status: "Info",
-  },
-  {
-    title: "Avg Revenue Per Service",
-    icon: DollarSign,
-    color: "yellow",
-    value: "$14.0K",
-    target: "Per engagement",
-    trend: "+$3K since 5Y",
-    status: "Info",
-  },
-];
+const TOP_ICON_MAP = {
+  "context-success": CheckCircle,
+  "integration-error": AlertTriangle,
+  "service-adoption": Layers,
+  "avg-revenue": DollarSign,
+};
 
-// --- Data for Adoption Trend (BPC MT2.png - Left) ---
-const ADOPTION_TREND_DATA = [
-  { name: "5Y", value: 0.75 },
-  { name: "3Y", value: 1.5 },
-  { name: "1Y", value: 2.25 },
-  { name: "Q", value: 2.55 },
-  { name: "M", value: 2.65 },
-  { name: "W", value: 2.75 },
-  { name: "D", value: 2.9 },
-  { name: "Today", value: 2.7 },
-];
+const HEALTH_ICON_MAP = {
+  "ctx-transfer": Zap,
+  "billing-latency": Clock,
+  "revenue-per-service": DollarSign,
+  "error-rate": AlertTriangle,
+  default: Activity,
+};
 
-// --- Data for Service Distribution (BPC MT2.png - Right) ---
-const CATEGORY_DISTRIBUTION_DATA = [
-  { name: "Growth Strategy", value: 33, color: "#312E81" }, // Indigo-900
-  { name: "Compliance", value: 17, color: "#8B5CF6" }, // Violet-500
-  { name: "Operations", value: 17, color: "#3B82F6" }, // Blue-500
-  { name: "Market Expansion", value: 17, color: "#FCD34D" }, // Amber-300
-  { name: "Financial Advisory", value: 16, color: "#10B981" }, // Emerald-500
-];
-const TOTAL_ACTIVE_ENGAGEMENTS = 6;
-const RADIAN = Math.PI / 180;
+const COMPLIANCE_ICON_MAP = {
+  "mandatory-note": Clock,
+  "audit-time": Info,
+};
 
-// --- Data for Performance SLOs (BPC MT3.png) ---
-const PERFORMANCE_SLO_DATA = [
-  {
-    name: "Context Transfer (P1)",
-    actual: 245,
-    target: 500,
-    unit: "ms",
-    status: "On Target",
-    color: "#0D3E7F", // Darker Blue/Indigo
-    xAxisLabel: "245ms",
-    targetLabel: "500ms",
-  },
-  {
-    name: "Billing Event (P2)",
-    actual: 80,
-    target: 120,
-    unit: "ms",
-    status: "On Target",
-    color: "#0D3E7F",
-    xAxisLabel: "80ms",
-    targetLabel: "120ms",
-  },
-  {
-    name: "Catalog Sync (P3)",
-    actual: 2.5,
-    target: 5,
-    unit: "min",
-    status: "Excellent",
-    color: "#0D3E7F",
-    xAxisLabel: "2.5min",
-    targetLabel: "5min",
-  },
-];
+const CHART_COLOR_MAP = {
+  growth: "#312E81", // Indigo-900
+  compliance: "#8B5CF6", // Violet-500
+  operations: "#3B82F6", // Blue-500
+  market: "#FCD34D", // Amber-300
+  financial: "#10B981", // Emerald-500
+  default: "#8884d8",
+};
 
-// --- Data for Integration Health Summary (BPC MT4.png - Bottom) ---
-const HEALTH_SUMMARY_METRICS = [
-  { label: "Context Transfer Success", value: "100.0%", icon: Zap, unit: "" },
-  { label: "Billing Event Latency", value: "80ms", icon: Clock, unit: "" },
-  {
-    label: "Avg Revenue Per Service",
-    value: "$14.0K",
-    icon: DollarSign,
-    unit: "",
-  },
-  {
-    label: "Integration Error Rate",
-    value: "0.00%",
-    icon: AlertTriangle,
-    unit: "",
-  },
-];
-
-// ====================================================================
-// 2. REUSABLE COMPONENTS
-// ====================================================================
+/* ============================================================
+    SUB-COMPONENTS
+============================================================ */
 
 /**
- * Top Metric Card Component (from BPC MT1.png top row)
+ * Top Metric Card Component
  */
 const MetricCard = ({
   title,
-  icon: Icon,
-  color,
+  id,
+  styleCategory,
   value,
   target,
   trend,
   status,
 }) => {
-  const styles = colorStyleMap[color] || {
-    border: "border-gray-500",
-    text: "text-gray-900",
-    icon: "text-gray-500",
-  };
+  const styles = COLOR_STYLE_MAP[styleCategory] || COLOR_STYLE_MAP.default;
+  const Icon = TOP_ICON_MAP[id] || Activity;
   const trendColor =
     status === "Success" ? "text-green-600" : "text-purple-600";
 
@@ -215,7 +131,6 @@ const MetricCard = ({
         <Icon size={18} className={`mr-2 ${styles.icon}`} />
         <h3 className={`text-sm font-medium text-gray-700`}>{title}</h3>
       </div>
-      {/* Main value uses the theme color from the map */}
       <p className={`text-3xl font-bold mb-2 ${styles.text}`}>{value}</p>
       <div className="text-xs text-gray-500">
         <p className="mb-1">
@@ -227,29 +142,21 @@ const MetricCard = ({
   );
 };
 
-/**
- * Custom Tooltip for Line Chart
- */
+// Tooltips
 const CustomLineTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="p-2 bg-white border border-gray-300 rounded-md shadow-lg text-sm">
         <p className="font-bold text-gray-700">{label}</p>
-        <p className="text-green-500">
-          Adoption: {payload[0].value.toFixed(2)}
-        </p>
+        <p className="text-green-500">Value: {payload[0].value.toFixed(2)}</p>
       </div>
     );
   }
   return null;
 };
 
-/**
- * Custom Tooltip for Bar Chart (SLOs)
- */
 const CustomSLOTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const data = PERFORMANCE_SLO_DATA.find((d) => d.name === label);
     return (
       <div className="p-3 bg-white border border-gray-300 rounded-md shadow-lg text-sm">
         <p className="font-bold text-gray-800 mb-1">{label.split("(")[0]}</p>
@@ -257,14 +164,12 @@ const CustomSLOTooltip = ({ active, payload, label }) => {
           Actual:{" "}
           <span className="font-semibold text-indigo-800">
             {payload.find((p) => p.name === "Actual")?.value}
-            {data?.unit}
           </span>
         </p>
         <p className="text-gray-600">
           Target:{" "}
           <span className="font-semibold text-gray-400">
             {payload.find((p) => p.name === "Target")?.value}
-            {data?.unit}
           </span>
         </p>
       </div>
@@ -273,9 +178,6 @@ const CustomSLOTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-/**
- * Custom Tooltip for Pie Chart
- */
 const CustomPieTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -293,28 +195,27 @@ const CustomPieTooltip = ({ active, payload }) => {
 };
 
 /**
- * Health Summary Card (BPC MT4.png bottom row)
+ * Health Summary Card
  */
-const HealthSummaryCard = ({ label, value, icon: Icon, unit }) => (
-  <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-full">
-    <p className="text-3xl font-bold text-gray-900 mb-3 flex items-baseline">
-      {value}
-    </p>
-    <div className="flex items-center text-sm text-gray-500">
-      <Icon size={16} className="mr-1 text-purple-500" />
-      <span className="truncate">{label}</span>
+const HealthSummaryCard = ({ label, value, id }) => {
+  const Icon = HEALTH_ICON_MAP[id] || HEALTH_ICON_MAP.default;
+
+  return (
+    <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-full">
+      <p className="text-3xl font-bold text-gray-900 mb-3 flex items-baseline">
+        {value}
+      </p>
+      <div className="flex items-center text-sm text-gray-500">
+        <Icon size={16} className="mr-1 text-purple-500" />
+        <span className="truncate">{label}</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-// ====================================================================
-// 3. CHART COMPONENTS
-// ====================================================================
+// --- CHART COMPONENTS ---
 
-/**
- * Chart 1: Context Transfer Success Rate Trend (BPC MT1.png - Bottom Left)
- */
-const ContextSuccessTrend = () => (
+const ContextSuccessTrend = ({ data }) => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col h-full">
     <h3 className="text-lg font-semibold text-gray-900 mb-1">
       Context Transfer Success Rate Trend
@@ -325,7 +226,7 @@ const ContextSuccessTrend = () => (
     <div className="flex-grow min-h-[250px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={ADOPTION_TREND_DATA}
+          data={data}
           margin={{ top: 10, right: 30, left: -20, bottom: 5 }}>
           <CartesianGrid
             strokeDasharray="3 3"
@@ -359,11 +260,7 @@ const ContextSuccessTrend = () => (
   </div>
 );
 
-/**
- * Chart 2: Integration Error Rate Trend (BPC MT1.png - Bottom Right)
- */
 const ErrorRateTrend = () => {
-  // Flipped and scaled version of the adoption data for a downward trend look
   const ERROR_RATE_DATA = [
     { name: "5Y", value: 0.55 },
     { name: "3Y", value: 0.25 },
@@ -426,10 +323,7 @@ const ErrorRateTrend = () => {
   );
 };
 
-/**
- * Chart 3: Service Adoption Trend (BPC MT2.png - Left)
- */
-const BpcAdoptionTrend = () => (
+const BpcAdoptionTrend = ({ data }) => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col h-full">
     <h3 className="text-lg font-semibold text-gray-900 mb-1">
       BPC Service Adoption Trend
@@ -440,7 +334,7 @@ const BpcAdoptionTrend = () => (
     <div className="flex-grow min-h-[250px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={ADOPTION_TREND_DATA}
+          data={data}
           margin={{ top: 10, right: 30, left: -20, bottom: 5 }}>
           <CartesianGrid
             strokeDasharray="3 3"
@@ -474,10 +368,7 @@ const BpcAdoptionTrend = () => (
   </div>
 );
 
-/**
- * Chart 4: Service Category Distribution (BPC MT2.png - Right)
- */
-const CategoryDistribution = () => {
+const CategoryDistribution = ({ data, totalEngagements }) => {
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col h-full">
       <h3 className="text-lg font-semibold text-gray-900 mb-1">
@@ -490,31 +381,38 @@ const CategoryDistribution = () => {
       <div className="flex-grow flex flex-col items-center justify-center min-h-[250px] w-full">
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
-            <Tooltip content={<CustomPieTooltip />} />{" "}
-            {/* Tooltip for hover details */}
+            <Tooltip content={<CustomPieTooltip />} />
             <Pie
-              data={CATEGORY_DISTRIBUTION_DATA}
+              data={data}
               cx="50%"
               cy="50%"
-              innerRadius={0} // Full pie chart
+              innerRadius={0}
               outerRadius={100}
               fill="#8884d8"
               paddingAngle={3}
               dataKey="value"
               labelLine={false}>
-              {CATEGORY_DISTRIBUTION_DATA.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={
+                    CHART_COLOR_MAP[entry.categoryId] || CHART_COLOR_MAP.default
+                  }
+                />
               ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-        {/* Custom Legend (kept as requested) */}
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm mt-4">
-          {CATEGORY_DISTRIBUTION_DATA.map((entry, index) => (
+          {data.map((entry, index) => (
             <div key={index} className="flex items-center">
               <span
                 className="w-2 h-2 rounded-full mr-1"
-                style={{ backgroundColor: entry.color }}></span>
+                style={{
+                  backgroundColor:
+                    CHART_COLOR_MAP[entry.categoryId] ||
+                    CHART_COLOR_MAP.default,
+                }}></span>
               <span className="text-gray-600">
                 {entry.name}{" "}
                 <span className="font-medium text-gray-800">
@@ -526,39 +424,27 @@ const CategoryDistribution = () => {
         </div>
         <p className="text-sm text-gray-500 mt-4">
           Total Active Engagements:{" "}
-          <span className="font-bold text-gray-800">
-            {TOTAL_ACTIVE_ENGAGEMENTS}
-          </span>
+          <span className="font-bold text-gray-800">{totalEngagements}</span>
         </p>
       </div>
     </div>
   );
 };
 
-/**
- * Chart 5: Performance SLOs (BPC MT3.png)
- * MODIFIED:
- * - Reduced description margin (mb-6 -> mb-3)
- * - Reduced chart height (h-[240px] -> h-[200px]) to move chart up and free space below
- * - Reduced font size and boldness of metric values below the chart
- */
-const PerformanceSLOs = () => (
-  // Increased overall container height to h-[400px] to ensure everything fits fully
+const PerformanceSLOs = ({ data }) => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 min-h-[400px]">
     <h3 className="text-lg font-semibold text-gray-900 mb-1">
       Performance SLOs
     </h3>
-    {/* Reduced margin for tighter spacing */}
     <p className="text-sm text-gray-500 mb-3">
       Target vs. Actual latency and sync metrics
     </p>
 
-    {/* Reduced height from 240px to 200px to move chart up and free space below */}
     <div className="h-[200px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={PERFORMANCE_SLO_DATA}
-          layout="horizontal" // Vertical bars
+          data={data}
+          layout="horizontal"
           margin={{ top: 10, right: 30, left: 10, bottom: 0 }}
           barCategoryGap="20%"
           barGap={4}>
@@ -571,14 +457,13 @@ const PerformanceSLOs = () => (
             dataKey="name"
             type="category"
             stroke="#6B7280"
-            // Straight and Bold labels
             style={{ fontSize: "11px", fontWeight: "bold" }}
             tickLine={false}
             axisLine={false}
-            angle={0} // Straight
+            angle={0}
             textAnchor="middle"
             height={30}
-            interval={0} // Force show all labels
+            interval={0}
           />
           <YAxis
             type="number"
@@ -587,35 +472,31 @@ const PerformanceSLOs = () => (
             domain={[0, 500]}
           />
           <Tooltip content={<CustomSLOTooltip />} />
-          {/* Bar thickness remains at 40 (wider) */}
           <Bar dataKey="target" fill="#E5E7EB" name="Target" barSize={40} />
           <Bar dataKey="actual" fill="#0D3E7F" name="Actual" barSize={40} />
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Metric details adjusted for tighter layout and reduced boldness */}
       <div className="flex justify-around items-end pt-1 mt-3 border-t border-gray-100">
-        {PERFORMANCE_SLO_DATA.map((data, index) => (
+        {data.map((item, index) => (
           <div
             key={index}
             className="flex flex-col items-center w-1/3 px-1 text-center">
-            {/* Reduced font size (lg->base) and boldness (bold->semibold) */}
             <p className="text-base font-semibold text-indigo-900 leading-tight">
-              {data.actual}
-              {data.unit}
+              {item.actual}
+              {item.unit}
             </p>
             <p className="text-xs text-gray-500 mb-0.5 leading-tight">
-              Target: {data.target}
-              {data.unit}
+              Target: {item.target}
+              {item.unit}
             </p>
-            {/* Reduced horizontal padding */}
             <span
               className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                data.status === "Excellent"
+                item.status === "Excellent"
                   ? "bg-green-100 text-green-700"
                   : "bg-green-100 text-green-700"
               }`}>
-              {data.status}
+              {item.status}
             </span>
           </div>
         ))}
@@ -624,46 +505,19 @@ const PerformanceSLOs = () => (
   </div>
 );
 
-/**
- * Section for Audit & Compliance Metrics (BPC MT4.png - Top Row)
- */
-const ComplianceMetrics = () => {
-  // Data specific to BPC MT4.png top row
-  const COMPLIANCE_METRICS = [
-    {
-      title: "Mandatory Note Compliance (M1)",
-      icon: Clock,
-      color: "orange",
-      value: "100.0%",
-      description: "Adherence to Module Note Framework for high-risk actions",
-      target: "100%",
-      statusText: "Compliant",
-      statusColor: "green",
-    },
-    {
-      title: "Audit Justification Time (M2)",
-      icon: Info,
-      color: "cyan",
-      value: "1.58 min",
-      description: "Average time to locate Module Note for billing events",
-      target: "< 2 minutes",
-      statusText: "Excellent",
-      statusColor: "green",
-    },
-  ];
-
+const ComplianceMetrics = ({ metrics }) => {
   const ComplianceCard = ({
     title,
-    icon: Icon,
-    color,
+    id,
+    styleCategory,
     value,
     description,
     target,
     statusText,
-    statusColor,
+    tagColor,
   }) => {
-    // Use the static map for the icon color
-    const iconClasses = colorStyleMap[color]?.icon || "text-gray-500";
+    const iconClasses = COLOR_STYLE_MAP[styleCategory]?.icon || "text-gray-500";
+    const Icon = COMPLIANCE_ICON_MAP[id] || Clock;
 
     return (
       <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100 transition hover:shadow-lg">
@@ -672,19 +526,16 @@ const ComplianceMetrics = () => {
           <h3 className="text-sm font-medium text-gray-700">{title}</h3>
         </div>
 
-        {/* Reduced font size (4xl->3xl) and boldness (extrabold->bold) */}
         <p className="text-3xl font-bold text-orange-600 mb-2">{value}</p>
-
         <p className="text-xs text-gray-500 mb-4">{description}</p>
 
         <div className="flex justify-between items-center text-xs font-medium border-t pt-2 mt-2">
           <p className="text-gray-600">Target:</p>
           <div className="flex items-center space-x-2">
             <span className="text-gray-800 font-bold">{target}</span>
-            {/* Tailwind compiler safe classes for the status tag */}
             <span
               className={`px-2 py-0.5 rounded-full ${
-                statusColor === "green"
+                tagColor === "green"
                   ? "bg-green-100 text-green-700"
                   : "bg-cyan-100 text-cyan-700"
               }`}>
@@ -698,16 +549,14 @@ const ComplianceMetrics = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
-      <ComplianceCard {...COMPLIANCE_METRICS[0]} />
-      <ComplianceCard {...COMPLIANCE_METRICS[1]} />
+      {metrics.map((metric, index) => (
+        <ComplianceCard key={index} {...metric} />
+      ))}
     </div>
   );
 };
 
-/**
- * Section for Integration Health Summary (BPC MT4.png - Bottom Row)
- */
-const IntegrationHealthSummary = () => (
+const IntegrationHealthSummary = ({ metrics }) => (
   <div className="mt-12">
     <h3 className="text-lg font-semibold text-gray-900 mb-1">
       Integration Health Summary
@@ -716,48 +565,92 @@ const IntegrationHealthSummary = () => (
       Comprehensive view of BPC Portal integration across all systems
     </p>
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {HEALTH_SUMMARY_METRICS.map((metric, index) => (
+      {metrics.map((metric, index) => (
         <HealthSummaryCard key={index} {...metric} />
       ))}
     </div>
   </div>
 );
 
-// ====================================================================
-// 4. MAIN EXPORT
-// ====================================================================
+/* ============================================================
+    MAIN EXPORT
+============================================================ */
 
 export default function BpcMetricsDashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/beapOnelite/bpc");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Failed to fetch BPC metrics data");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 min-h-[400px]">
+        <Loader2 className="w-10 h-10 text-indigo-700 animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Metrics...</p>
+      </div>
+    );
+  }
+
+  // Safe Data Access
+  const topMetrics = data?.topMetrics ?? [];
+  const adoptionTrendData = data?.adoptionTrendData ?? [];
+  const categoryDistributionData = data?.categoryDistributionData ?? [];
+  const performanceSloData = data?.performanceSloData ?? [];
+  const complianceMetrics = data?.complianceMetrics ?? [];
+  const healthSummaryMetrics = data?.healthSummaryMetrics ?? [];
+  const totalActiveEngagements = data?.meta?.totalActiveEngagements ?? 0;
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        {/* Top Metric Cards (BPC MT1.png - Top Row) */}
+        {/* Top Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          {TOP_METRICS.map((metric, index) => (
+          {topMetrics.map((metric, index) => (
             <MetricCard key={index} {...metric} />
           ))}
         </div>
 
-        {/* Integration Trend Charts (BPC MT1.png - Bottom Row) */}
+        {/* Integration Trend Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <ContextSuccessTrend />
+          <ContextSuccessTrend data={adoptionTrendData} />
           <ErrorRateTrend />
         </div>
 
-        {/* Adoption and Distribution Charts (BPC MT2.png) */}
+        {/* Adoption and Distribution Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <BpcAdoptionTrend />
-          <CategoryDistribution />
+          <BpcAdoptionTrend data={adoptionTrendData} />
+          <CategoryDistribution
+            data={categoryDistributionData}
+            totalEngagements={totalActiveEngagements}
+          />
         </div>
 
-        {/* Performance SLOs (BPC MT3.png) */}
+        {/* Performance SLOs */}
         <div className="mt-6">
-          <PerformanceSLOs />
+          <PerformanceSLOs data={performanceSloData} />
         </div>
 
-        {/* Compliance and Health (BPC MT4.png) */}
-        <ComplianceMetrics />
-        <IntegrationHealthSummary />
+        {/* Compliance and Health */}
+        <ComplianceMetrics metrics={complianceMetrics} />
+        <IntegrationHealthSummary metrics={healthSummaryMetrics} />
 
         {/* Standard Footer/Spacer for UI consistency */}
         <div className="h-10"></div>
