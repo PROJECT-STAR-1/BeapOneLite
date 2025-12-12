@@ -1,0 +1,114 @@
+{
+  "branch": "Lagos Main Branch",
+  "summary": {
+    "overdue_notice": {
+      "message": "Urgent: 1 Overdue Invoice",
+      "total_overdue": 1857000,
+      "percentage_past_due": "33.3%"
+    },
+    "total_outstanding": {
+      "amount": 1857000,
+      "unpaid_invoices": 1
+    },
+    "collected_paid": {
+      "amount": 13618000,
+      "paid_invoices": 2
+    },
+    "avg_dso": {
+      "days": 30
+    },
+    "conversion_rate": {
+      "rate": "0%"
+    },
+    "pending": {
+      "amount": 0,
+      "invoices": 0
+    },
+    "overdue": {
+      "amount": 1857000,
+      "invoices": 1
+    },
+    "total_quotes": {
+      "count": 0,
+      "converted": 0
+    },
+    "draft_invoices": {
+      "count": 0
+    }
+  },
+  "aging_schedule": {
+    "current_not_due": {
+      "invoices": 0,
+      "amount": 0
+    },
+    "1_30_days": {
+      "invoices": 1,
+      "amount": 1857000
+    },
+    "31_60_days": {
+      "invoices": 0,
+      "amount": 0
+    },
+    "60_plus_days": {
+      "invoices": 0,
+      "amount": 0
+    }
+  },
+  "top_customers_outstanding": [
+    {
+      "customer": "Guaranty Trust Bank",
+      "invoices": 1,
+      "amount": 1857000
+    }
+  ],
+  "recent_invoices": [
+    {
+      "customer": "Acme Corporation",
+      "invoice_number": "INV-001",
+      "date": "11/20/2025",
+      "amount_usd": 5000,
+      "amount_ngn": 7737500,
+      "status": "Paid"
+    },
+    {
+      "customer": "TechStart Ltd",
+      "invoice_number": "INV-004",
+      "date": "11/15/2025",
+      "amount_usd": 3800,
+      "amount_ngn": 5880500,
+      "status": "Paid"
+    },
+    {
+      "customer": "Guaranty Trust Bank",
+      "invoice_number": "INV-003",
+      "date": "10/15/2025",
+      "amount_usd": 1200,
+      "amount_ngn": 1857000,
+      "status": "Overdue"
+    }
+  ],
+  "revenueTrend": {
+    "dates": ["11/5", "11/8", "11/11", "11/14", "11/17", "11/20", "11/23", "11/26", "11/29", "12/4"],
+    "invoices": [0, 0, 0, 6000000, 0, 7800000, 0, 0, 0, 0],
+    "quotes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+  "invoiceStatusDistribution": {
+    "paidPercent": 67,
+    "overduePercent": 33
+  },
+  "agingBreakdown": {
+    "categories": ["Current", "1-30 Days", "31-60 Days", "60+ Days"],
+    "values": [0, 1800000, 0, 0]
+  },
+  "collectionEfficiency": {
+    "paid": 14000000,
+    "outstanding": 3000000,
+    "collectionRatePercent": 88.0
+  },
+  "quickActions": [
+    "New Invoice",
+    "New Quote",
+    "Reports",
+    "Clients"
+  ]
+}

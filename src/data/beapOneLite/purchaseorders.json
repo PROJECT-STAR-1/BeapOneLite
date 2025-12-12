@@ -1,0 +1,27 @@
+{
+  "metrics": {
+    "totalPOs": 5,
+    "totalPOValue": 7980000,
+    "signOffCompliance": 75,
+    "signedPOs": 4,
+    "issuedPOs": 4,
+    "poToBillMatchRate": 0,
+    "avgApprovalTimeHours": 51.9,
+    "avgApprovalTimeTarget": 4
+  },
+  "statuses": [
+    { "name": "Draft", "count": 1 },
+    { "name": "Issued", "count": 1 },
+    { "name": "Reviewed", "count": 0 },
+    { "name": "Approved", "count": 1 },
+    { "name": "Received", "count": 1 },
+    { "name": "Cancelled", "count": 1 }
+  ],
+  "purchaseOrders": [
+    { "poNumber": "NGN01-2025-000123", "vendor": "TechSupply Nigeria Ltd", "status": "Issued", "department": "IT", "items": 2, "totalAmount": 2580000, "createdDate": "19 Nov 2025", "alert": false },
+    { "poNumber": "NGN01-2025-000124", "vendor": "Office Mart", "status": "Approved", "department": "Admin", "items": 1, "totalAmount": 450000, "createdDate": "20 Nov 2025", "alert": false },
+    { "poNumber": "NGN01-2025-000125", "vendor": "BuildMart Ltd", "status": "Draft", "department": "Operations", "items": 1, "totalAmount": 1200000, "createdDate": "22 Nov 2025", "alert": false },
+    { "poNumber": "NGN01-2025-000126", "vendor": "Enterprise Solutions", "status": "Received", "department": "IT", "items": 1, "totalAmount": 3750000, "createdDate": "10 Nov 2025", "alert": true },
+    { "poNumber": "NGN01-2025-000127", "vendor": "ABC Trading Co.", "status": "Cancelled", "department": "Procurement", "items": 1, "totalAmount": 890000, "createdDate": "18 Nov 2025", "alert": false }
+  ]
+}

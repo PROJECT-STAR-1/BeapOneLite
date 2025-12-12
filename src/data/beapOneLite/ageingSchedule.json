@@ -1,0 +1,57 @@
+{
+  "metrics": {
+    "totalOutstanding": 1857000,
+    "avgOverdue": 21,
+    "atRisk": 0,
+    "current": 0
+  },
+  "agingBreakdown": [
+    {
+      "label": "Current",
+      "count": 0,
+      "amount": 0,
+      "percentage": 0
+    },
+    {
+      "label": "1-30 Days",
+      "count": 1,
+      "amount": 1857000,
+      "percentage": 100
+    },
+    {
+      "label": "31-60 Days",
+      "count": 0,
+      "amount": 0,
+      "percentage": 0
+    },
+    {
+      "label": "60+ Days",
+      "count": 0,
+      "amount": 0,
+      "percentage": 0
+    }
+  ],
+  "outstandingInvoices": [
+    {
+      "id": "INV-003",
+      "customer": "Guaranty Trust Bank",
+      "due": "2025-11-14",
+      "amountUSD": 1200,
+      "amountNGN": 1857000
+    },
+    {
+      "id": "INV-010",
+      "customer": "Acme Corporation",
+      "due": "2025-11-02",
+      "amountUSD": 8000,
+      "amountNGN": 12320000
+    },
+    {
+      "id": "INV-202",
+      "customer": "TechStart Ltd",
+      "due": "2025-12-01",
+      "amountUSD": 450,
+      "amountNGN": 690000
+    }
+  ]
+}
