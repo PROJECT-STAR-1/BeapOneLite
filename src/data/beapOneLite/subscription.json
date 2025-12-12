@@ -94,5 +94,117 @@
       }
     ],
     "locationLimitReached": true
-  }
+  },
+  "upgradeModal": {
+    "targetTierName": "Premium Tier",
+    "targetTierPricePerUser": 3500,
+    "currentActiveUsers": 5,
+    "estimatedMonthlyCost": 17500,
+    "featuresGained": [
+      "Bills & Payables",
+      "Procurement",
+      "Sales Orders",
+      "Document Management"
+    ],
+    "proratedWarning": "Your upgrade will be effective immediately. You’ll be charged a prorated amount for the remainder of this billing cycle."
+  },
+  "downgradeModal": {
+    "targetTierName": "Free Tier",
+    "targetTierPricePerUser": 0,
+    "currentActiveUsers": 5,
+    "estimatedMonthlyCost": 0,
+    "featuresLost": [
+      "Bank Reconciliation",
+      "Project Profitability",
+      "Financial Reporting",
+      "Email Support (24hr SLA)"
+    ],
+    "proratedWarning": "Your downgrade will be effective immediately. You’ll be charged a prorated amount for the remainder of this billing cycle. Note: Excess data/locations will be locked."
+  },
+  "billingDetails": {
+    "currentBilling": {
+      "period": "November 2024",
+      "userSubscription": { "quantity": 5, "price": 1500 },
+      "dataStorage": { "used": 3.8, "limit": 5, "overagePricePerGB": 250 },
+      "eInvoice": { "quantity": 30, "price": 45 },
+      "total": 8850,
+      "nextBillingDate": "December 1, 2024"
+    },
+    "paymentHistory": [
+      {
+        "amount": 7500,
+        "date": "Nov 1, 2024",
+        "method": "Bank Transfer",
+        "invoiceId": "INV-2024-11-001",
+        "status": "Success"
+      },
+      {
+        "amount": 9250,
+        "date": "Oct 1, 2024",
+        "method": "Card (Visa ****1234)",
+        "invoiceId": "INV-2024-10-001",
+        "status": "Success"
+      },
+      {
+        "amount": 7500,
+        "date": "Sep 1, 2024",
+        "method": "Bank Transfer",
+        "invoiceId": "INV-2024-09-001",
+        "status": "Success"
+      }
+    ]
+  },
+  "featureMatrix": {
+    "currentTier": "Standard Tier",
+    "features": [
+      { "id": "M1", "title": "Client Invoicing", "tier": "standard", "accessible": true },
+      { "id": "M2", "title": "Expense Tracking", "tier": "standard", "accessible": true },
+      { "id": "M3", "title": "Account Management", "tier": "standard", "accessible": true },
+      { "id": "M4", "title": "Bank Reconciliation", "tier": "standard", "accessible": true },
+      { "id": "M5", "title": "Project Profitability", "tier": "standard", "accessible": true },
+      { "id": "M6", "title": "Financial Reporting", "tier": "standard", "accessible": true },
+
+      { "id": "M7", "title": "Bills & Payables", "tier": "premium", "accessible": false },
+      { "id": "M8", "title": "Procurement", "tier": "premium", "accessible": false },
+      { "id": "M9", "title": "Sales Orders", "tier": "premium", "accessible": false },
+      { "id": "M10", "title": "Document Management", "tier": "premium", "accessible": false }
+    ]
+  },
+  "auditLog": [
+    {
+      "id": 1,
+      "type": "TIER CHANGE",
+      "tag": "USER_ACTION",
+      "date": "Nov 1, 2024, 01:00 AM",
+      "note": "Business expanded to 5 users and 2 locations. Upgraded to access Bank Reconciliation and Project Profitability features.",
+      "author": "Adebayo Okonkwo",
+      "from": "FREE",
+      "to": "STANDARD"
+    },
+    {
+      "id": 2,
+      "type": "CHARGE CALC",
+      "tag": "S1_CRON",
+      "date": "Nov 1, 2024, 11:30 AM",
+      "chargeAmount": "₦7,500"
+    },
+    {
+      "id": 3,
+      "type": "PG WEBHOOK RECEIVE",
+      "tag": "PG_WEBHOOK",
+      "date": "Nov 1, 2024, 11:35 AM",
+      "chargeAmount": "₦7,500",
+      "status": "Pending → Paid"
+    },
+    {
+      "id": 4,
+      "type": "STATUS TRANSITION",
+      "tag": "USER_ACTION",
+      "date": "Oct 15, 2024, 03:22 PM",
+      "note": "Evaluated STANDARD tier but decided to stay on FREE for now. Will upgrade when second location opens.",
+      "author": "Adebayo Okonkwo",
+      "from": "FREE",
+      "to": "FREE"
+    }
+  ]
 }

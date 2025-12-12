@@ -218,16 +218,16 @@ export default function Usage() {
                     {usageMetrics.locations.map((location, index) => (
                         <div 
                             key={index} 
-                            className={`p-4 bg-${location.color}-50 border border-${location.color}-100 rounded-xl flex justify-between items-center`}
+                            className={`p-4 bg-green-50 border border-green-100 rounded-xl flex justify-between items-center`}
                         >
                             <div>
                                 <div className="flex items-center gap-2 font-medium">
-                                    <MapPin className={`w-4 h-4 text-${location.color}-600`} />
+                                    <MapPin className={`w-4 h-4 text-green-600`} />
                                     {location.name}
                                 </div>
                                 <p className="text-xs text-gray-500 mt-1">{location.type}</p>
                             </div>
-                            <span className={`px-3 py-1 text-xs rounded-full bg-${location.color}-600 text-white`}>
+                            <span className={`px-3 py-1 text-xs rounded-full bg-green-600 text-white`}>
                                 {location.status}
                             </span>
                         </div>

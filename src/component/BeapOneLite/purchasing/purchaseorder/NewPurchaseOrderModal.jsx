@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { X, Plus, Trash2, AlertCircle } from 'lucide-react';
 
-export default function NewPurchaseOrderModal({ open, onClose }) {
+export default function NewPurchaseOrderModal({ isOpen, onClose }) {
   if (!open) return null;
 
   const vendorOptions = [

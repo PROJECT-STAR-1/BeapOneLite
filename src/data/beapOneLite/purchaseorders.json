@@ -1,27 +1,165 @@
 {
-  "metrics": {
-    "totalPOs": 5,
-    "totalPOValue": 7980000,
-    "signOffCompliance": 75,
-    "signedPOs": 4,
-    "issuedPOs": 4,
-    "poToBillMatchRate": 0,
-    "avgApprovalTimeHours": 51.9,
-    "avgApprovalTimeTarget": 4
-  },
-  "statuses": [
-    { "name": "Draft", "count": 1 },
-    { "name": "Issued", "count": 1 },
-    { "name": "Reviewed", "count": 0 },
-    { "name": "Approved", "count": 1 },
-    { "name": "Received", "count": 1 },
-    { "name": "Cancelled", "count": 1 }
-  ],
   "purchaseOrders": [
-    { "poNumber": "NGN01-2025-000123", "vendor": "TechSupply Nigeria Ltd", "status": "Issued", "department": "IT", "items": 2, "totalAmount": 2580000, "createdDate": "19 Nov 2025", "alert": false },
-    { "poNumber": "NGN01-2025-000124", "vendor": "Office Mart", "status": "Approved", "department": "Admin", "items": 1, "totalAmount": 450000, "createdDate": "20 Nov 2025", "alert": false },
-    { "poNumber": "NGN01-2025-000125", "vendor": "BuildMart Ltd", "status": "Draft", "department": "Operations", "items": 1, "totalAmount": 1200000, "createdDate": "22 Nov 2025", "alert": false },
-    { "poNumber": "NGN01-2025-000126", "vendor": "Enterprise Solutions", "status": "Received", "department": "IT", "items": 1, "totalAmount": 3750000, "createdDate": "10 Nov 2025", "alert": true },
-    { "poNumber": "NGN01-2025-000127", "vendor": "ABC Trading Co.", "status": "Cancelled", "department": "Procurement", "items": 1, "totalAmount": 890000, "createdDate": "18 Nov 2025", "alert": false }
+    {
+      "poNumber": "NGN01-2025-000123",
+      "vendor": "TechSupply Nigeria Ltd",
+      "status": "Issued",
+      "department": "IT",
+      "itemsCount": 2,
+      "totalAmount": 2580000,
+      "createdDate": "19 Nov 2025",
+      "hasAlert": false,
+      "isSigned": true,
+      "timeToIssueHours": 10.5,
+      "details": {
+        "branchId": "NGN01",
+        "salesStaff": "adebayo@example.com",
+        "createdBy": "adebayo@example.com",
+        "updatedAt": "20 Nov 2025, 11:30",
+        "signedBy": "USR-001",
+        "signedAt": "20 Nov 2025, 11:30",
+        "subtotal": 2400000,
+        "totalTax": 180000,
+        "totalAmount": 2580000
+      },
+      "vendorInfo": {
+        "vendorId": "VND-001",
+        "ewalletAddress": "ewallet-techsupply@example.com",
+        "taxId": "TIN-45678901",
+        "businessRegNumber": "RC-123456",
+        "address": "15 Adeola Odeku Street, Victoria Island, Lagos",
+        "phoneNumbers": [
+          "+234-802-555-0101",
+          "+234-802-555-0102"
+        ],
+        "emailAddresses": [
+          "accounts@techsupply.ng",
+          "info@techsupply.ng"
+        ]
+      },
+      "lineItems": [
+        {
+          "item": "Dell Laptop - Latitude 5420",
+          "description": "14\" FHD, i5-11th Gen, 8GB RAM, 256GB SSD",
+          "quantity": 5,
+          "unitPrice": 350000,
+          "taxRate": "7.5%",
+          "lineTotal": 1881250
+        },
+        {
+          "item": "HP Monitor 24\"",
+          "description": "Full HD IPS Display",
+          "quantity": 10,
+          "unitPrice": 65000,
+          "taxRate": "7.5%",
+          "lineTotal": 698750
+        }
+      ],
+      "auditLog": [
+        {
+          "event": "PO.Created",
+          "user": "adebayo@example.com",
+          "timestamp": "19 Nov 2025, 15:00",
+          "note": "Initial PO creation for IT equipment procurement"
+        },
+        {
+          "event": "PO.SignedOff",
+          "user": "USR-001",
+          "timestamp": "20 Nov 2025, 11:30",
+          "note": null,
+          "oldStatus": "Draft",
+          "newStatus": "Issued"
+        }
+      ]
+    },
+    {
+      "poNumber": "NGN01-2025-000124",
+      "vendor": "Office Mart",
+      "status": "Approved",
+      "department": "Admin",
+      "itemsCount": 1,
+      "totalAmount": 450000,
+      "createdDate": "20 Nov 2025",
+      "hasAlert": false,
+      "isSigned": true,
+      "timeToIssueHours": 2.1,
+      "details": { "subtotal": 450000, "totalTax": 0, "totalAmount": 450000 },
+      "vendorInfo": { "phoneNumbers": [], "emailAddresses": [] },
+      "lineItems": [],
+      "auditLog": []
+    },
+    {
+      "poNumber": "NGN01-2025-000125",
+      "vendor": "BuildMart Ltd",
+      "status": "Draft",
+      "department": "Operations",
+      "itemsCount": 1,
+      "totalAmount": 1200000,
+      "createdDate": "22 Nov 2025",
+      "hasAlert": false,
+      "isSigned": false,
+      "timeToIssueHours": null,
+      "details": { "subtotal": 1200000, "totalTax": 0, "totalAmount": 1200000 },
+      "vendorInfo": { "phoneNumbers": [], "emailAddresses": [] },
+      "lineItems": [
+         {
+          "item": "Cement - 50kg bags",
+          "description": "Dangote Premium",
+          "quantity": 200,
+          "unitPrice": 5500,
+          "taxRate": "7.5%",
+          "lineTotal": 1182500
+        }
+      ],
+      "auditLog": []
+    },
+    {
+      "poNumber": "NGN01-2025-000126",
+      "vendor": "Enterprise Solutions",
+      "status": "Received",
+      "department": "IT",
+      "itemsCount": 1,
+      "totalAmount": 3750000,
+      "createdDate": "10 Nov 2025",
+      "hasAlert": true,
+      "isSigned": true,
+      "timeToIssueHours": 5.4,
+      "details": { "subtotal": 3750000, "totalTax": 0, "totalAmount": 3750000 },
+      "vendorInfo": { "phoneNumbers": [], "emailAddresses": [] },
+      "lineItems": [],
+      "auditLog": []
+    },
+    {
+      "poNumber": "NGN01-2025-000127",
+      "vendor": "ABC Trading Co.",
+      "status": "Cancelled",
+      "department": "Procurement",
+      "itemsCount": 1,
+      "totalAmount": 890000,
+      "createdDate": "18 Nov 2025",
+      "hasAlert": false,
+      "isSigned": false,
+      "timeToIssueHours": null,
+      "details": { "subtotal": 890000, "totalTax": 0, "totalAmount": 890000 },
+      "vendorInfo": { "phoneNumbers": [], "emailAddresses": [] },
+      "lineItems": [],
+      "auditLog": []
+    },
+    {
+      "poNumber": "NGN01-2025-000128",
+      "vendor": "Global Supplies",
+      "status": "Issued",
+      "department": "Procurement",
+      "itemsCount": 3,
+      "totalAmount": 1000000,
+      "createdDate": "23 Nov 2025",
+      "hasAlert": false,
+      "isSigned": false,
+      "timeToIssueHours": 1.9,
+      "details": { "subtotal": 1000000, "totalTax": 0, "totalAmount": 1000000 },
+      "vendorInfo": { "phoneNumbers": [], "emailAddresses": [] },
+      "lineItems": [],
+      "auditLog": []
+    }
   ]
 }
