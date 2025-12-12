@@ -11,7 +11,6 @@ export default function TaxWhtReport() {
   const [location, setLocation] = useState("All Locations");
   const [activeTaxTab, setActiveTaxTab] = useState("vat");
 
-  // Editable start & end dates
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -42,10 +41,10 @@ export default function TaxWhtReport() {
           VAT/Sales Tax and Withholding Tax compliance tracking
         </p>
 
-        {/* Filter Bar */}
+        {/* FILTER BAR */}
         <div className="mt-8 bg-white rounded-xl shadow-sm p-5 flex justify-around items-center gap-4">
-
-          {/* Date Range Dropdown */}
+          
+          {/* Date Range */}
           <div className="relative">
             <button
               onClick={() => setOpenDateDropdown(!openDateDropdown)}
@@ -73,7 +72,7 @@ export default function TaxWhtReport() {
             )}
           </div>
 
-          {/* Start Date Input */}
+          {/* START DATE */}
           <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg border border-gray-300">
             <input
               type="date"
@@ -83,7 +82,7 @@ export default function TaxWhtReport() {
             />
           </div>
 
-          {/* End Date Input */}
+          {/* END DATE */}
           <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg border border-gray-300">
             <input
               type="date"
@@ -93,7 +92,7 @@ export default function TaxWhtReport() {
             />
           </div>
 
-          {/* Location Dropdown */}
+          {/* LOCATION */}
           <div className="relative">
             <button
               onClick={() => setOpenLocationDropdown(!openLocationDropdown)}
@@ -122,31 +121,50 @@ export default function TaxWhtReport() {
           </div>
         </div>
 
-        {/* Tab Switcher */}
+        {/* TABS */}
         <div className="mt-6 w-full bg-gray-100 rounded-xl flex items-center">
           <p
             onClick={() => setActiveTaxTab("vat")}
-            className={`flex w-full px-6 py-3 items-center gap-2 font-semibold cursor-pointer rounded-xl transition-all justify-center ${
-              activeTaxTab === "vat" ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
+            className={`flex w-full px-6 py-3 items-center gap-2 font-semibold cursor-pointer rounded-xl justify-center ${
+              activeTaxTab === "vat"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-600"
             }`}
           >
-            <CircleDollarSign size={20}/> VAT / Sales Tax
+            <CircleDollarSign size={20} /> VAT / Sales Tax
           </p>
 
           <p
             onClick={() => setActiveTaxTab("wht")}
-            className={`flex items-center w-full px-6 py-3 font-semibold cursor-pointer rounded-xl transition-all justify-center ${
-              activeTaxTab === "wht" ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
+            className={`flex w-full px-6 py-3 items-center gap-2 font-semibold cursor-pointer rounded-xl justify-center ${
+              activeTaxTab === "wht"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-600"
             }`}
           >
-            <Percent size={20}/> Withholding Tax (WHT)
+            <Percent size={20} /> Withholding Tax (WHT)
           </p>
         </div>
 
-        {/* Tab Content */}
+        {/* CONTENT */}
         <div className="mt-4 p-6 bg-white rounded-xl shadow-sm">
-          {activeTaxTab === "vat" && <VatSalesTax />}
-          {activeTaxTab === "wht" && <WithholdingTax />}
+          {activeTaxTab === "vat" && (
+            <VatSalesTax
+              dateRange={dateRange}
+              startDate={startDate}
+              endDate={endDate}
+               location={location === "All Locations" ? "" : location}
+            />
+          )}
+
+          {activeTaxTab === "wht" && (
+            <WithholdingTax
+              dateRange={dateRange}
+              startDate={startDate}
+              endDate={endDate}
+              location={location}
+            />
+          )}
         </div>
       </div>
     </Layout>
