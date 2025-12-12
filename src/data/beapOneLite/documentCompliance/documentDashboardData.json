@@ -1,0 +1,59 @@
+{
+  "complianceAdherenceScore": {
+    "score": "87.2%",
+    "statusText": "Good - Minor improvements needed",
+    "mar": "99.3%",
+    "expiredDocs": 1
+  },
+  "documentAuditIntegrity": {
+    "status": "PASS",
+    "description": "All mandatory notes present",
+    "detail": "100% integrity means all high-risk actions (delete, permission changes) have mandatory notes"
+  },
+  "mandatoryAttachmentRate": {
+    "rate": "99.3%",
+    "note": "Some transactions missing required documents",
+    "target": "100% (M7, M8 transactions)"
+  },
+  "avgRenewalLeadTime": {
+    "days": 55,
+    "targetText": "Target: > 30 days - Current performance exceeds target"
+  },
+  "rbacDenialRatio": {
+    "ratio": "50%",
+    "accessDenied": 2,
+    "successfulAccess": 3
+  },
+  "noteEntryRate": {
+    "ratePerDay": 1,
+    "note": "Higher rate indicates active document management and strong audit trail"
+  },
+  "complianceDocumentStatus": {
+    "total": 4,
+    "active": 2,
+    "pending": 1,
+    "expired": 1,
+    "percentages": {
+      "active": "50%",
+      "pending": "25%",
+      "expired": "25%"
+    }
+  },
+  "documentTypeDistribution": {
+    "categories": [
+      { "name": "General", "count": 2 },
+      { "name": "License", "count": 1 },
+      { "name": "Tax Report", "count": 1 },
+      { "name": "Permit", "count": 1 },
+      { "name": "Certificate", "count": 1 },
+      { "name": "Expense Receipt", "count": 1 }
+    ],
+    "totalCategories": 10
+  },
+  "repositorySummary": {
+    "totalDocuments": 10,
+    "complianceDocs": 4,
+    "mandatoryAttachments": 2,
+    "totalStorage": "18.5 MB"
+  }
+}

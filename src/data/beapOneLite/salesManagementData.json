@@ -1,0 +1,110 @@
+{
+  "dashboardMetrics": {
+    "conversionCompliance": "100%",
+    "conversionComplianceText": "All conversions compliant",
+    "conversionComplianceTargetMet": true,
+    "avgFulfillmentTime": "120h",
+    "avgFulfillmentTimeSub": "~5 days",
+    "averageOrderValue": "9.88M",
+    "averageOrderValueSub": "Per order",
+    "fulfillmentRate": "75%",
+    "fulfillmentRateSub": "Active orders fulfilled",
+    "conversionLag": "2.1 days",
+    "conversionLagTargetMet": true,
+    "conversionLagSub": "Within 3-day target",
+    "reservedInventoryValue": "46.4M",
+    "reservedInventoryValueSub": "Open orders",
+    "cancellationRate": "12.5%",
+    "cancellationRateSub": "Of total orders",
+    "noteCompliance": "100%",
+    "noteComplianceSub": "All critical actions documented",
+    "noteComplianceTargetMet": true
+  },
+  "orderData": [
+    { "name": "Draft", "count": 1, "value": 1000000, "statusId": "Draft" },
+    { "name": "Placed", "count": 2, "value": 5000000, "statusId": "Placed" },
+    {
+      "name": "In Production",
+      "count": 1,
+      "value": 43540000,
+      "statusId": "InProduction"
+    },
+    {
+      "name": "Ready for Delivery",
+      "count": 1,
+      "value": 20000000,
+      "statusId": "ReadyForDelivery"
+    },
+    {
+      "name": "Fulfilled",
+      "count": 1,
+      "value": 5250000,
+      "statusId": "Fulfilled"
+    },
+    { "name": "Invoiced", "count": 1, "value": 650000, "statusId": "Invoiced" },
+    {
+      "name": "Cancelled",
+      "count": 1,
+      "value": 2880000,
+      "statusId": "Cancelled"
+    }
+  ],
+  "criticalAlerts": [
+    {
+      "id": "NGN01-WHS-2511-000008",
+      "vendor": "Office Supplies Plus",
+      "description": "Delivery date (Nov 20) has passed. Current status: Placed",
+      "severity": "HIGH",
+      "alertType": "circle"
+    },
+    {
+      "id": "NGN01-WHS-2511-000002",
+      "vendor": "MegaMart Wholesale",
+      "description": "Inventory reservation failed. Stock may be insufficient.",
+      "severity": "HIGH",
+      "alertType": "triangle"
+    }
+  ],
+  "recentSalesOrders": [
+    {
+      "soNumber": "NGN01-RTL-2511-000001",
+      "customer": "Global Tech Solutions",
+      "branch": "Lagos Main",
+      "status": "Fulfilled",
+      "totalAmount": "5.25M",
+      "deliveryDate": "11/22/2024"
+    },
+    {
+      "soNumber": "NGN01-WHS-2511-000002",
+      "customer": "MegaMart Wholesale",
+      "branch": "Lagos Main",
+      "status": "Placed",
+      "totalAmount": "2.88M",
+      "deliveryDate": "11/25/2024"
+    },
+    {
+      "soNumber": "AB/02-CORP-2511-000003",
+      "customer": "Federal Ministry of Education",
+      "branch": "Abuja Branch",
+      "status": "In Production",
+      "totalAmount": "43.54M",
+      "deliveryDate": "11/30/2024"
+    },
+    {
+      "soNumber": "NGN01-RTL-2511-000004",
+      "customer": "SmartHome Electronics",
+      "branch": "Lagos Main",
+      "status": "Draft",
+      "totalAmount": "2.61M",
+      "deliveryDate": "11/28/2024"
+    },
+    {
+      "soNumber": "NGN01-RTL-2510-000005",
+      "customer": "QuickBuy Stores",
+      "branch": "Lagos Main",
+      "status": "Invoiced",
+      "totalAmount": "0.65M",
+      "deliveryDate": "10/18/2024"
+    }
+  ]
+}

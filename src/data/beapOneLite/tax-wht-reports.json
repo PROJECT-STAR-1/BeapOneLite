@@ -1,0 +1,74 @@
+{
+  "vatsalestax": {
+    "netTaxableSales": 16720930.23,
+    "totalVatCollected": 1254069.77,
+    "vatRate": 7.5,
+    "totalInvoices": 4,
+    "taxCompliance": "100%",
+    "vatBreakdown": [
+      {
+        "label": "VAT 7.5%",
+        "invoices": 4,
+        "amount": 1254069.77,
+        "base": 16720930.23
+      },
+      {
+        "label": "Zero-Rated (0%)",
+        "invoices": 0,
+        "amount": 0.0,
+        "base": 0.0
+      },
+      {
+        "label": "Exempt",
+        "invoices": 0,
+        "amount": 0.0,
+        "base": 0.0
+      }
+    ],
+    "locations": [
+      {
+        "name": "Lagos Main Branch",
+        "invoices": 3,
+        "vatAmount": 1079651.16,
+        "baseAmount": 14395348.84
+      },
+      {
+        "name": "Abuja Office",
+        "invoices": 1,
+        "vatAmount": 174418.60,
+        "baseAmount": 2325581.40
+      }
+    ]
+  },
+  "withholdingtax": {
+    "summaryCards": [
+      {
+        "title": "Total WHT Credit",
+        "value": "₦116,279.07",
+        "subtitle": "Withheld by clients",
+        "percentage": "%"
+      },
+      {
+        "title": "WHT Invoices",
+        "value": "0",
+        "subtitle": "With WHT applied"
+      },
+      {
+        "title": "WHT Utilization",
+        "value": "30%",
+        "subtitle": "Of total invoices"
+      }
+    ],
+    "summaryDetails": [
+      { "label": "Standard WHT Rate", "value": "5%" },
+      { "label": "Total Invoices Subject to WHT", "value": "0" },
+      { "label": "Total WHT Amount", "value": "₦116,279.07", "isCurrency": true },
+      { "label": "Tax Credit Available", "value": "₦116,279.07", "isCurrency": true}
+    ],
+    "customerWHT": [
+      { "id": 1, "name": "Acme Corporation", "invoices": 1, "amount": 359883.72 },
+      { "id": 2, "name": "Beta Systems Inc.", "invoices": 3, "amount": 98765.43 },
+      { "id": 3, "name": "Gamma Corp", "invoices": 1, "amount": 50000.00 }
+    ]
+  }
+}
