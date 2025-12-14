@@ -1,0 +1,101 @@
+{
+  "projectData": [
+    {
+      "id": "project-1",
+      "name": "Acme Corp Website Redesign",
+      "client": "Acme Corporation",
+      "location": "LCT-001",
+      "date": "Nov 2025",
+      "loggedHours": 9,
+      "status": "Active",
+      "profitMargin": 98.4,
+      "grossProfit": 7611438,
+      "revenue": 7737500,
+      "bur": 78,
+      "burHours": 7
+    },
+    {
+      "id": "project-2",
+      "name": "TechStart Mobile App Development",
+      "client": "TechStart Ltd",
+      "location": "LCT-001",
+      "date": "Oct 2025",
+      "loggedHours": 15,
+      "status": "Active",
+      "profitMargin": 97.7,
+      "grossProfit": 5748000,
+      "revenue": 5880500,
+      "bur": 93,
+      "burHours": 14
+    },
+    {
+      "id": "project-3",
+      "name": "Finance Plus Integration",
+      "client": "Finance Plus Inc",
+      "location": "LCT-002",
+      "date": "Sep 2025",
+      "loggedHours": 20,
+      "status": "Completed",
+      "profitMargin": 99.0,
+      "grossProfit": 2476000,
+      "revenue": 2500000,
+      "bur": 80,
+      "burHours": 16
+    },
+    {
+      "id": "project-4",
+      "name": "Global Logistics Dashboard",
+      "client": "Global Logistics",
+      "location": "LCT-001",
+      "date": "Nov 2025",
+      "loggedHours": 12,
+      "status": "Active",
+      "profitMargin": 0.0,
+      "grossProfit": 0,
+      "revenue": 0,
+      "bur": 100,
+      "burHours": 12
+    }
+  ],
+  "summaryData": {
+    "totalProjects": 4,
+    "totalRevenue": 16118000,
+    "totalProfit": 15835438,
+    "avgMargin": 73.8
+  },
+  "utilizationSummary": {
+    "teamMembers": 2,
+    "totalTimeHours": 36,
+    "billableHours": 33,
+    "avgBUR": 93,
+    "nonBillableCost": 17500,
+    "timeEntries": 8
+  },
+  "staffData": [
+    {
+      "name": "Adebayo Okonkwo",
+      "projects": 3,
+      "timeEntries": 5,
+      "totalTime": 20,
+      "billable": 17,
+      "nonBillable": 3,
+      "internalCost": 17500,
+      "bur": 85
+    },
+    {
+      "name": "Amina Hassan",
+      "projects": 3,
+      "timeEntries": 3,
+      "totalTime": 16,
+      "billable": 16,
+      "nonBillable": 0,
+      "internalCost": 0,
+      "bur": 100
+    }
+  ],
+  "timePeriods": [
+    { "value": "30d", "label": "Last 30 Days" },
+    { "value": "7d", "label": "Last 7 Days" },
+    { "value": "all", "label": "All Time" }
+  ]
+}
