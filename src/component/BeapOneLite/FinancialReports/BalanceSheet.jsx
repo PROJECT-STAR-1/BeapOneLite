@@ -1,59 +1,67 @@
 // components/BalanceSheet.jsx
 
-import { useState } from 'react';
-import { Download, AlertTriangle, Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Download, AlertTriangle, Info, DollarSign } from 'lucide-react';
 
 
 export default function BalanceSheet() {
-  const asOfDate = 'December 4, 2025';
+  const [balanceSheetData, setBalanceSheetData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Balance Sheet Data
-  const data = {
-    assets: {
-      current: [
-        { label: 'Cash and Bank', amount: 0 },
-        { label: 'Accounts Receivable', amount: 0 },
-        { label: 'Inventory', amount: 150000 },
-        { label: 'Prepaid Expenses', amount: 45000 },
-      ],
-      fixed: [
-        { label: 'Property, Plant & Equipment', amount: 850000 },
-        { label: 'Less: Accumulated Depreciation', amount: -120000, negative: true },
-      ],
-    },
-    liabilities: {
-      current: [
-        { label: 'Accounts Payable', amount: 0 },
-        { label: 'Accrued Expenses', amount: 35000 },
-        { label: 'Short-term Debt', amount: 100000 },
-        { label: 'Taxes Payable', amount: 25000 },
-      ],
-      longTerm: [
-        { label: 'Long-term Debt', amount: 300000 },
-        { label: 'Deferred Revenue', amount: 50000 },
-      ],
-    },
-    equity: [
-      { label: "Owner's Equity", amount: 500000 },
-      { label: 'Retained Earnings', amount: 75000 },
-      { label: 'Current Period Income', amount: 0 },
-    ],
-  };
+  // --- Data Fetching Effect ---
+  useEffect(() => {
+    async function fetchBalanceSheetData() {
+      try {
+        const res = await fetch('/api/beapOnelite/financialreports');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const json = await res.json();
+        
+        // Extract the balance sheet specific data from the main payload
+        if (json.balanceSheetData) {
+          setBalanceSheetData(json.balanceSheetData);
+        } else {
+          setError("Balance Sheet data not found in the API response.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch Balance Sheet data:", err);
+        setError("Failed to load financial data.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-  // Calculations
-  const totalCurrentAssets = data.assets.current.reduce((sum, item) => sum + item.amount, 0);
-  const totalFixedAssets = data.assets.fixed.reduce((sum, item) => sum + item.amount, 0);
+    fetchBalanceSheetData();
+  }, []);
+  // -----------------------------
+
+  if (isLoading) {
+      return <div className="p-6 text-center text-gray-500">Loading Balance Sheet...</div>;
+  }
+  
+  if (error || !balanceSheetData) {
+      return <div className="p-6 text-center text-red-500">{error || "Balance Sheet data is not available."}</div>;
+  }
+
+  // Destructure data once available
+  const { asOfDate, assets, liabilities, equity } = balanceSheetData;
+
+  // Calculations (UNCHANGED)
+  const totalCurrentAssets = assets.current.reduce((sum, item) => sum + item.amount, 0);
+  const totalFixedAssets = assets.fixed.reduce((sum, item) => sum + item.amount, 0);
   const totalAssets = totalCurrentAssets + totalFixedAssets;
 
-  const totalCurrentLiabilities = data.liabilities.current.reduce((sum, item) => sum + item.amount, 0);
-  const totalLongTermLiabilities = data.liabilities.longTerm.reduce((sum, item) => sum + item.amount, 0);
+  const totalCurrentLiabilities = liabilities.current.reduce((sum, item) => sum + item.amount, 0);
+  const totalLongTermLiabilities = liabilities.longTerm.reduce((sum, item) => sum + item.amount, 0);
   const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
 
-  const totalEquity = data.equity.reduce((sum, item) => sum + item.amount, 0);
+  const totalEquity = equity.reduce((sum, item) => sum + item.amount, 0);
   const totalLiabilitiesAndEquity = totalLiabilities + totalEquity;
 
-  const difference = totalAssets - totalLiabilitiesAndEquity; // -160,000
-  const isBalanced = difference === 0;
+  const difference = totalAssets - totalLiabilitiesAndEquity;
+  const isBalanced = Math.abs(difference) < 0.01; 
 
   const formatCurrency = (amount) => {
     const abs = Math.abs(amount);
@@ -65,141 +73,19 @@ export default function BalanceSheet() {
     return amount < 0 ? `-${formatted}` : formatted;
   };
 
-const handleExportPDF = () => {
-  const doc = new jsPDF('p', 'mm', 'a4');
-  const pageWidth = doc.internal.pageSize.getWidth();
-
-  // Title
-  doc.setFontSize(20);
-  doc.setTextColor(30, 58, 138);
-  doc.text('Balance Sheet', pageWidth / 2, 20, { align: 'center' });
-
-  doc.setFontSize(12);
-  doc.setTextColor(100);
-  doc.text(`As of ${asOfDate}`, pageWidth / 2, 30, { align: 'center' });
-
-  let y = 50;
-
-  // Helper to add line items
-  const addLineItem = (label, amount, indent = 0) => {
-    const xLabel = 20 + indent * 10;
-    const xAmount = 180;
-
-    if (amount < 0) doc.setTextColor(220, 38, 38); // red
-    else doc.setTextColor(0, 0, 0);
-
-    doc.text(label, xLabel, y);
-    doc.text(formatCurrency(amount), xAmount, y, { align: 'right' });
-    y += 7;
+  // Export Function (UNCHANGED - uses window.print())
+  const handleExportPDF = () => {
+    window.print();
   };
-
-  const addSectionHeader = (text, color = [59, 130, 246]) => {
-    doc.setFillColor(...color);
-    doc.setDrawColor(...color);
-    doc.setFontSize(14);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont(undefined, 'bold');
-    doc.rect(14, y - 8, pageWidth - 28, 10, 'F');
-    doc.text(text, pageWidth / 2, y - 2, { align: 'center' });
-    y += 10;
-    doc.setTextColor(0);
-    doc.setFont(undefined, 'normal');
-    doc.setFontSize(11);
-  };
-
-  // === ASSETS ===
-  addSectionHeader('ASSETS', [191, 219, 254]);
-
-  doc.setFont(undefined, 'bold');
-  doc.text('Current Assets', 20, y);
-  y += 10;
-
-  data.assets.current.forEach(item => addLineItem(item.label, item.amount, 1));
-  y += 5;
-  doc.setDrawColor(59, 130, 246);
-  doc.line(20, y - 3, 190, y - 3);
-  addLineItem('Total Current Assets', totalCurrentAssets);
-  y += 10;
-
-  doc.setFont(undefined, 'bold');
-  doc.text('Fixed Assets', 20, y);
-  y += 10;
-
-  data.assets.fixed.forEach(item => addLineItem(item.label, item.amount, 1));
-  y += 5;
-  doc.line(20, y - 3, 190, y - 3);
-  addLineItem('Total Fixed Assets', totalFixedAssets);
-  y += 10;
-
-  doc.setFontSize(14);
-  doc.setTextColor(30, 58, 138);
-  doc.setFont(undefined, 'bold');
-  doc.text('TOTAL ASSETS', 20, y);
-  doc.text(formatCurrency(totalAssets), 180, y, { align: 'right' });
-  y += 20;
-
-  // === LIABILITIES ===
-  addSectionHeader('LIABILITIES', [254, 226, 226]);
-
-  doc.text('Current Liabilities', 20, y);
-  y += 10;
-  data.liabilities.current.forEach(item => addLineItem(item.label, item.amount, 1));
-  y += 5;
-  doc.setDrawColor(220, 38, 38);
-  doc.line(20, y - 3, 190, y - 3);
-  addLineItem('Total Current Liabilities', totalCurrentLiabilities);
-  y += 10;
-
-  doc.text('Long-term Liabilities', 20, y);
-  y += 10;
-  data.liabilities.longTerm.forEach(item => addLineItem(item.label, item.amount, 1));
-  y += 5;
-  doc.line(20, y - 3, 190, y - 3);
-  addLineItem('Total Long-term Liabilities', totalLongTermLiabilities);
-  y += 10;
-
-  doc.setTextColor(220, 38, 38);
-  doc.setFont(undefined, 'bold');
-  doc.text('TOTAL LIABILITIES', 20, y);
-  doc.text(formatCurrency(totalLiabilities), 180, y, { align: 'right' });
-  y += 15;
-
-  // === EQUITY ===
-  addSectionHeader('EQUITY', [220, 252, 231]);
-
-  data.equity.forEach(item => addLineItem(item.label, item.amount, 1));
-  y += 5;
-  doc.setDrawColor(34, 197, 94);
-  doc.line(20, y - 3, 190, y - 3);
-  addLineItem('TOTAL EQUITY', totalEquity);
-  y += 15;
-
-  // Final Total
-  doc.setFontSize(16);
-  doc.setTextColor(30, 58, 138);
-  doc.setFont(undefined, 'bold');
-  doc.text('TOTAL LIABILITIES & EQUITY', 20, y);
-  doc.text(formatCurrency(totalLiabilitiesAndEquity), 180, y, { align: 'right' });
-
-  // Imbalance Warning
-  if (!isBalanced) {
-    y += 20;
-    doc.setFillColor(254, 226, 226);
-    doc.setTextColor(220, 38, 38);
-    doc.roundedRect(14, y - 10, pageWidth - 28, 20, 3, 3, 'F');
-    doc.setFontSize(12);
-    doc.text(`Warning: Balance sheet does not balance. Difference: ${formatCurrency(difference)}`, pageWidth / 2, y + 5, { align: 'center' });
-  }
-
-  doc.save(`Balance_Sheet_${asOfDate.replace(/[^a-z0-9]/gi, '_')}.pdf`);
-};
 
   return (
     <div className="space-y-6 mt-5 p-3 ">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-blue-900">Balance Sheet</h2>
+          <h2 className="text-2xl font-bold text-blue-900 flex items-center gap-2">
+            <DollarSign size={26}/> Balance Sheet
+          </h2>
           <p className="text-gray-600 text-sm mt-1">As of {asOfDate}</p>
         </div>
 
@@ -212,10 +98,10 @@ const handleExportPDF = () => {
           )}
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-2 px-4 py-2 bg-white/93 hover:bg-gray-100  rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-4 py-2 bg-white/93 hover:bg-gray-100 rounded-lg text-sm font-medium transition print:hidden border"
           >
             <Download className="w-4 h-4" />
-            Export PDF
+            Download PDF
           </button>
         </div>
       </div>
@@ -230,7 +116,7 @@ const handleExportPDF = () => {
           <div className="p-6 space-y-6">
             <div>
               <p className="text-sm font-semibold text-gray-600 mb-3">Current Assets</p>
-              {data.assets.current.map((item, i) => (
+              {assets.current.map((item, i) => (
                 <div key={i} className="flex justify-between py-2">
                   <span className="text-gray-700">{item.label}</span>
                   <span className="font-medium">{formatCurrency(item.amount)}</span>
@@ -246,7 +132,7 @@ const handleExportPDF = () => {
 
             <div>
               <p className="text-sm font-semibold text-gray-600 mb-3">Fixed Assets</p>
-              {data.assets.fixed.map((item, i) => (
+              {assets.fixed.map((item, i) => (
                 <div key={i} className="flex justify-between py-2">
                   <span className="text-gray-700">{item.label}</span>
                   <span className={item.negative ? 'text-red-600' : 'font-medium'}>
@@ -281,7 +167,7 @@ const handleExportPDF = () => {
             <div className="p-6 space-y-6">
               <div>
                 <p className="text-sm font-semibold text-gray-600 mb-3">Current Liabilities</p>
-                {data.liabilities.current.map((item, i) => (
+                {liabilities.current.map((item, i) => (
                   <div key={i} className="flex justify-between py-2">
                     <span className="text-gray-700">{item.label}</span>
                     <span className="font-medium">{formatCurrency(item.amount)}</span>
@@ -297,7 +183,7 @@ const handleExportPDF = () => {
 
               <div>
                 <p className="text-sm font-semibold text-gray-600 mb-3">Long-term Liabilities</p>
-                {data.liabilities.longTerm.map((item, i) => (
+                {liabilities.longTerm.map((item, i) => (
                   <div key={i} className="flex justify-between py-2">
                     <span className="text-gray-700">{item.label}</span>
                     <span className="font-medium">{formatCurrency(item.amount)}</span>
@@ -326,7 +212,7 @@ const handleExportPDF = () => {
               <h3 className="text-lg font-bold text-green-900">EQUITY</h3>
             </div>
             <div className="p-6">
-              {data.equity.map((item, i) => (
+              {equity.map((item, i) => (
                 <div key={i} className="flex justify-between py-2">
                   <span className="text-gray-700">{item.label}</span>
                   <span className="font-medium">{formatCurrency(item.amount)}</span>
@@ -352,41 +238,41 @@ const handleExportPDF = () => {
       </div>
 
       {/* Imbalance Warning - Perfect Match to Your Screenshot */}
-{!isBalanced && (
-  <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-6 max-w-4xl mx-auto">
-    <div className="text-center space-y-4">
-      {/* Calculation Row */}
-      <div className="flex items-center justify-center gap-6 text-lg font-medium">
-        <div className="text-right">
-          <p className="text-gray-700">Assets</p>
-          <p className="text-2xl font-bold text-blue-900">{formatCurrency(totalAssets)}</p>
+      {!isBalanced && (
+        <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-6 max-w-4xl mx-auto">
+          <div className="text-center space-y-4">
+            {/* Calculation Row */}
+            <div className="flex items-center justify-center gap-6 text-lg font-medium">
+              <div className="text-right">
+                <p className="text-gray-700">Assets</p>
+                <p className="text-2xl font-bold text-blue-900">{formatCurrency(totalAssets)}</p>
+              </div>
+
+              <span className="text-gray-500 text-2xl">−</span>
+
+              <div className="text-left">
+                <p className="text-gray-700">Liabilities + Equity</p>
+                <p className="text-2xl font-bold text-blue-900">{formatCurrency(totalLiabilitiesAndEquity)}</p>
+              </div>
+
+              <span className="text-gray-500 text-2xl">=</span>
+
+              <div className="text-left min-w-40">
+                <p className="text-gray-700">Difference</p>
+                <p className={`text-2xl font-bold ${difference < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  {formatCurrency(difference)}
+                </p>
+              </div>
+            </div>
+
+            {/* Warning Message */}
+            <div className="flex items-center justify-center gap-2 text-red-700 font-medium pt-4 border-t border-red-200">
+              <AlertTriangle className="w-6 h-6" />
+              <span>Warning: Balance sheet does not balance. Please review entries.</span>
+            </div>
+          </div>
         </div>
-
-        <span className="text-gray-500 text-2xl">−</span>
-
-        <div className="text-left">
-          <p className="text-gray-700">Liabilities + Equity</p>
-          <p className="text-2xl font-bold text-blue-900">{formatCurrency(totalLiabilitiesAndEquity)}</p>
-        </div>
-
-        <span className="text-gray-500 text-2xl">=</span>
-
-        <div className="text-left min-w-40">
-          <p className="text-gray-700">Difference</p>
-          <p className={`text-2xl font-bold ${difference < 0 ? 'text-red-600' : 'text-green-600'}`}>
-            {formatCurrency(difference)}
-          </p>
-        </div>
-      </div>
-
-      {/* Warning Message */}
-      <div className="flex items-center justify-center gap-2 text-red-700 font-medium pt-4 border-t border-red-200">
-        <AlertTriangle className="w-6 h-6" />
-        <span>Warning: Balance sheet does not balance. Please review entries.</span>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       {/* Footer Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">

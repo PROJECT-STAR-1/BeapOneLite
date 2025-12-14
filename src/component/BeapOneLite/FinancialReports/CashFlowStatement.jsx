@@ -1,46 +1,40 @@
+// components/CashFlowStatement.jsx
 
+import { useState, useEffect } from 'react';
 import { Download, ArrowDownUp, Info } from 'lucide-react';
 
 export default function CashFlowStatement() {
-  // =============================================
-  // ALL MOCK DATA IS HERE 
-  // =============================================
-  const cashFlowData = {
-    period: '11/4/2025 – 12/4/2025',
-    beginningCash: 250000,
-    netChange: 78000,                    
-    endingCash: 328000,                 
+  const [cashFlowData, setCashFlowData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    operating: {
-      netIncome: 0,
-      adjustments: [
-        { label: 'Depreciation & Amortization', amount: 15000 },
-        { label: 'Increase in Accounts Receivable', amount: -25000 },
-        { label: 'Decrease in Inventory', amount: 10000 },
-        { label: 'Increase in Accounts Payable', amount: 18000 },
-      ],
-      netCash: 18000,
-    },
+  // --- Data Fetching Effect ---
+  useEffect(() => {
+    async function fetchCashFlowData() {
+      try {
+        const res = await fetch('/api/beapOnelite/financialreports');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const json = await res.json();
+        
+        // Extract the cash flow specific data from the main payload
+        if (json.cashFlowData) {
+          setCashFlowData(json.cashFlowData);
+        } else {
+          setError("Cash Flow Statement data not found in the API response.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch Cash Flow Statement data:", err);
+        setError("Failed to load financial data.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    investing: {
-      items: [
-        { label: 'Purchase of Property, Plant & Equipment', amount: -50000 },
-        { label: 'Proceeds from Sale of Assets', amount: 0 },
-      ],
-      netCash: -50000,
-    },
-
-    financing: {
-      items: [
-        { label: 'Proceeds from Loans', amount: 100000 },
-        { label: 'Loan Repayments', amount: -25000 },
-        { label: 'Owner Contributions', amount: 50000 },
-        { label: 'Owner Draws', amount: -15000 },
-      ],
-      netCash: 110000,
-    },
-  };
-
+    fetchCashFlowData();
+  }, []);
+  // -----------------------------
 
 
   // =============================================
@@ -58,9 +52,34 @@ export default function CashFlowStatement() {
     if (amount < 0) return <span className="text-red-600">−{formatted}</span>;
     return <span className="text-gray-700">₦0</span>;
   };
+  
+  const handleExportPDF = () => {
+    // Standard browser print function for PDF export
+    window.print();
+  };
 
+  // --- Loading and Error States ---
+  if (isLoading) {
+    return <div className="p-6 text-center text-gray-500">Loading Cash Flow Statement...</div>;
+  }
+  
+  if (error || !cashFlowData) {
+    return <div className="p-6 text-center text-red-500">{error || "Cash Flow Statement data is not available."}</div>;
+  }
+
+  // --- Destructuring for cleaner JSX ---
+  const { period, beginningCash, netChange, endingCash, operating, investing, financing } = cashFlowData;
+
+  // --- Calculations (unchanged, using destructured data) ---
+  // The mock data already has netCash pre-calculated, but for robustness:
+  // const calculatedNetChange = operating.netCash + investing.netCash + financing.netCash;
+  // const isDataConsistent = Math.abs(calculatedNetChange - netChange) < 0.01;
+  // const calculatedEndingCash = beginningCash + netChange;
+  
+  
   return (
     <div className='mt-5 p-3'>
+      
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
@@ -68,17 +87,20 @@ export default function CashFlowStatement() {
             <ArrowDownUp className="w-7 h-7" />
             Cash Flow Statement
           </h2>
-          <p className="text-gray-600">For the period {cashFlowData.period}</p>
+          <p className="text-gray-600">For the period {period}</p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 ${
-            cashFlowData.netChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            netChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }`}>
             <span className="w-2 h-2 rounded-full bg-current animate-pulse"></span>
-            Net Change: {formatCurrency(cashFlowData.netChange)}
+            Net Change: {formatCurrency(netChange)}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg font-medium rounded-lg">
+          <button 
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg font-medium rounded-lg print:hidden"
+          >
             <Download className="w-4 h-4" />
             Export PDF
           </button>
@@ -93,13 +115,13 @@ export default function CashFlowStatement() {
         <div className="p-6 space-y-5">
           <div className="flex justify-between">
             <span>Net Income</span>
-            {formatCurrency(cashFlowData.operating.netIncome)}
+            {formatCurrency(operating.netIncome)}
           </div>
 
           <div className="border-t pt-4">
             <p className="text-sm text-gray-500 mb-4">Adjustments to reconcile net income to net cash:</p>
             <div className="space-y-3 ml-6">
-              {cashFlowData.operating.adjustments.map((item, i) => (
+              {operating.adjustments.map((item, i) => (
                 <div key={i} className="flex justify-between">
                   <span className="text-gray-700">{item.label}</span>
                   {formatCurrency(item.amount)}
@@ -111,8 +133,8 @@ export default function CashFlowStatement() {
           <div className="border-t-2 border-blue-500 pt-4">
             <div className="flex justify-between text-lg font-bold text-blue-900">
               <span>Net Cash from Operating Activities</span>
-              <span className={cashFlowData.operating.netCash >= 0 ? 'text-green-600' : 'text-red-600'}>
-                {formatCurrency(cashFlowData.operating.netCash)}
+              <span className={operating.netCash >= 0 ? 'text-green-600' : 'text-red-600'}>
+                {formatCurrency(operating.netCash)}
               </span>
             </div>
           </div>
@@ -125,7 +147,7 @@ export default function CashFlowStatement() {
           <h3 className="text-lg font-bold text-purple-900">Cash Flow from Investing Activities</h3>
         </div>
         <div className="p-6 space-y-4">
-          {cashFlowData.investing.items.map((item, i) => (
+          {investing.items.map((item, i) => (
             <div key={i} className="flex justify-between">
               <span className="text-gray-700">{item.label}</span>
               {formatCurrency(item.amount)}
@@ -134,8 +156,8 @@ export default function CashFlowStatement() {
           <div className="border-t-2 border-purple-500 pt-4">
             <div className="flex justify-between text-lg font-bold text-purple-900">
               <span>Net Cash from Investing Activities</span>
-              <span className={cashFlowData.investing.netCash >= 0 ? 'text-green-600' : 'text-red-600'}>
-                {formatCurrency(cashFlowData.investing.netCash)}
+              <span className={investing.netCash >= 0 ? 'text-green-600' : 'text-red-600'}>
+                {formatCurrency(investing.netCash)}
               </span>
             </div>
           </div>
@@ -148,7 +170,7 @@ export default function CashFlowStatement() {
           <h3 className="text-lg font-bold text-green-900">Cash Flow from Financing Activities</h3>
         </div>
         <div className="p-6 space-y-4">
-          {cashFlowData.financing.items.map((item, i) => (
+          {financing.items.map((item, i) => (
             <div key={i} className="flex justify-between">
               <span className="text-gray-700">{item.label}</span>
               {formatCurrency(item.amount)}
@@ -157,7 +179,7 @@ export default function CashFlowStatement() {
           <div className="border-t-2 border-green-500 pt-4">
             <div className="flex justify-between text-lg font-bold text-green-900">
               <span>Net Cash from Financing Activities</span>
-              <span className="text-green-600">{formatCurrency(cashFlowData.financing.netCash)}</span>
+              <span className="text-green-600">{formatCurrency(financing.netCash)}</span>
             </div>
           </div>
         </div>
@@ -168,33 +190,34 @@ export default function CashFlowStatement() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="text-center">
             <p className="text-sm text-gray-600">Operating Cash Flow</p>
-            <p className="text-2xl font-bold text-green-700 mt-2">{formatCurrency(18000)}</p>
-            <p className="text-xs text-gray-500">23% of total</p>
+            <p className="text-2xl font-bold text-green-700 mt-2">{formatCurrency(operating.netCash)}</p>
+            <p className="text-xs text-gray-500">{((operating.netCash / netChange) * 100).toFixed(0)}% of total</p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-600">Investing Cash Flow</p>
-            <p className="text-2xl font-bold text-red-600 mt-2">{formatCurrency(-50000)}</p>
-            <p className="text-xs text-gray-500">-64% of total</p>
+            <p className="text-2xl font-bold text-red-600 mt-2">{formatCurrency(investing.netCash)}</p>
+            <p className="text-xs text-gray-500">{((investing.netCash / netChange) * 100).toFixed(0)}% of total</p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-600">Financing Cash Flow</p>
-            <p className="text-2xl font-bold text-green-700 mt-2">{formatCurrency(110000)}</p>
-            <p className="text-xs text-gray-500">141% of total</p>
+            <p className="text-2xl font-bold text-green-700 mt-2">{formatCurrency(financing.netCash)}</p>
+            <p className="text-xs text-gray-500">{((financing.netCash / netChange) * 100).toFixed(0)}% of total</p>
           </div>
         </div>
+        
 
         <div className="border-t-4 border-blue-600 pt-8">
           <div className="flex justify-between text-xl font-bold text-blue-900 mb-4">
             <span>Net Change in Cash</span>
-            <span className="text-green-600">+{formatCurrency(cashFlowData.netChange)}</span>
+            <span className={netChange >= 0 ? 'text-green-600' : 'text-red-600'}>{formatCurrency(netChange)}</span>
           </div>
           <div className="flex justify-between text-gray-600">
             <span>Cash at Beginning of Period</span>
-            <span>{formatCurrency(cashFlowData.beginningCash)}</span>
+            <span>{formatCurrency(beginningCash)}</span>
           </div>
           <div className="flex justify-between text-3xl font-bold text-blue-900 mt-6 pt-6 border-t-4 border-blue-700">
             <span>Cash at End of Period</span>
-            <span>{formatCurrency(cashFlowData.endingCash)}</span>
+            <span>{formatCurrency(endingCash)}</span>
           </div>
         </div>
       </div>

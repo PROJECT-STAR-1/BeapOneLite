@@ -1,19 +1,19 @@
-
 import { useState } from 'react';
 import { Info, Download, TrendingUp, DollarSign } from 'lucide-react';
 
-export default function PLStatement() {
+export default function PLStatement({ reportData, explanations }) {
   const [showExplanations, setShowExplanations] = useState(false);
 
-  const reportData = {
-    period: 'November 4, 2025 – December 4, 2025',
-    grossProfit: 13618000,
-    netProfit: 13246938,
-    totalRevenue: 13618000,
-    cogs: 0,
-    operatingExpenses: 371063,
-    netProfitBeforeTax: 13246938,
-  };
+  // Fallback for missing data
+  if (!reportData || !explanations) {
+    return <div className="p-6 text-center text-red-500">No report data available for the selected period and location.</div>;
+  }
+
+  // --- Calculations ---
+  const grossProfit = reportData.totalRevenue - reportData.cogs;
+  const netProfitBeforeTax = grossProfit - reportData.operatingExpenses;
+
+  // --- Utility Functions ---
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-NG', {
@@ -23,49 +23,19 @@ export default function PLStatement() {
     }).format(amount);
   };
 
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-
-    // Title
-    doc.setFontSize(20);
-    doc.setTextColor(30, 58, 138);
-    doc.text('Profit & Loss Statement', 105, 20, { align: 'center' });
-
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text(reportData.period, 105, 30, { align: 'center' });
-
-    // Summary Cards
-    doc.setFontSize(14);
-    doc.setTextColor(0);
-    doc.text('Gross Profit', 20, 50);
-    doc.text(formatCurrency(reportData.grossProfit), 180, 50, { align: 'right' });
-
-    doc.text('Net Profit (Before Tax)', 20, 60);
-    doc.setTextColor(30, 58, 138);
-    doc.setFont(undefined, 'bold');
-    doc.text(formatCurrency(reportData.netProfitBeforeTax), 180, 60, { align: 'right' });
-
-    // Table
-    doc.autoTable({
-      startY: 80,
-      head: [['Item', 'Amount (₦)']],
-      body: [
-        ['Total Revenue', formatCurrency(reportData.totalRevenue)],
-        ['Cost of Goods Sold (COGS)', formatCurrency(reportData.cogs)],
-        [{ content: 'Gross Profit', styles: { fontStyle: 'bold' } }, formatCurrency(reportData.grossProfit)],
-        ['Operating Expenses', ''],
-        ['   Other Expenses', formatCurrency(-reportData.operatingExpenses)],
-        ['Total Operating Expenses', formatCurrency(-reportData.operatingExpenses)],
-        [{ content: 'Net Profit (Before Tax)', styles: { fillColor: [30, 58, 138], textColor: [255, 255, 255], fontStyle: 'bold' } }, formatCurrency(reportData.netProfitBeforeTax)],
-      ],
-      theme: 'plain',
-      styles: { fontSize: 11, cellPadding: 4 },
-      headStyles: { fillColor: [243, 244, 246], textColor: [55, 65, 81] },
-    });
-
-    doc.save('Profit_and_Loss_Statement.pdf');
+  const calculateMargin = (profit, revenue) => {
+    if (revenue === 0) return '0.0%';
+    return ((profit / revenue) * 100).toFixed(1) + '%';
   };
+
+  // Standard React/Browser export function using Print-to-PDF
+  const handleDownloadPDF = () => {
+    // This will trigger the browser's print dialog, which usually includes
+    // an option to "Save as PDF" or "Microsoft Print to PDF".
+    window.print();
+  };
+
+  // --- Render ---
 
   return (
     <div className="space-y-6 mt-6 p-4">
@@ -89,7 +59,8 @@ export default function PLStatement() {
 
           <button
             onClick={handleDownloadPDF}
-            className="flex items-center gap-2 px-4 py-2  hover:bg-gray-50 rounded-lg text-sm font-medium transition border bg-white/93 "
+            // Use Tailwind class to hide button in print view if necessary (optional)
+            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg text-sm font-medium transition border bg-white/93 print:hidden"
           >
             <Download className="w-4 h-4" />
             Download PDF
@@ -99,29 +70,34 @@ export default function PLStatement() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Gross Profit Card */}
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
           <p className="text-gray-600 text-sm">Gross Profit</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">
-            {formatCurrency(reportData.grossProfit)}
+            {formatCurrency(grossProfit)}
           </p>
-          <p className="text-sm text-gray-500 mt-1">Margin: 100.0%</p>
+          <p className="text-sm text-gray-500 mt-1">Margin: {calculateMargin(grossProfit, reportData.totalRevenue)}</p>
         </div>
 
+        {/* Net Profit Card */}
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
           <p className="text-gray-600 text-sm">Net Profit</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">
-            {formatCurrency(reportData.netProfit)}
+            {formatCurrency(netProfitBeforeTax)}
           </p>
-          <p className="text-sm text-gray-500 mt-1">Margin: 97.3%</p>
+          <p className="text-sm text-gray-500 mt-1">Margin: {calculateMargin(netProfitBeforeTax, reportData.totalRevenue)}</p>
         </div>
 
-        <div className="bg-green-50 p-5 rounded-xl border border-green-200">
+        {/* Performance Card */}
+        <div className={`p-5 rounded-xl border ${netProfitBeforeTax > 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-700 text-sm">Performance</p>
-              <p className="text-lg font-bold text-green-700 mt-1">Profitable</p>
+              <p className={`text-lg font-bold mt-1 ${netProfitBeforeTax > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                {netProfitBeforeTax > 0 ? 'Profitable' : 'Loss'}
+              </p>
             </div>
-            <TrendingUp className="w-8 h-8 text-green-600" />
+            <TrendingUp className={`w-8 h-8 ${netProfitBeforeTax > 0 ? 'text-green-600' : 'text-red-600 rotate-180'}`} />
           </div>
         </div>
       </div>
@@ -144,7 +120,7 @@ export default function PLStatement() {
             </div>
             {showExplanations && (
               <div className="mt-2 p-4 bg-blue-50 rounded-lg text-sm text-gray-700 border border-blue-100">
-                This is the total money customers paid you for your goods and services during this period.
+                {explanations.totalRevenue}
               </div>
             )}
             <div className="h-px bg-gray-300 mt-4"></div>
@@ -161,7 +137,7 @@ export default function PLStatement() {
             </div>
             {showExplanations && (
               <div className="mt-2 p-4 bg-blue-50 rounded-lg text-sm text-gray-700 border border-blue-100">
-                The direct cost of the products you sold (e.g., inventory purchases, raw materials).
+                {explanations.cogs}
               </div>
             )}
           </div>
@@ -174,12 +150,12 @@ export default function PLStatement() {
                 <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
               </h4>
               <span className="text-2xl font-bold text-green-700">
-                {formatCurrency(reportData.grossProfit)}
+                {formatCurrency(grossProfit)}
               </span>
             </div>
             {showExplanations && (
               <div className="mt-3 p-4 bg-blue-50 rounded-lg text-sm text-gray-700 border border-blue-100">
-                What you earned before paying your business overhead costs.
+                {explanations.grossProfit}
               </div>
             )}
           </div>
@@ -199,7 +175,7 @@ export default function PLStatement() {
             </div>
             {showExplanations && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-gray-700 border border-blue-100">
-                All the day-to-day costs to keep your doors open, like rent and wages.
+                {explanations.operatingExpenses}
               </div>
             )}
           </div>
@@ -209,12 +185,12 @@ export default function PLStatement() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold">Net Profit (Before Tax)</h3>
               <span className="text-2xl font-bold">
-                {formatCurrency(reportData.netProfitBeforeTax)}
+                {formatCurrency(netProfitBeforeTax)}
               </span>
             </div>
-             {showExplanations && (
+              {showExplanations && (
               <div className="mt-3 p-4 bg-blue-800 rounded-lg text-sm text-white border border-blue-700">
-                The final money your business made (or lost) this period.
+                {explanations.netProfitBeforeTax}
               </div>
             )}
           </div>

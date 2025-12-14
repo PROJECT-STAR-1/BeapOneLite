@@ -1,42 +1,41 @@
 // components/TaxPreviewReport.jsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Download, Calendar, FileText, Info, X } from 'lucide-react';
 
 export default function TaxPreviewReport() {
   const [showEfilingModal, setShowEfilingModal] = useState(false);
+  const [taxData, setTaxData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // =============================================
-  // ALL MOCK DATA — Replace this object when backend comes
-  // =============================================
-  const taxData = {
-    period: '11/4/2025 – 12/4/2025',
-    filingDueDate: 'December 25, 2025',
-    isOnTrack: true,
+  // --- Data Fetching Effect ---
+  useEffect(() => {
+    async function fetchTaxData() {
+      try {
+        const res = await fetch('/api/beapOnelite/financialreports');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const json = await res.json();
+        
+        // Extract the tax preview specific data from the main payload
+        if (json.taxData) {
+          setTaxData(json.taxData);
+        } else {
+          setError("Tax Preview Report data not found in the API response.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch Tax Preview Report data:", err);
+        setError("Failed to load tax preview data.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    vat: {
-      outputVat: 0,
-      inputVat: 0,
-      netPayable: 0,
-    },
-
-    wht: {
-      items: [
-        { category: 'Consultancy (5%)', rate: '5.0%', amount: 25000 },
-        { category: 'Professional Services (10%)', rate: '10.0%', amount: 45000 },
-        { category: 'Contract/Commission (5%)', rate: '5.0%', amount: 15000 },
-      ],
-      totalCredit: 85000,
-    },
-
-    incomeTax: {
-      grossIncome: 0,
-      allowableExpenses: 0,
-      taxableIncome: 0,
-      whtCreditApplied: 85000,
-      estimatedTaxPayable: 0,
-    },
-  };
+    fetchTaxData();
+  }, []);
+  // -----------------------------
 
   // Helper
   const formatCurrency = (amount) => {
@@ -47,6 +46,25 @@ export default function TaxPreviewReport() {
     }).format(Math.abs(amount));
   };
 
+  const handleExportPDF = () => {
+    // Standard browser print function for PDF export
+    window.print();
+  };
+
+
+  // --- Loading and Error States ---
+  if (isLoading) {
+    return <div className="p-6 text-center text-gray-500">Loading Tax Preview Report...</div>;
+  }
+  
+  if (error || !taxData) {
+    return <div className="p-6 text-center text-red-500">{error || "Tax Preview Report data is not available."}</div>;
+  }
+
+  // --- Destructuring for cleaner JSX (only after data is confirmed) ---
+  const { period, filingDueDate, isOnTrack, vat, wht, incomeTax } = taxData;
+
+
   return (
     <div className='mt-5 p-3'>
       {/* Header */}
@@ -56,15 +74,20 @@ export default function TaxPreviewReport() {
             <FileText className="w-8 h-8" />
             Tax Preview Report
           </h2>
-          <p className="text-gray-600">Estimated tax obligations for {taxData.period}</p>
+          <p className="text-gray-600">Estimated tax obligations for {period}</p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            On Track
+          <div className={`px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 ${
+            isOnTrack ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${isOnTrack ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+            {isOnTrack ? 'On Track' : 'Review Required'}
           </div>
-          <button className="flex items-center gap-2 px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg font-medium">
+          <button 
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg font-medium print:hidden"
+          >
             <Download className="w-4 h-4" />
             Export PDF
           </button>
@@ -75,19 +98,19 @@ export default function TaxPreviewReport() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="bg-blue-50 rounded-2xl p-6 text-center border border-blue-200">
           <p className="text-blue-700 font-medium">VAT Payable (7.5%)</p>
-          <p className="text-3xl font-bold text-blue-900 mt-3">₦0</p>
-          <p className="text-sm text-gray-600 mt-2">Output: ₦0</p>
+          <p className="text-3xl font-bold text-blue-900 mt-3">{formatCurrency(vat.netPayable)}</p>
+          <p className="text-sm text-gray-600 mt-2">Output: {formatCurrency(vat.outputVat)}</p>
         </div>
 
         <div className="bg-purple-50 rounded-2xl p-6 text-center border border-purple-200">
           <p className="text-purple-700 font-medium">WHT Deducted</p>
-          <p className="text-3xl font-bold text-purple-900 mt-3">₦85,000</p>
+          <p className="text-3xl font-bold text-purple-900 mt-3">{formatCurrency(wht.totalCredit)}</p>
           <p className="text-sm text-gray-600 mt-2">Credit Available</p>
         </div>
 
         <div className="bg-green-50 rounded-2xl p-6 text-center border border-green-200">
           <p className="text-green-700 font-medium">Estimated Income Tax</p>
-          <p className="text-3xl font-bold text-green-900 mt-3">₦0</p>
+          <p className="text-3xl font-bold text-green-900 mt-3">{formatCurrency(incomeTax.estimatedTaxPayable)}</p>
           <p className="text-sm text-gray-600 mt-2">Progressive Rate</p>
         </div>
       </div>
@@ -101,16 +124,16 @@ export default function TaxPreviewReport() {
         <div className="p-6 space-y-5">
           <div className="flex justify-between text-gray-700">
             <span>Output VAT (Sales)</span>
-            <span>₦0</span>
+            <span>{formatCurrency(vat.outputVat)}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span>Less: Input VAT (Purchases)</span>
-            <span>-₦0</span>
+            <span>-{formatCurrency(vat.inputVat)}</span>
           </div>
           <div className="border-t-2 border-blue-500 pt-5">
             <div className="flex justify-between text-lg font-bold text-blue-900">
               <span>Net VAT Payable</span>
-              <span>₦0</span>
+              <span>{formatCurrency(vat.netPayable)}</span>
             </div>
           </div>
           <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-800 border border-blue-200">
@@ -126,7 +149,7 @@ export default function TaxPreviewReport() {
           <p className="text-sm text-purple-700">Tax credits from WHT deductions</p>
         </div>
         <div className="p-6 space-y-5">
-          {taxData.wht.items.map((item, i) => (
+          {wht.items.map((item, i) => (
             <div key={i} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-0">
               <div>
                 <p className="font-medium text-gray-800">{item.category}</p>
@@ -138,7 +161,7 @@ export default function TaxPreviewReport() {
           <div className="border-t-2 border-purple-500 pt-5">
             <div className="flex justify-between text-lg font-bold text-purple-900">
               <span>Total WHT Available for Credit</span>
-              <span>{formatCurrency(taxData.wht.totalCredit)}</span>
+              <span>{formatCurrency(wht.totalCredit)}</span>
             </div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-sm text-purple-800 border border-purple-200">
@@ -156,28 +179,29 @@ export default function TaxPreviewReport() {
         <div className="p-6 space-y-5">
           <div className="flex justify-between text-gray-700">
             <span>Gross Income</span>
-            <span>₦0</span>
+            <span>{formatCurrency(incomeTax.grossIncome)}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span>Less: Allowable Expenses</span>
-            <span>-₦0</span>
+            <span>-{formatCurrency(incomeTax.allowableExpenses)}</span>
           </div>
           <div className="flex justify-between font-bold text-gray-900">
             <span>Taxable Income</span>
-            <span>₦0</span>
+            <span>{formatCurrency(incomeTax.taxableIncome)}</span>
           </div>
           <div className="flex justify-between text-red-700">
             <span>Less: WHT Credits</span>
-            <span>-{formatCurrency(taxData.wht.totalCredit)}</span>
+            <span>-{formatCurrency(wht.totalCredit)}</span>
           </div>
           <div className="border-t-2 border-green-600 pt-5">
             <div className="flex justify-between text-xl font-bold text-green-900">
               <span>Estimated Tax Payable</span>
-              <span>₦0</span>
+              <span>{formatCurrency(incomeTax.estimatedTaxPayable)}</span>
             </div>
           </div>
           <div className="bg-green-50 rounded-lg p-5 border border-green-200">
             <p className="font-medium text-green-900 mb-3">Progressive Tax Rates (Nigeria):</p>
+            
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>First ₦300,000: <span className="font-bold">7%</span></div>
               <div>Next ₦300,000: <span className="font-bold">11%</span></div>
@@ -195,8 +219,10 @@ export default function TaxPreviewReport() {
             <Calendar className="w-10 h-10 text-yellow-700 flex-shrink-0" />
             <div>
               <h4 className="text-lg font-bold text-yellow-900">Filing Deadline</h4>
-              <p className="text-yellow-800 font-medium">Due Date: {taxData.filingDueDate}</p>
-              <p className="text-sm text-green-700 font-medium mt-1">You are on track for timely tax compliance.</p>
+              <p className="text-yellow-800 font-medium">Due Date: {filingDueDate}</p>
+              <p className={`text-sm font-medium mt-1 ${isOnTrack ? 'text-green-700' : 'text-red-700'}`}>
+                {isOnTrack ? 'You are on track for timely tax compliance.' : 'Action required: Deadline approaching or missed.'}
+              </p>
             </div>
           </div>
           <button
