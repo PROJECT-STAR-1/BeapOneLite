@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   AlertTriangle,
@@ -9,53 +9,23 @@ import {
   Zap,
 } from "lucide-react";
 
-export default function Queue() {
-  const initialData = [
-    {
-      id: 1,
-      amount: 250000,
-      type: "credit",
-      desc: "CREDIT TRF FRM OLUWASEUN ENTERPRISES",
-      date: "11/25/2025",
-      ref: "NEFT2025112503",
-    },
-    {
-      id: 2,
-      amount: 5000,
-      type: "debit",
-      desc: "ALABA MARKET LEVY - DAILY",
-      date: "11/25/2025",
-      ref: "DBT2025112503",
-    },
-    {
-      id: 3,
-      amount: 150,
-      type: "debit",
-      desc: "BANK CHARGES - SMS ALERT FEE",
-      date: "11/25/2025",
-      ref: "FEE2025112501",
-    },
-    {
-      id: 4,
-      amount: 8500,
-      type: "debit",
-      desc: "POS WITHDRAWAL - ATM TRANSACTION",
-      date: "11/24/2025",
-      ref: "DBT2025112404",
-    },
-    {
-      id: 5,
-      amount: 180000,
-      type: "credit",
-      desc: "PAYMENT RECEIVED - MOBILE TRANSFER",
-      date: "11/23/2025",
-      ref: "NEFT2025112301",
-    },
-  ];
-
-  const [unmatched, setUnmatched] = useState(initialData);
+// Define the component to accept 'data' as a prop
+export default function Queue({ data }) {
+  // Extract unmatchedLines from props, using an empty array as a safe fallback
+  const initialLines = data?.unmatchedLines || [];
+  const oneClickOptions = data?.oneClickOptions || [];
+  
+  // Use the fetched data as the initial state for the list that can change
+  const [unmatched, setUnmatched] = useState(initialLines);
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
+
+  // IMPORTANT: Reset the 'unmatched' state whenever the incoming 'data' prop changes,
+  // ensuring that the local state is always initialized with the prop data.
+  // This is crucial if the parent component re-fetches the data.
+  useEffect(() => {
+    setUnmatched(initialLines);
+  }, [data]);
 
   // SEARCH FILTER
   const filtered = unmatched.filter((item) =>
@@ -144,11 +114,17 @@ export default function Queue() {
                   </div>
                 </div>
 
+                {/* Placeholder for potential match count/confidence */}
                 <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-md">
                   1
                 </span>
               </div>
             ))}
+            {filtered.length === 0 && (
+                <div className="text-center py-10 text-gray-400">
+                    No unmatched lines match your search query.
+                </div>
+            )}
           </div>
         </div>
 
@@ -200,11 +176,12 @@ export default function Queue() {
               <div className="mt-5">
                 <p className="font-semibold flex gap-2 items-center"> <Zap size={14}/> One-Click Record as Expense</p>
                 <p className="text-xs text-gray-500 mb-3">
-                  Cant find a match? Create a new expense record instantly.
+                  Can't find a match? Create a new expense record instantly.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 font-medium">
-                  {["Bank Fees", "Withdrawal", "Utilities", "Other"].map(
+                  {/* Dynamic rendering of options from the JSON data */}
+                  {oneClickOptions.map(
                     (label) => (
                       <button
                         key={label}

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useCallback } from "react";
 import {
@@ -10,39 +10,36 @@ import {
   Building,
 } from "lucide-react";
 
-export default function ImportBankStatement() {
+// --- ICON/COLOR MAPPING (UI Logic, Stored in Component) ---
+const providerIconMap = (type) => {
+  switch (type) {
+    case "bank":
+      return <Building className="w-4 h-4 text-purple-700" />;
+    case "mobile":
+      return <Smartphone className="w-4 h-4 text-green-600" />;
+    case "file":
+      return <FileText className="w-4 h-4 text-gray-700" />;
+    default:
+      return null;
+  }
+};
+
+const historyIconMap = (type) => {
+  if (type === "bank") return <Building size={14} className="text-gray-500" />;
+  if (type === "mobile") return <Smartphone size={14} className="text-green-600" />;
+  return <FileText size={14} className="text-gray-500" />;
+};
+
+
+// Define the component to accept 'data' as a prop
+export default function ImportBankStatement({ data }) {
   const [file, setFile] = useState(null);
   const [dragging, setDragging] = useState(false);
 
-  // Dropdown list
-  const providers = [
-    { icon: "bank", label: "🏦 GTBank (Guaranty Trust Bank)" },
-    { icon: "bank", label: "🏦 Access Bank" },
-    { icon: "bank", label: "🏦 Zenith Bank" },
-    { icon: "bank", label: "🏦 First Bank of Nigeria" },
-    { icon: "bank", label: "🏦 United Bank for Africa (UBA)" },
-    { icon: "bank", label: "🏦 Fidelity Bank" },
-
-    { icon: "mobile", label: "📱 M-Pesa (Safaricom)" },
-    { icon: "mobile", label: "📱 MTN Mobile Money" },
-    { icon: "mobile", label: "📱 Airtel Money" },
-    { icon: "mobile", label: "📱 Vodafone Cash" },
-
-    { icon: "file", label: "📄 Generic CSV Format" },
-  ];
-
-  const renderIcon = (type) => {
-    switch (type) {
-      case "bank":
-        return <Building className="w-4 h-4 text-purple-700" />;
-      case "mobile":
-        return <Smartphone className="w-4 h-4 text-green-600" />;
-      case "file":
-        return <FileText className="w-4 h-4 text-gray-700" />;
-      default:
-        return null;
-    }
-  };
+  // Extract data from props
+  const providers = data?.supportedProviders || [];
+  const history = data?.importHistory || [];
+  const importSteps = data?.importProcessSteps || [];
 
   // Drag/drop logic
   const onDrop = useCallback((e) => {
@@ -57,48 +54,8 @@ export default function ImportBankStatement() {
     if (f) setFile(f);
   };
 
-  // Mock Import History
-  const history = [
-    {
-      filename: "GTBank_Statement_Nov2025.csv",
-      status: "Completed",
-      provider: "GTBank",
-      account: "0123456789",
-      dateRange: "Nov 1 - Nov 25, 2025",
-      transactions: 147,
-      autoMatched: 142,
-      type: "bank",
-    },
-    {
-      filename: "MPesa_Oct2025.csv",
-      status: "Completed",
-      provider: "M-Pesa",
-      account: "+254712345678",
-      dateRange: "Oct 1 - Oct 31, 2025",
-      transactions: 89,
-      autoMatched: 87,
-      type: "mobile",
-    },
-    {
-      filename: "Access_Bank_Sept2025.csv",
-      status: "Completed",
-      provider: "Access Bank",
-      account: "9876543210",
-      dateRange: "Sept 1 - Sept 30, 2025",
-      transactions: 203,
-      autoMatched: 198,
-      type: "bank",
-    },
-  ];
-
-  const iconForType = (type) => {
-    if (type === "bank") return <Building size={14} className="text-gray-500" />;
-    if (type === "mobile") return <Smartphone size={14} className="text-green-600" />;
-    return <FileText size={14} className="text-gray-500" />;
-  };
-
   return (
-    <div className="w-full  mx-auto p-6">
+    <div className="w-full  mx-auto p-6">
       {/* ---------- IMPORT SECTION ---------- */}
       <div className="p-4 border border-gray-200 rounded-lg bg-white/95">
       <h2 className="text-xl font-semibold mb-1 flex items-center gap-2"><Upload size={26}/> Import Bank Statement</h2>
@@ -113,6 +70,7 @@ export default function ImportBankStatement() {
       <div className="relative mb-6">
         <select className="w-full border rounded-md px-3 py-2 pr-10 appearance-none focus:ring focus:ring-blue-200 bg-white">
           <option>Select your bank or provider</option>
+          {/* Dynamically render providers from fetched data */}
           {providers.map((p, idx) => (
             <option key={idx}>{p.label}</option>
           ))}
@@ -142,7 +100,7 @@ export default function ImportBankStatement() {
         </p>
 
         <label className="cursor-pointer">
-          <span className="px-4 py-2 bg-gray-50 border border-gray-300  text-gray-900 font-medium rounded-md shadow hover:bg-gray-100">
+          <span className="px-4 py-2 bg-gray-50 border border-gray-300  text-gray-900 font-medium rounded-md shadow hover:bg-gray-100">
             Browse Files
           </span>
           <input type="file" className="hidden" accept=".csv" onChange={chooseFile} />
@@ -174,19 +132,20 @@ export default function ImportBankStatement() {
         </p>
 
         <div className="grid md:grid-cols-3 gap-4">
+          {/* Dynamically render supported providers from fetched data */}
           {providers.map((p, index) => (
             <div
               key={index}
               className="flex items-center gap-2 border rounded-md px-4 py-3 bg-white shadow-sm hover:bg-gray-50 cursor-pointer"
             >
-              {renderIcon(p.icon)}
-              <span>{p.label.replace(/^[^ ]+ /, "")}</span>
+              {providerIconMap(p.type)}
+              <span>{p.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ---------- IMPORT HISTORY APPENDED HERE ---------- */}
+      {/* ---------- IMPORT HISTORY ---------- */}
       <div className="w-full mt-12 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <h2 className="text-lg font-semibold mb-1">Import History</h2>
         <p className="text-gray-600 mb-6">
@@ -194,6 +153,7 @@ export default function ImportBankStatement() {
         </p>
 
         <div className="space-y-4">
+          {/* Dynamically render history from fetched data */}
           {history.map((item, idx) => (
             <div
               key={idx}
@@ -212,7 +172,7 @@ export default function ImportBankStatement() {
 
                   <div className="flex items-center text-gray-600 text-sm gap-4">
                     <div className="flex items-center gap-1">
-                      {iconForType(item.type)}
+                      {historyIconMap(item.type)}
                       {item.provider}
                     </div>
 
@@ -231,15 +191,15 @@ export default function ImportBankStatement() {
 
               <div className="text-right flex gap-9">
                 <div>
-                    <p className="text-gray-700 text-sm">
-                  {item.transactions} transactions
-                </p>
-                <p className="text-green-600 text-sm">
-                  {item.autoMatched} auto-matched
-                </p>
+                  <p className="text-gray-700 text-sm">
+                    {item.transactions} transactions
+                  </p>
+                  <p className="text-green-600 text-sm">
+                    {item.autoMatched} auto-matched
+                  </p>
                 </div>
 
-                <button className="text-gray-800  text-sm font-medium hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 mt-1">
+                <button className="text-gray-800  text-sm font-medium hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 mt-1">
                   View Details
                 </button>
               </div>
@@ -247,42 +207,28 @@ export default function ImportBankStatement() {
           ))}
         </div>
       </div>
+      
       {/* HOW STATEMENT IMPORT WORKS */}
-<div className="mt-8 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white rounded-xl p-6">
-  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-    <FileText className="w-5 h-5" />
-    How Statement Import Works
-  </h3>
-
-  <div className="grid md:grid-cols-3 gap-8 text-sm">
-
-    {/* Step 1 */}
-    <div>
-      <p className="font-semibold text-yellow-300 mb-1">1. Select Provider</p>
-      <p className="text-indigo-100">
-        Choose your bank or mobile money provider from the list
-      </p>
-    </div>
-
-    {/* Step 2 */}
-    <div>
-      <p className="font-semibold text-yellow-300 mb-1">2. Upload CSV</p>
-      <p className="text-indigo-100">
-        Upload your statement in CSV format (downloaded from bank)
-      </p>
-    </div>
-
-    {/* Step 3 */}
-    <div>
-      <p className="font-semibold text-yellow-300 mb-1">3. Auto-Match</p>
-      <p className="text-indigo-100">
-        Our 4-tier heuristic engine automatically matches transactions
-      </p>
-    </div>
-
-  </div>
-</div>
-
+      <div className="mt-8 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white rounded-xl p-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <FileText className="w-5 h-5" />
+          How Statement Import Works
+        </h3>
+        
+        <div className="grid md:grid-cols-3 gap-8 text-sm">
+          {/* Static class applied here */}
+          {importSteps.map((step, idx) => (
+            <div key={idx}>
+              <p className={`font-semibold text-yellow-300 mb-1`}>
+                {idx + 1}. {step.title}
+              </p>
+              <p className="text-indigo-100">
+                {step.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

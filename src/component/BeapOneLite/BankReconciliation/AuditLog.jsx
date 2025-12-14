@@ -16,164 +16,110 @@ import {
   Download,
 } from "lucide-react";
 
-export default function AuditLog() {
-  /* ============================================================
-     FILTER OPTIONS
-  ============================================================ */
-  const actions = [
-    "All Actions",
-    "Manual Match",
-    "One-Click Match",
-    "Bulk Match",
-    "Unmatch",
-    "Status Override",
-    "Delete",
-  ];
+// --- SUB-COMPONENTS (Kept local) ---
 
-  const users = [
-    "All Users",
-    "Adebayo Okonkwo",
-    "Chinwe Adeyemi",
-    "Olumide Johnson",
-  ];
+function SummaryBox({ title, value, green }) {
+  return (
+    <div className="p-5 border bg-white rounded-xl shadow-sm">
+      <p className="text-gray-500 text-sm">{title}</p>
+      <p className={`text-2xl font-semibold ${green ? "text-green-600" : ""}`}>
+        {value}
+      </p>
+    </div>
+  );
+}
 
-  const statuses = ["All Status", "Success", "Failed", "Pending"];
+function SelectDropdown({ options, value, onChange }) {
+  return (
+    <select
+      className="border px-4 py-2 rounded-lg bg-white text-sm"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      {options.map((o) => (
+        <option key={o}>{o}</option>
+      ))}
+    </select>
+  );
+}
 
-  /* ============================================================
-     FULL DATASET EXACTLY AS PROVIDED
-  ============================================================ */
-  const fullData = [
-    {
-      action: "Manual Match",
-      status: "Success",
-      id: "TXN-2025-1147",
-      description:
-        "Manually matched GTBank deposit ₦50,000 with Invoice INV-2025-0324",
-      justification:
-        "Customer paid via different account than usual",
-      user: "Adebayo Okonkwo",
-      timestamp: "11/27/2025, 2:35:22 PM",
-      score: "95.5%",
-      metadata: {
-        bankAmount: "₦50,000",
-        systemAmount: "₦50,000",
-      },
-    },
-    {
-      action: "One-Click Match",
-      status: "Success",
-      id: "TXN-2025-1146",
-      description:
-        "Auto-matched M-Pesa payment ₦125,000 with Invoice INV-2025-0323",
-      justification: null,
-      user: "Adebayo Okonkwo",
-      timestamp: "11/27/2025, 1:20:15 PM",
-      score: "98.2%",
-      metadata: {
-        bankAmount: "₦125,000",
-        systemAmount: "₦125,000",
-      },
-    },
-    {
-      action: "Status Override",
-      status: "Success",
-      id: "TXN-2025-1145",
-      description:
-        "Overrode reconciliation status from Pending to Reconciled",
-      justification:
-        "Bank confirmed transaction was processed but delayed in system",
-      user: "Chinwe Adeyemi",
-      timestamp: "11/27/2025, 11:45:30 AM",
-      score: null,
-      metadata: {
-        previous: "Pending",
-        newStatus: "Reconciled",
-      },
-    },
-    {
-      action: "Unmatch",
-      status: "Success",
-      id: "TXN-2025-1144",
-      description:
-        "Unmatched incorrect association between bank transfer and invoice",
-      justification:
-        "Wrong customer identified - amounts matched but different client",
-      user: "Adebayo Okonkwo",
-      timestamp: "11/27/2025, 10:15:42 AM",
-      score: "88.0%",
-      metadata: {
-        bankAmount: "₦75,000",
-        systemAmount: "₦75,000",
-      },
-    },
-    {
-      action: "Bulk Match",
-      status: "Success",
-      id: "BULK-2025-025",
-      description:
-        "Processed bulk matching for 23 transactions from Access Bank",
-      justification: null,
-      user: "Olumide Johnson",
-      timestamp: "11/27/2025, 9:30:18 AM",
-      score: "92.3%",
-      metadata: {},
-    },
-    {
-      action: "Manual Match",
-      status: "Success",
-      id: "TXN-2025-1143",
-      description:
-        "Manually matched Zenith Bank credit ₦200,000 with Sales Order SO-2025-089",
-      justification:
-        "Partial payment - customer paid 50% upfront",
-      user: "Chinwe Adeyemi",
-      timestamp: "11/26/2025, 4:55:12 PM",
-      score: "85.0%",
-      metadata: {
-        bankAmount: "₦200,000",
-        systemAmount: "₦400,000",
-      },
-    },
-    {
-      action: "Delete",
-      status: "Success",
-      id: "TXN-2025-1142",
-      description:
-        "Deleted duplicate transaction entry",
-      justification:
-        "Same transaction imported twice from different statements",
-      user: "Adebayo Okonkwo",
-      timestamp: "11/26/2025, 3:20:45 PM",
-      score: null,
-      metadata: {},
-    },
-    {
-      action: "Manual Match",
-      status: "Failed",
-      id: "TXN-2025-1141",
-      description:
-        "Failed to match transaction - insufficient data",
-      justification: null,
-      user: "Olumide Johnson",
-      timestamp: "11/26/2025, 2:10:33 PM",
-      score: "45.0%",
-      metadata: {
-        bankAmount: "₦35,000",
-      },
-    },
-  ];
+function ActivityCard({ row, actionIcons, statusIcons }) {
+  return (
+    <div className="border bg-white p-5 rounded-xl shadow-sm space-y-3">
+      {/* Action + Status */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm font-medium">
+          {actionIcons[row.action] || <AlertCircle size={18} className="text-gray-500" />} {row.action}
+        </div>
 
-  /* ============================================================
-     FILTER STATE
-  ============================================================ */
+        <div className="flex items-center gap-1 bg-black text-white text-xs px-2 py-1 rounded-md">
+          {statusIcons[row.status] || <Clock size={14} className="text-gray-400" />} {row.status}
+        </div>
+
+        <span className="text-sm text-gray-500">{row.id}</span>
+      </div>
+
+      {/* Description */}
+      <p className="font-medium">{row.description}</p>
+
+      {/* Justification */}
+      {row.justification && (
+        <p className="border bg-yellow-50 border-yellow-200 p-2 rounded text-sm">
+          <strong>Justification:</strong> {row.justification}
+        </p>
+      )}
+      <div className="flex justify-between"></div>
+      {/* User, Time, Score */}
+      <div className="text-sm text-gray-600 space-y-1">
+        <p className="flex items-center gap-2">
+          <User size={16} /> {row.user}
+        </p>
+        <p className="flex items-center gap-2">
+          <Clock size={16} /> {row.timestamp}
+        </p>
+        {row.score && (
+          <p className="flex items-center gap-2">
+            <Target size={16} /> Match Score: {row.score}
+          </p>
+        )}
+
+        {/* Metadata */}
+      {row.metadata && Object.keys(row.metadata).length > 0 && (
+        <div className="border bg-gray-50 py-3 rounded-lg text-sm w-fit px-7">
+          <p className="flex items-center gap-2 font-semibold mb-1">
+            <FileText size={16} /> Metadata:
+          </p>
+
+          {Object.entries(row.metadata).map(([key, value], i) => (
+            <p key={i} className="capitalize">
+              {key.replace(/([A-Z])/g, " $1")} : {value}
+            </p>
+          ))}
+        </div>
+      )}
+      </div>
+    </div>
+  );
+}
+
+// --- MAIN COMPONENT ---
+export default function AuditLog({ data }) {
+  // --- Data Extraction with Fallbacks ---
+  const summary = data?.summary || {};
+  const filterOptions = data?.filterOptions || {};
+  const fullData = data?.logEntries || [];
+
+  const actions = filterOptions.actions || ["All Actions"];
+  const users = filterOptions.users || ["All Users"];
+  const statuses = filterOptions.statuses || ["All Status"];
+
+  // --- State ---
   const [searchValue, setSearchValue] = useState("");
-  const [actionFilter, setActionFilter] = useState("All Actions");
-  const [userFilter, setUserFilter] = useState("All Users");
-  const [statusFilter, setStatusFilter] = useState("All Status");
+  const [actionFilter, setActionFilter] = useState(actions[0]);
+  const [userFilter, setUserFilter] = useState(users[0]);
+  const [statusFilter, setStatusFilter] = useState(statuses[0]);
 
-  /* ============================================================
-     FILTERING LOGIC
-  ============================================================ */
+  // --- Filtering Logic (now uses external data) ---
   const filteredData = useMemo(() => {
     return fullData.filter((row) => {
       const matchesSearch =
@@ -183,20 +129,19 @@ export default function AuditLog() {
       const matchesAction =
         actionFilter === "All Actions" || row.action === actionFilter;
 
-      const matchesUser =
-        userFilter === "All Users" || row.user === userFilter;
+      const matchesUser = userFilter === "All Users" || row.user === userFilter;
 
       const matchesStatus =
         statusFilter === "All Status" || row.status === statusFilter;
 
       return matchesSearch && matchesAction && matchesUser && matchesStatus;
     });
-  }, [searchValue, actionFilter, userFilter, statusFilter]);
+  }, [searchValue, actionFilter, userFilter, statusFilter, fullData]);
 
-  /* ============================================================
-     EXPORT CSV
-  ============================================================ */
+  // --- Export CSV Logic (uses external data) ---
   const exportCSV = () => {
+    if (fullData.length === 0) return;
+
     const headers = Object.keys(fullData[0]).join(",");
     const rows = fullData
       .map((item) =>
@@ -213,9 +158,7 @@ export default function AuditLog() {
     link.click();
   };
 
-  /* ============================================================
-     ICON MAP (Matches Screenshot Exactly)
-  ============================================================ */
+  // --- ICON MAP (Remains local for UI presentation) ---
   const actionIcons = {
     "Manual Match": <CheckCircle size={18} className="text-green-600" />,
     "One-Click Match": <Zap size={18} className="text-green-600" />,
@@ -231,19 +174,17 @@ export default function AuditLog() {
     Pending: <Clock size={14} className="text-yellow-600" />,
   };
 
-  /* ============================================================
-     MAIN RENDER
-  ============================================================ */
+  // --- MAIN RENDER ---
   return (
     <div className="p-6 space-y-6">
-      {/* TOP SUMMARY BOXES */}
+      {/* TOP SUMMARY BOXES (Uses data from JSON) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SummaryBox title="Total Actions" value={fullData.length} />
-        <SummaryBox title="Success Rate" value="87.5%" green />
-        <SummaryBox title="Active Users" value="3" />
+        <SummaryBox title="Total Actions" value={summary.totalActions} />
+        <SummaryBox title="Success Rate" value={summary.successRate} green />
+        <SummaryBox title="Active Users" value={summary.activeUsers} />
       </div>
 
-      {/* FILTERS */}
+      {/* FILTERS (Uses data from JSON) */}
       <div className="bg-white border p-6 rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Filter Audit Log</h2>
 
@@ -280,7 +221,7 @@ export default function AuditLog() {
         </p>
       </div>
 
-      {/* ACTIVITY LIST */}
+      {/* ACTIVITY LIST (Uses filteredData) */}
       <div>
         <h2 className="text-xl font-semibold mb-1">Reconciliation Activity</h2>
         <p className="text-gray-600 mb-4">
@@ -298,114 +239,24 @@ export default function AuditLog() {
           ))}
         </div>
       </div>
+      
       {/* MNF Integration Box */}
-<div className="bg-[#1E0F6B] text-white p-6 rounded-xl flex items-start gap-4 shadow-md">
-  <div className="bg-yellow-300/20 p-3 rounded-lg">
-    <FileText className="text-yellow-300" size={28} />
-  </div>
-
-  <div>
-    <h3 className="text-lg font-semibold">
-      Module Note Framework (MNF) Integration
-    </h3>
-    <p className="text-sm opacity-90 mt-1 leading-relaxed">
-      All reconciliation actions are logged with full context and justification
-      through the MNF system. This ensures complete audit compliance and
-      traceability for financial reporting and regulatory requirements.
-    </p>
-  </div>
-</div>
-
-    </div>
-  );
-}
-
-/* ============================================================
-   SUB-COMPONENTS
-============================================================ */
-
-function SummaryBox({ title, value, green }) {
-  return (
-    <div className="p-5 border bg-white rounded-xl shadow-sm">
-      <p className="text-gray-500 text-sm">{title}</p>
-      <p className={`text-2xl font-semibold ${green ? "text-green-600" : ""}`}>
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function SelectDropdown({ options, value, onChange }) {
-  return (
-    <select
-      className="border px-4 py-2 rounded-lg bg-white text-sm"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {options.map((o) => (
-        <option key={o}>{o}</option>
-      ))}
-    </select>
-  );
-}
-
-function ActivityCard({ row, actionIcons, statusIcons }) {
-  return (
-    <div className="border bg-white p-5 rounded-xl shadow-sm space-y-3">
-      {/* Action + Status */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm font-medium">
-          {actionIcons[row.action]} {row.action}
+      <div className="bg-[#1E0F6B] text-white p-6 rounded-xl flex items-start gap-4 shadow-md">
+        <div className="bg-yellow-300/20 p-3 rounded-lg">
+          <FileText className="text-yellow-300" size={28} />
         </div>
 
-        <div className="flex items-center gap-1 bg-black text-white text-xs px-2 py-1 rounded-md">
-          {statusIcons[row.status]} {row.status}
-        </div>
-
-        <span className="text-sm text-gray-500">{row.id}</span>
-      </div>
-
-      {/* Description */}
-      <p className="font-medium">{row.description}</p>
-
-      {/* Justification */}
-      {row.justification && (
-        <p className="border bg-yellow-50 border-yellow-200 p-2 rounded text-sm">
-          <strong>Justification:</strong> {row.justification}
-        </p>
-      )}
-      <div className="flex justify-between"></div>
-      {/* User, Time, Score */}
-      <div className="text-sm text-gray-600 space-y-1">
-        <p className="flex items-center gap-2">
-          <User size={16} /> {row.user}
-        </p>
-        <p className="flex items-center gap-2">
-          <Clock size={16} /> {row.timestamp}
-        </p>
-        {row.score && (
-          <p className="flex items-center gap-2">
-            <Target size={16} /> Match Score: {row.score}
+        <div>
+          <h3 className="text-lg font-semibold">
+            Module Note Framework (MNF) Integration
+          </h3>
+          <p className="text-sm opacity-90 mt-1 leading-relaxed">
+            All reconciliation actions are logged with full context and justification
+            through the MNF system. This ensures complete audit compliance and
+            traceability for financial reporting and regulatory requirements.
           </p>
-        )}
-
-          {/* Metadata */}
-      {row.metadata && Object.keys(row.metadata).length > 0 && (
-        <div className="border bg-gray-50 py-3 rounded-lg text-sm w-fit px-7">
-          <p className="flex items-center gap-2 font-semibold mb-1">
-            <FileText size={16} /> Metadata:
-          </p>
-
-          {Object.entries(row.metadata).map(([key, value], i) => (
-            <p key={i} className="capitalize">
-              {key.replace(/([A-Z])/g, " $1")} : {value}
-            </p>
-          ))}
         </div>
-      )}
       </div>
-
-    
     </div>
   );
 }

@@ -71,19 +71,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   // Menu items and dropdown contents
   const menuItems = [
-<<<<<<< HEAD
-    { href: "/beapOneLite", icon: LayoutDashboard, label: "Dashboard", status: "✓" },
-    { href: "/beapOneLite/ewallet", icon: Wallet, label: "eWallet & Payments", status: "✓" },
-    { href: "/beapOneLite/bank-reconciliation", icon: Building2, label: "Bank Reconciliation", status: "S" },
-    { href: "/project-profitability", icon: FileText, label: "Project Profitability", status: "S" },
-    { href: "/financial-reports", icon: BarChart3, label: "Financial Reports", status: "S" },
-    { href: "/reporting-engine", icon: FileText, label: "Reporting Engine", status: "S" },
-    { href: "/e-invoicing-tax", icon: FileText, label: "E-Invoicing & Tax", status: "P" },
-    { href: "/document-management", icon: FileText, label: "Document Management", status: "P" },
-    { href: "/subscription-billing", icon: FileText, label: "Subscription & Billing", status: "✓" },
-    { href: "/bpc-portal", icon: FileText, label: "BPC Portal", status: "P" },
-    { href: "/settings", icon: FileText, label: "Settings", status: "✓" },
-=======
     {
       href: "/beapOneLite",
       icon: LayoutDashboard,
@@ -145,7 +132,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "P",
     },
     { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
->>>>>>> c95dbb074ad3ed4429b67f412603ea975517356d
   ];
 
   const salesInvoicingItems = [
