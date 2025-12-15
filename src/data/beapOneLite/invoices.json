@@ -1,29 +1,95 @@
-[
-  {
-    "id": "INV-001",
-    "company": "Acme Corporation",
-    "date": "2025-11-20",
-    "amountUSD": "5000.00",
-    "amountNGN": "7737500.00",
-    "due": "2025-12-20",
-    "status": "Paid"
+{
+  "metrics": {
+    "totalValue": "15,475,000.00",
+    "paid": "13,618,000.00",
+    "pending": "0.00",
+    "overdue": "1,857,000.00"
   },
-  {
-    "id": "INV-004",
-    "company": "TechStart Ltd",
-    "date": "2025-11-15",
-    "amountUSD": "3800.00",
-    "amountNGN": "5880500.00",
-    "due": "2025-12-15",
-    "status": "Paid"
-  },
-  {
-    "id": "INV-003",
-    "company": "Guaranty Trust Bank",
-    "date": "2025-10-15",
-    "amountUSD": "1200.00",
-    "amountNGN": "1857000.00",
-    "due": "2025-11-14",
-    "status": "Overdue"
-  }
-]
+  "invoices": [
+    {
+      "id": "INV-001",
+      "company": "Acme Corporation",
+      "date": "2025-11-20",
+      "amountUSD": "$5,000.00",
+      "amountNGN": "₦7,737,500.00",
+      "due": "2025-12-20",
+      "status": "Paid",
+      "items": [
+        {
+          "description": "Website Redesign - Milestone 1",
+          "qty": 1,
+          "unitPrice": "$5,000.00",
+          "total": "$5,000.00"
+        }
+      ]
+    },
+    {
+      "id": "INV-004",
+      "company": "TechStart Ltd",
+      "date": "2025-11-15",
+      "amountUSD": "$3,800.00",
+      "amountNGN": "₦5,880,500.00",
+      "due": "2025-12-15",
+      "status": "Paid",
+      "items": [
+        {
+          "description": "Backend Integration — Phase 1",
+          "qty": 1,
+          "unitPrice": "$3,800.00",
+          "total": "$3,800.00"
+        }
+      ]
+    },
+    {
+      "id": "INV-003",
+      "company": "Guaranty Trust Bank",
+      "date": "2025-10-15",
+      "amountUSD": "$1,200.00",
+      "amountNGN": "₦1,857,000.00",
+          "due": "2025-11-14",
+      "status": "Overdue",
+      "items": [
+        {
+          "description": "API Upgrade — Module A",
+          "qty": 1,
+          "unitPrice": "$1,200.00",
+          "total": "$1,200.00"
+        }
+      ]
+    },
+    {
+      "id": "INV-005",
+      "company": "Global Services Co.",
+      "date": "2025-12-01",
+      "amountUSD": "$7,500.00",
+      "amountNGN": "₦11,606,250.00",
+      "due": "2025-01-01",
+      "status": "Pending",
+      "items": [
+        {
+          "description": "Cloud Deployment Setup",
+          "qty": 1,
+          "unitPrice": "$7,500.00",
+          "total": "$7,500.00"
+        }
+      ]
+    },
+    {
+      "id": "INV-002",
+      "company": "BuildMart Ltd",
+      "date": "2025-11-01",
+      "amountUSD": "$450.00",
+      "amountNGN": "₦696,375.00",
+      "due": "2025-12-01",
+      "status": "Draft",
+      "items": [
+        {
+          "description": "UI/UX Consultation Session",
+          "qty": 1,
+          "unitPrice": "$450.00",
+          "total": "$450.00"
+        }
+      ]
+    }
+  ]
+}

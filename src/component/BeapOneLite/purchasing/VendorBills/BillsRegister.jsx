@@ -1,234 +1,297 @@
-"use client";
+import React, { useState, useEffect, useMemo } from 'react';
+import { Clock, Info } from 'lucide-react';
+import PaymentModal from './PaymentModal'; // Shared modal
 
-import { useState, useEffect, useMemo } from "react";
-import { ChevronDown, ChevronUp, Calendar, Info, DollarSign } from "lucide-react";
+// --- Utility Functions ---
 
-const formatCurrency = (amount) =>
-  new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    minimumFractionDigits: 0,
-  }).format(amount);
-
-// Status Tag Component
-const StatusTag = ({ status }) => {
-  let colorClass = "";
-  switch (status) {
-    case "Issued":
-    case "Scheduled":
-      colorClass = "bg-blue-600/10 text-blue-800 font-semibold";
-      break;
-    case "Partial":
-    case "Partially Paid":
-      colorClass = "bg-yellow-600/10 text-yellow-800 font-semibold";
-      break;
-    case "Overdue":
-      colorClass = "bg-red-600/10 text-red-800 font-semibold";
-      break;
-    case "Paid":
-      colorClass = "bg-gray-700 text-white font-semibold";
-      break;
-    default:
-      colorClass = "bg-gray-100 text-gray-700";
-  }
-  return <span className={`px-2 py-0.5 text-xs rounded ${colorClass}`}>{status}</span>;
+const formatNaira = (amount) => {
+  return `₦${(amount || 0).toLocaleString('en-NG')}`;
 };
 
-// Bill Item Component
-const BillItem = ({ bill }) => {
-  const [isExpanded, setIsExpanded] = useState(bill.alwaysShowDetails || false);
+// Component for the status tags
+const StatusTag = ({ status, isInstallment = false }) => {
+  let colorClass = '';
+  let text = status;
 
-  const outstandingColor = bill.status === "Overdue" ? "text-red-600" : "text-gray-500";
-  const isExpandable =
-    bill.isInstallment || bill.status === "Overdue" || bill.status === "Partial";
-  const showExpandIcon = isExpandable && !bill.alwaysShowDetails;
+  switch (status) {
+    case 'Issued':
+    case 'Scheduled':
+      colorClass = 'bg-gray-200 text-gray-700';
+      break;
+    case 'Overdue':
+      colorClass = 'bg-red-100 text-red-700';
+      break;
+    case 'Paid':
+      colorClass = 'bg-green-100 text-green-700';
+      break;
+    case 'Partial':
+    case 'Partially Paid':
+      colorClass = 'bg-yellow-100 text-yellow-700';
+      text = isInstallment ? 'Partial' : 'Partially Paid';
+      break;
+    default:
+      colorClass = 'bg-gray-200 text-gray-700';
+  }
 
   return (
-    <div
-      className={`p-4 border-b last:border-b-0 ${
-        isExpanded ? "bg-gray-50" : "bg-white hover:bg-gray-50"
-      }`}
-    >
-      {/* Header */}
-      <div
-        className={`flex justify-between items-start ${
-          showExpandIcon ? "cursor-pointer" : "cursor-default"
-        }`}
-        onClick={() => showExpandIcon && setIsExpanded(!isExpanded)}
-      >
-        {/* Left */}
-        <div className="flex-1 min-w-0 pr-4">
-          <div className="flex items-center space-x-2 mb-1">
-            <span
-              className={`text-lg font-semibold ${
-                bill.status === "Paid" ? "text-gray-700" : "text-gray-900"
-              }`}
-            >
-              {bill.vendor}
+    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${colorClass}`}>
+      {text}
+    </span>
+  );
+};
+
+// Component for a single Bill Card
+const BillCard = ({ bill, openPaymentModal }) => {
+  const isInstallments = bill.type === 'Installments';
+  const showPayNow = bill.outstandingAmount > 0;
+  
+  const billStatusTag = bill.status === 'Partial' ? 'Partially Paid' : bill.status;
+
+  return (
+    <div className="border border-gray-200 rounded-lg p-6 shadow-sm mb-6 bg-white">
+      <div className="flex justify-between items-start">
+        {/* Vendor Info and Description */}
+        <div>
+          <h3 className="text-xl font-semibold text-gray-800 flex items-center mb-1">
+            {bill.vendor}
+            <span className="ml-3">
+                <StatusTag status={billStatusTag} />
             </span>
-
-            <StatusTag status={bill.status === "Partial" ? "Partially Paid" : bill.status} />
-
-            {bill.isInstallment && <StatusTag status="Installments" />}
-          </div>
-
-          <p className="text-sm text-gray-600 truncate">{bill.description}</p>
-          <div className="text-xs text-gray-500 mt-1">
-            Bill: <b>{bill.billId}</b> | Issued: <b>{bill.issuedDate}</b>
-            {bill.dueDate && <> | Due: {bill.dueDate}</>}
-          </div>
+            {isInstallments && (
+              <span className="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                Installments
+              </span>
+            )}
+          </h3>
+          <p className="text-gray-600 mb-1">{bill.description}</p>
+          <p className="text-sm text-gray-500">
+            Bill: **{bill.id}** | Issued: **{bill.issuedDate}**
+            {bill.status === 'Paid' ? ` | Due: ${bill.dueDate}` : ''}
+          </p>
         </div>
 
-        {/* Right */}
-        <div className="flex items-center space-x-6">
-          <div className="text-right whitespace-nowrap">
-            <p
-              className={`text-xl font-bold ${
-                bill.status === "Paid" ? "text-gray-700" : "text-black"
-              }`}
+        {/* Total Amount, Outstanding, and Pay Now Button */}
+        <div className="text-right">
+          <p className="text-2xl font-bold text-gray-800 mb-1">{formatNaira(bill.totalAmount)}</p>
+          {bill.paidAmount > 0 && bill.outstandingAmount > 0 && (
+            <p className="text-sm text-green-600">Paid: {formatNaira(bill.paidAmount)}</p>
+          )}
+          {bill.outstandingAmount > 0 ? (
+            <p className="text-sm font-medium text-red-600 mb-3">Outstanding: {formatNaira(bill.outstandingAmount)}</p>
+          ) : (
+            <p className="text-sm font-medium text-green-600 mb-3">Paid: {formatNaira(bill.paidAmount)}</p>
+          )}
+          
+          {showPayNow && (
+            <button
+              // Pass the full bill object as paymentContext
+              onClick={() => openPaymentModal(bill)} 
+              className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-150 shadow-md"
             >
-              {formatCurrency(bill.totalAmount)}
-            </p>
-
-            {bill.outstanding > 0 && (
-              <p className={`text-sm ${outstandingColor}`}>
-                Outstanding: {formatCurrency(bill.outstanding)}
-              </p>
-            )}
-
-            {bill.paid > 0 && (
-              <p className="text-sm text-green-600">Paid: {formatCurrency(bill.paid)}</p>
-            )}
-          </div>
-
-          {bill.status !== "Paid" && (
-            <button className="px-4 py-2 bg-black text-white rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
               Pay Now
             </button>
           )}
-
-          {showExpandIcon &&
-            (isExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-500" />
-            ) : (
-              <ChevronDown className="w-5 h-5 text-gray-500" />
-            ))}
         </div>
       </div>
 
-      {/* Installments */}
-      {(isExpanded || bill.alwaysShowDetails) &&
-        bill.isInstallment &&
-        bill.installments?.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <h4 className="text-sm font-bold mb-3 text-gray-700">Payment Schedule:</h4>
-
-            {bill.installments.map((i, index) => (
-              <div key={i.id} className="flex justify-between items-center py-2">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-gray-800">Installment #{index + 1}</span>
-                  <span className="text-sm text-gray-600">Due: {i.dueDate}</span>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <span className="font-semibold text-gray-900">{formatCurrency(i.amount)}</span>
-
-                  {i.status === "Overdue" ? (
-                    <button className="px-3 py-1 bg-red-600 text-white rounded-lg text-xs font-medium">
-                      Overdue
-                    </button>
-                  ) : (
-                    <StatusTag status={i.status} />
-                  )}
-                </div>
+      {/* Installment Schedule (if applicable) */}
+      {isInstallments && bill.schedule && bill.schedule.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-gray-100">
+          <h4 className="text-md font-semibold text-gray-800 mb-4">Payment Schedule:</h4>
+          {bill.schedule.map((installment, index) => (
+            <div
+              key={installment.id}
+              className={`flex justify-between items-center py-3 ${
+                index < bill.schedule.length - 1 ? 'border-b border-gray-100' : ''
+              }`}
+            >
+              <div className="flex items-center">
+                <Clock className="w-4 h-4 text-gray-500 mr-2" />
+                <span className="font-medium text-gray-700">
+                  Installment #{installment.id}: Due: **{installment.dueDate}**
+                </span>
               </div>
-            ))}
-          </div>
-        )}
+              <div className="flex items-center space-x-4">
+                <span className="font-bold text-gray-800">{formatNaira(installment.amount)}</span>
+                <StatusTag status={installment.status} isInstallment={true} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-// -------------------
-// MAIN COMPONENT
-// -------------------
-export default function BillsRegister() {
-  const [bills, setBills] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const [loading, setLoading] = useState(true);
+// Main Bill Register Component
+const BillRegister = () => {
+  const API_URL = '/api/beapOnelite/vendorbills'; 
+  const filters = ['All', 'Issued', 'Partial', 'Overdue', 'Paid'];
 
-  // Fetch data
+  const [bills, setBills] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paymentContext, setPaymentContext] = useState(null);
+
+  // --- Data Fetching ---
   useEffect(() => {
-    async function loadBills() {
+    const fetchBills = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const res = await fetch("/api/beapOnelite/vendorbills");
-        const data = await res.json();
-        setBills(data.bills); // <-- loaded from JSON
-      } catch (error) {
-        console.error("Failed to fetch bills:", error);
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setBills(data.bills || []);
+      } catch (e) {
+        console.error("Failed to fetch vendor bills:", e);
+        setError("Failed to load bills. Please try again.");
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    loadBills();
-  }, []);
+    fetchBills();
+  }, [API_URL]);
+
+  // --- Modal Handlers ---
+
+  // Accepts either a full Bill object or a structured Installment object
+  const handleOpenPaymentModal = (context) => {
+    setPaymentContext(context);
+    setIsModalOpen(true);
+  };
+
+  const handleClosePaymentModal = () => {
+    setIsModalOpen(false);
+    setPaymentContext(null);
+  };
+
+  // --- Filtering Logic ---
 
   const filteredBills = useMemo(() => {
-    return bills.filter((bill) => {
-      const label = bill.status === "Partial" ? "Partially Paid" : bill.status;
-
-      if (filter === "All") return true;
-      return label === filter;
+    if (activeFilter === 'All') {
+      return bills;
+    }
+    
+    return bills.filter(bill => {
+      switch (activeFilter) {
+        case 'Issued':
+          return bill.status === 'Issued'; 
+        case 'Partial':
+          return bill.status === 'Partial' || (bill.schedule && bill.schedule.some(inst => inst.status === 'Partial'));
+        case 'Overdue':
+          return bill.schedule && bill.schedule.some(inst => inst.status === 'Overdue');
+        case 'Paid':
+          return bill.status === 'Paid';
+        default:
+          return false;
+      }
     });
-  }, [filter, bills]);
+  }, [activeFilter, bills]);
+  
+  // Count calculation for filters
+  const getFilterCount = (filter) => {
+    if (filter === 'All') return bills.length;
+    
+    return bills.filter(bill => {
+      switch (filter) {
+        case 'Issued':
+          return bill.status === 'Issued';
+        case 'Partial':
+          return bill.status === 'Partial' || (bill.schedule && bill.schedule.some(inst => inst.status === 'Partial'));
+        case 'Overdue':
+          return bill.schedule && bill.schedule.some(inst => inst.status === 'Overdue');
+        case 'Paid':
+          return bill.status === 'Paid';
+        default:
+          return false;
+      }
+    }).length;
+  };
 
-  const filters = ["All", "Issued", "Partial", "Overdue", "Paid"];
-
+  // --- Render Logic ---
   if (loading) {
-    return <p className="p-4">Loading bills...</p>;
+    return (
+      <div className="p-8 bg-gray-50 min-h-screen flex justify-center items-center">
+        <div className="text-lg font-medium text-gray-600">Loading bill register...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 bg-gray-50 min-h-screen">
+        <div className="p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-md">
-      {/* Filters */}
-      <div className="flex space-x-2 mb-4">
-        {filters.map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-              filter === f
-                ? "bg-black text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            {f}
-          </button>
-        ))}
+    <div className="p-8 bg-gray-50 min-h-screen">
+      {/* Filter Buttons */}
+      <div className="flex space-x-3 mb-8">
+        {filters.map((filter) => {
+          const count = getFilterCount(filter);
+          const isActive = activeFilter === filter;
+          
+          return (
+            <button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition duration-150 ${
+                isActive
+                  ? 'bg-black text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              {filter} {filter === 'All' && `(${count})`}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Bills List */}
-      <div className="border border-gray-200 rounded-xl overflow-hidden">
+      {/* Bill List */}
+      <div className="space-y-6">
         {filteredBills.length > 0 ? (
-          filteredBills.map((bill) => <BillItem key={bill.id} bill={bill} />)
+          filteredBills.map((bill) => (
+            <BillCard key={bill.id} bill={bill} openPaymentModal={handleOpenPaymentModal} />
+          ))
         ) : (
-          <p className="p-4 text-center text-gray-500">
-            No bills found for this filter.
-          </p>
+          <div className="p-6 text-center text-gray-500 bg-white rounded-lg border border-gray-200">
+            No bills found for the selected filter ({activeFilter}).
+          </div>
         )}
       </div>
 
-      {/* About Section */}
-      <div className="mt-6 p-4 border border-blue-200 bg-blue-50 rounded-lg flex space-x-3 items-start">
-        <Info className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+      {/* Info Block at the bottom */}
+      <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start text-sm">
+        <Info className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
         <div>
-          <h3 className="font-bold text-blue-800 mb-1">About Vendor Bill Management (M7)</h3>
-          <p className="text-sm text-blue-700">
-            M7 tracks all accounts payable with installment support and automated aging analysis.
+          <h5 className="font-semibold text-blue-800 mb-1">About Vendor Bill Management (M7)</h5>
+          <p className="text-blue-700">
+            M7 tracks all accounts payable (money owed to vendors) with support for installment payments, automated aging analysis, and E-Wallet integration for seamless payment processing. All payments are executed through the SME's dedicated E-Wallet for complete cash flow visibility.
           </p>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {paymentContext && (
+        <PaymentModal
+          isOpen={isModalOpen}
+          onClose={handleClosePaymentModal}
+          paymentContext={paymentContext}
+        />
+      )}
     </div>
   );
-}
+};
+
+export default BillRegister;

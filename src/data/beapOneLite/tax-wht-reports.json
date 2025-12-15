@@ -2,7 +2,6 @@
   "vatsalestax": {
     "netTaxableSales": 16720930.23,
     "totalVatCollected": 1254069.77,
-    "vatRate": 7.5,
     "totalInvoices": 4,
     "taxCompliance": "100%",
     "vatBreakdown": [
@@ -25,20 +24,38 @@
         "base": 0.0
       }
     ],
-    "locations": [
+      "invoices": [
       {
-        "name": "Lagos Main Branch",
-        "invoices": 3,
-        "vatAmount": 1079651.16,
-        "baseAmount": 14395348.84
+        "id": 1,
+        "location": "Lagos Main Branch",
+        "date": "2025-01-05",
+        "baseAmount": 5000000,
+        "vatAmount": 375000
       },
       {
-        "name": "Abuja Office",
-        "invoices": 1,
-        "vatAmount": 174418.60,
-        "baseAmount": 2325581.40
+        "id": 2,
+        "location": "Lagos Main Branch",
+        "date": "2025-12-12",
+        "baseAmount": 9395348.84,
+        "vatAmount": 704651.16
+      },
+      {
+        "id": 3,
+        "location": "Abuja Office",
+        "date": "2025-01-20",
+        "baseAmount": 2325581.4,
+        "vatAmount": 174418.6
+      },
+      {
+        "id": 4,
+        "location": "Lagos Main Branch",
+        "date": "2025-02-02",
+        "baseAmount": 2000000,
+        "vatAmount": 150000
       }
-    ]
+    ],
+    "vatRate": 7.5
+  
   },
   "withholdingtax": {
     "summaryCards": [
@@ -66,9 +83,30 @@
       { "label": "Tax Credit Available", "value": "₦116,279.07", "isCurrency": true}
     ],
     "customerWHT": [
-      { "id": 1, "name": "Acme Corporation", "invoices": 1, "amount": 359883.72 },
-      { "id": 2, "name": "Beta Systems Inc.", "invoices": 3, "amount": 98765.43 },
-      { "id": 3, "name": "Gamma Corp", "invoices": 1, "amount": 50000.00 }
+      {
+        "id": 1,
+        "name": "Acme Corporation",
+        "location": "Lagos Main Branch",
+        "date": "2025-01-10",
+        "invoices": 1,
+        "amount": 359883.72
+      },
+      {
+        "id": 2,
+        "name": "Beta Systems Inc.",
+        "location": "Abuja Office",
+        "date": "2025-01-25",
+        "invoices": 3,
+        "amount": 98765.43
+      },
+      {
+        "id": 3,
+        "name": "Gamma Corp",
+        "location": "Port Harcourt",
+        "date": "2025-02-05",
+        "invoices": 1,
+        "amount": 50000
+      }
     ]
   }
 }

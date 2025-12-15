@@ -1,116 +1,161 @@
-'use client';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Ngn } from 'lucide-react';
+import PaymentModal from './PaymentModal'; // Shared modal
 
-import { Calendar, FileText, Info } from 'lucide-react';
-import { useEffect, useState } from 'react';
-
-// --- FORMAT CURRENCY ---
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    minimumFractionDigits: 0,
-  }).format(amount);
+// Utility function to format currency (needed if this component is rendered alone)
+const formatNaira = (amount) => {
+    return `₦${(amount || 0).toLocaleString('en-NG')}`;
 };
 
-// --- PAYMENT ITEM ---
-const PaymentItem = ({ payment }) => {
-  const paymentDetails = `${payment.billId} • Installment ${payment.installment}`;
+const UpcomingPayments = () => {
+    const API_URL = '/api/beapOnelite/vendorbills'; 
 
-  return (
-    <div className="flex justify-between items-start py-4 border-b last:border-b-0">
-      {/* Left */}
-      <div className="flex-1 min-w-0 pr-4">
-        <span className="text-lg font-semibold text-gray-900">{payment.vendor}</span>
-        <p className="text-sm text-gray-600 truncate mt-0.5">
-          {payment.description}
-        </p>
-        <div className="text-xs text-gray-500 mt-1">
-          Bill: <b>{paymentDetails}</b>
-        </div>
-      </div>
+    const [bills, setBills] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-      {/* Right */}
-      <div className="flex items-center space-x-4 ml-auto">
-        <div className="text-right whitespace-nowrap">
-          <p className="text-xl font-bold text-black">
-            {formatCurrency(payment.amount)}
-          </p>
-          <div className="flex items-center justify-end text-sm text-gray-500 mt-0.5">
-            <Calendar className="w-4 h-4 mr-1" />
-            <span>Due: {payment.dueDate}</span>
-          </div>
-        </div>
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [paymentContext, setPaymentContext] = useState(null);
 
-        <button className="flex items-center space-x-1 px-4 py-2 bg-black text-white rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors h-10">
-          <FileText className="w-4 h-4" />
-          <span>Pay Now</span>
-        </button>
-      </div>
-    </div>
-  );
-};
+    // --- Data Fetching ---
+    useEffect(() => {
+        const fetchBills = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setBills(data.bills || []);
+            } catch (e) {
+                console.error("Failed to fetch upcoming payments:", e);
+                setError("Failed to load upcoming payments.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-// -------------------------------
-// MAIN COMPONENT
-// -------------------------------
-export default function UpcomingPayments() {
-  const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true);
+        fetchBills();
+    }, [API_URL]);
 
-  // Fetch from API
-  useEffect(() => {
-    async function loadPayments() {
-      try {
-        const res = await fetch('/api/beapOnelite/vendorbills');
-        const data = await res.json();
-        setPayments(data.upcomingPayments); // <-- from JSON
-      } catch (error) {
-        console.error('Failed to fetch upcoming payments:', error);
-      } finally {
-        setLoading(false);
-      }
+
+    // --- Data Processing for Upcoming Payments ---
+    const upcomingPayments = useMemo(() => {
+        let installments = [];
+
+        bills.forEach(bill => {
+            if (bill.type === 'Installments' && bill.schedule) {
+                bill.schedule.forEach(installment => {
+                    // Only include scheduled payments that are not yet Paid
+                    if (installment.status !== 'Paid') {
+                        installments.push({
+                            vendor: bill.vendor,
+                            billId: bill.id,
+                            description: bill.description,
+                            totalBillAmount: bill.totalAmount,
+                            installmentId: installment.id,
+                            paymentType: `Installment #${installment.id}`,
+                            amount: installment.amount,
+                            dueDate: installment.dueDate,
+                            status: installment.status,
+                        });
+                    }
+                });
+            }
+        });
+
+        // Sort by Due Date (earliest first)
+        installments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+        // Limit to the next 5
+        return installments.slice(0, 5);
+    }, [bills]);
+
+    // --- Modal Handlers ---
+    const handleOpenPaymentModal = (context) => {
+        setPaymentContext(context);
+        setIsModalOpen(true);
+    };
+
+    const handleClosePaymentModal = () => {
+        setIsModalOpen(false);
+        setPaymentContext(null);
+    };
+
+    // --- Render Logic ---
+    if (loading) {
+        return (
+            <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-200 text-center">
+                <p className="text-gray-600">Loading scheduled payments...</p>
+            </div>
+        );
     }
 
-    loadPayments();
-  }, []);
+    if (error) {
+        return (
+            <div className="p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {error}
+            </div>
+        );
+    }
 
-  if (loading) {
-    return <p className="p-4">Loading scheduled payments...</p>;
-  }
+    if (upcomingPayments.length === 0) {
+        return (
+            <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Next 5 Scheduled Payments</h3>
+                <p className="text-gray-500">No upcoming scheduled payments found.</p>
+            </div>
+        );
+    }
 
-  return (
-    <div className="p-4 bg-white rounded-xl shadow-md">
-      
-      <h2 className="text-xl font-bold text-gray-900 mb-4">
-        Next {payments.length} Scheduled Payments
-      </h2>
+    return (
+        <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Next 5 Scheduled Payments</h3>
+            <div className="space-y-4">
+                {upcomingPayments.map((payment) => (
+                    <div
+                        key={`${payment.billId}-${payment.installmentId}`}
+                        className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+                    >
+                        {/* Payment Info */}
+                        <div>
+                            <p className="text-lg font-semibold text-gray-800">{payment.vendor}</p>
+                            <p className="text-gray-600 text-sm">{payment.description}</p>
+                            <p className="text-xs text-gray-500">
+                                Bill: **{payment.billId}** • {payment.paymentType}
+                            </p>
+                        </div>
 
-      {/* Payment List */}
-      <div className="border border-gray-200 rounded-xl overflow-hidden px-4">
-        {payments.length > 0 ? (
-          payments.map(payment => (
-            <PaymentItem key={payment.id} payment={payment} />
-          ))
-        ) : (
-          <p className="p-4 text-center text-gray-500">
-            No upcoming scheduled payments.
-          </p>
-        )}
-      </div>
+                        {/* Amount and Pay Now Button */}
+                        <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                                <p className="text-lg font-bold text-gray-800">{formatNaira(payment.amount)}</p>
+                                <p className="text-sm text-gray-500">Due: **{payment.dueDate}**</p>
+                            </div>
+                            <button
+                                // Pass the installment object as paymentContext
+                                onClick={() => handleOpenPaymentModal(payment)} 
+                                className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-150 shadow-md flex items-center"
+                            >
+                                Pay Now
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-      {/* About Block */}
-      <div className="mt-6 p-4 border border-blue-200 bg-blue-50 rounded-lg flex space-x-3 items-start">
-        <Info className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-        <div>
-          <h3 className="font-bold text-blue-800 mb-1">
-            About Vendor Bill Management (M7)
-          </h3>
-          <p className="text-sm text-blue-700">
-            M7 tracks all <b>accounts payable</b> with support for installment payments,
-            automated aging analysis, and E-Wallet integration  for seamless payment processing. All payments are executed through the SME's dedicated E-Wallet for complete cash flow visibility..
-          </p>
+            {/* The shared modal */}
+            {paymentContext && (
+                <PaymentModal
+                    isOpen={isModalOpen}
+                    onClose={handleClosePaymentModal}
+                    paymentContext={paymentContext}
+                />
+            )}
         </div>
-      </div>
-    </div>
-  );
-}
+    );
+};
+
+export default UpcomingPayments;
