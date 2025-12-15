@@ -1,0 +1,316 @@
+{
+  "moduleInfo": {
+    "name": "M4 MODULE - STANDARD TIER"
+  },
+  "dashboard": {
+    "matchingAlgorithm": "4-tier heuristic algorithm",
+    "branch": "Lagos Main Branch",
+    "kpis": [
+      {
+        "title": "Auto-Match Success Rate",
+        "value": "75.0%",
+        "unit": null,
+        "target": "Target: >80% | 3/4 auto-matched"
+      },
+      {
+        "title": "Reconciliation Lag",
+        "value": "7.7",
+        "unit": "days",
+        "target": "Target: ≤3 days | Avg time to finalize"
+      },
+      {
+        "title": "One-Click Recording Rate",
+        "value": "20.0%",
+        "unit": null,
+        "target": "Target: ≤15% | 2 lines recorded"
+      }
+    ],
+    "operationalMetrics": [
+      {
+        "title": "Queue Size (RQS)",
+        "value": 4,
+        "target": "Target: <500 lines"
+      },
+      {
+        "title": "Unreconciled Value",
+        "value": "₦263,650.00",
+        "target": "Target: <$2,000"
+      },
+      {
+        "title": "Import Latency",
+        "value": "12s",
+        "target": "Target: <30s per 1K lines"
+      },
+      {
+        "title": "Total Lines Imported",
+        "value": 10,
+        "target": "All statement lines"
+      }
+    ],
+    "statusBreakdown": [
+      { "label": "Unmatched", "value": 4 },
+      { "label": "Auto-Matched", "value": 3 },
+      { "label": "Manual-Matched", "value": 1 },
+      { "label": "One-Click Recorded", "value": 2 },
+      { "label": "Total Matched", "value": 4 }
+    ],
+    "matchingEnginePerformance": [
+      {
+        "title": "Heuristic Matches (High Confidence)",
+        "count": 1,
+        "percentage": "25.0%",
+        "description": "Rules 1 & 2: Exact/Amount Match (>95% confidence)"
+      },
+      {
+        "title": "Learning Engine Matches",
+        "count": 2,
+        "percentage": "50.0%",
+        "description": "Rule 3: Fuzzy/Learned Match (90–95% confidence)"
+      }
+    ]
+  },
+  "queue": {
+    "unmatchedLines": [
+      {
+        "id": 1,
+        "amount": 250000,
+        "type": "credit",
+        "desc": "CREDIT TRF FRM OLUWASEUN ENTERPRISES",
+        "date": "11/25/2025",
+        "ref": "NEFT2025112503"
+      },
+      {
+        "id": 2,
+        "amount": 5000,
+        "type": "debit",
+        "desc": "ALABA MARKET LEVY - DAILY",
+        "date": "11/25/2025",
+        "ref": "DBT2025112503"
+      },
+      {
+        "id": 3,
+        "amount": 150,
+        "type": "debit",
+        "desc": "BANK CHARGES - SMS ALERT FEE",
+        "date": "11/25/2025",
+        "ref": "FEE2025112501"
+      },
+      {
+        "id": 4,
+        "amount": 8500,
+        "type": "debit",
+        "desc": "POS WITHDRAWAL - ATM TRANSACTION",
+        "date": "11/24/24",
+        "ref": "DBT2025112404"
+      },
+      {
+        "id": 5,
+        "amount": 180000,
+        "type": "credit",
+        "desc": "PAYMENT RECEIVED - MOBILE TRANSFER",
+        "date": "11/23/2025",
+        "ref": "NEFT2025112301"
+      }
+    ],
+    "oneClickOptions": [
+      "Bank Fees", 
+      "Withdrawal", 
+      "Utilities", 
+      "Other"
+    ]
+  },
+  "import": {
+    "supportedFormats": ["CSV", "XLSX"],
+    "supportedProviders": [
+      { "type": "bank", "label": "GTBank (Guaranty Trust Bank)" },
+      { "type": "bank", "label": "Access Bank" },
+      { "type": "bank", "label": "Zenith Bank" },
+      { "type": "bank", "label": "First Bank of Nigeria" },
+      { "type": "bank", "label": "United Bank for Africa (UBA)" },
+      { "type": "bank", "label": "Fidelity Bank" },
+      { "type": "mobile", "label": "M-Pesa (Safaricom)" },
+      { "type": "mobile", "label": "MTN Mobile Money" },
+      { "type": "mobile", "label": "Airtel Money" },
+      { "type": "mobile", "label": "Vodafone Cash" },
+      { "type": "file", "label": "Generic CSV Format" }
+    ],
+    "importHistory": [
+      {
+        "filename": "GTBank_Statement_Nov2025.csv",
+        "status": "Completed",
+        "provider": "GTBank",
+        "account": "0123456789",
+        "dateRange": "Nov 1 - Nov 25, 2025",
+        "transactions": 147,
+        "autoMatched": 142,
+        "type": "bank"
+      },
+      {
+        "filename": "MPesa_Oct2025.csv",
+        "status": "Completed",
+        "provider": "M-Pesa",
+        "account": "+254712345678",
+        "dateRange": "Oct 1 - Oct 31, 2025",
+        "transactions": 89,
+        "autoMatched": 87,
+        "type": "mobile"
+      },
+      {
+        "filename": "Access_Bank_Sept2025.csv",
+        "status": "Completed",
+        "provider": "Access Bank",
+        "account": "9876543210",
+        "dateRange": "Sept 1 - Sept 30, 2025",
+        "transactions": 203,
+        "autoMatched": 198,
+        "type": "bank"
+      }
+    ],
+    "importProcessSteps": [
+      { 
+        "title": "Select Provider", 
+        "detail": "Choose your bank or mobile money provider from the list"
+      },
+      { 
+        "title": "Upload CSV", 
+        "detail": "Upload your statement in CSV format (downloaded from bank)"
+      },
+      { 
+        "title": "Auto-Match", 
+        "detail": "Our 4-tier heuristic engine automatically matches transactions"
+      }
+    ]
+  },
+  "auditLog": {
+    "summary": {
+      "totalActions": 8,
+      "successRate": "87.5%",
+      "activeUsers": 3
+    },
+    "filterOptions": {
+      "actions": [
+        "All Actions",
+        "Manual Match",
+        "One-Click Match",
+        "Bulk Match",
+        "Unmatch",
+        "Status Override",
+        "Delete"
+      ],
+      "users": [
+        "All Users",
+        "Adebayo Okonkwo",
+        "Chinwe Adeyemi",
+        "Olumide Johnson"
+      ],
+      "statuses": ["All Status", "Success", "Failed", "Pending"]
+    },
+    "logEntries": [
+      {
+        "action": "Manual Match",
+        "status": "Success",
+        "id": "TXN-2025-1147",
+        "description": "Manually matched GTBank deposit ₦50,000 with Invoice INV-2025-0324",
+        "justification": "Customer paid via different account than usual",
+        "user": "Adebayo Okonkwo",
+        "timestamp": "11/27/2025, 2:35:22 PM",
+        "score": "95.5%",
+        "metadata": {
+          "bankAmount": "₦50,000",
+          "systemAmount": "₦50,000"
+        }
+      },
+      {
+        "action": "One-Click Match",
+        "status": "Success",
+        "id": "TXN-2025-1146",
+        "description": "Auto-matched M-Pesa payment ₦125,000 with Invoice INV-2025-0323",
+        "justification": null,
+        "user": "Adebayo Okonkwo",
+        "timestamp": "11/27/2025, 1:20:15 PM",
+        "score": "98.2%",
+        "metadata": {
+          "bankAmount": "₦125,000",
+          "systemAmount": "₦125,000"
+        }
+      },
+      {
+        "action": "Status Override",
+        "status": "Success",
+        "id": "TXN-2025-1145",
+        "description": "Overrode reconciliation status from Pending to Reconciled",
+        "justification": "Bank confirmed transaction was processed but delayed in system",
+        "user": "Chinwe Adeyemi",
+        "timestamp": "11/27/2025, 11:45:30 AM",
+        "score": null,
+        "metadata": {
+          "previous": "Pending",
+          "newStatus": "Reconciled"
+        }
+      },
+      {
+        "action": "Unmatch",
+        "status": "Success",
+        "id": "TXN-2025-1144",
+        "description": "Unmatched incorrect association between bank transfer and invoice",
+        "justification": "Wrong customer identified - amounts matched but different client",
+        "user": "Adebayo Okonkwo",
+        "timestamp": "11/27/2025, 10:15:42 AM",
+        "score": "88.0%",
+        "metadata": {
+          "bankAmount": "₦75,000",
+          "systemAmount": "₦75,000"
+        }
+      },
+      {
+        "action": "Bulk Match",
+        "status": "Success",
+        "id": "BULK-2025-025",
+        "description": "Processed bulk matching for 23 transactions from Access Bank",
+        "justification": null,
+        "user": "Olumide Johnson",
+        "timestamp": "11/27/2025, 9:30:18 AM",
+        "score": "92.3%",
+        "metadata": {}
+      },
+      {
+        "action": "Manual Match",
+        "status": "Success",
+        "id": "TXN-2025-1143",
+        "description": "Manually matched Zenith Bank credit ₦200,000 with Sales Order SO-2025-089",
+        "justification": "Partial payment - customer paid 50% upfront",
+        "user": "Chinwe Adeyemi",
+        "timestamp": "11/26/2025, 4:55:12 PM",
+        "score": "85.0%",
+        "metadata": {
+          "bankAmount": "₦200,000",
+          "systemAmount": "₦400,000"
+        }
+      },
+      {
+        "action": "Delete",
+        "status": "Success",
+        "id": "TXN-2025-1142",
+        "description": "Deleted duplicate transaction entry",
+        "justification": "Same transaction imported twice from different statements",
+        "user": "Adebayo Okonkwo",
+        "timestamp": "11/26/2025, 3:20:45 PM",
+        "score": null,
+        "metadata": {}
+      },
+      {
+        "action": "Manual Match",
+        "status": "Failed",
+        "id": "TXN-2025-1141",
+        "description": "Failed to match transaction - insufficient data",
+        "justification": null,
+        "user": "Olumide Johnson",
+        "timestamp": "11/26/2025, 2:10:33 PM",
+        "score": "45.0%",
+        "metadata": {
+          "bankAmount": "₦35,000"
+        }
+      }
+    ]
+  }
+}
