@@ -10,7 +10,7 @@ import {
   CheckCircle,
   BadgeDollarSign,
   Loader2,
-  PlusCircle, // Added for empty state action
+  PlusCircle,
 } from "lucide-react";
 
 /* ============================================================
@@ -21,12 +21,9 @@ const PRIMARY_COLOR = "text-indigo-600";
 const ICON_SIZE_SM = 18;
 const ICON_SIZE_LG = 28;
 
-
-/**
- * Renders the status badge (Active/Inactive).
- */
 /* ============================================================
     SUB-COMPONENTS
+============================================================ */
 
 const StatusBadge = ({ status }) => {
   const isActive = status === "ACTIVE";
