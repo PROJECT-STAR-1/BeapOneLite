@@ -131,15 +131,40 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       label: "BPC Portal",
       status: "P",
     },
-    { href: "/beapOneLite/settings", icon: FileText, label: "Settings", status: "✓" },
+    {
+      href: "/beapOneLite/settings",
+      icon: FileText,
+      label: "Settings",
+      status: "✓",
+    },
   ];
 
   const salesInvoicingItems = [
-    { href: "/beapOneLite/sales-invoices/invoices", icon: Clipboard, label: "Invoices" },
-    { href: "/beapOneLite/sales-invoices/aging-schedule", icon: Calendar, label: "Aging Schedule" },
-    { href: "/beapOneLite/sales-invoices/invoice-register", icon: File, label: "Invoice Register" },
-    { href: "/beapOneLite/sales-invoices/tax-wht-report", icon: DollarSign, label: "Tax & WHT Report" },
-    { href: "/beapOneLite/sales-invoices/sales-reports", icon: BarChart3, label: "Sales Reports" },
+    {
+      href: "/beapOneLite/sales-invoices/invoices",
+      icon: Clipboard,
+      label: "Invoices",
+    },
+    {
+      href: "/beapOneLite/sales-invoices/aging-schedule",
+      icon: Calendar,
+      label: "Aging Schedule",
+    },
+    {
+      href: "/beapOneLite/sales-invoices/invoice-register",
+      icon: File,
+      label: "Invoice Register",
+    },
+    {
+      href: "/beapOneLite/sales-invoices/tax-wht-report",
+      icon: DollarSign,
+      label: "Tax & WHT Report",
+    },
+    {
+      href: "/beapOneLite/sales-invoices/sales-reports",
+      icon: BarChart3,
+      label: "Sales Reports",
+    },
   ];
 
   const expensesItems = [
@@ -157,37 +182,60 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   ];
 
   const purchasingItems = [
-    { href: "/beapOneLite/purchasing/vendor-bills", icon: Clipboard, label: "Vendor Bills" },
-    { href: "/beapOneLite/purchasing/purchase-orders", icon: BarChart3, label: "Purchase Orders" },
+    {
+      href: "/beapOneLite/purchasing/vendor-bills",
+      icon: Clipboard,
+      label: "Vendor Bills",
+    },
+    {
+      href: "/beapOneLite/purchasing/purchase-orders",
+      icon: BarChart3,
+      label: "Purchase Orders",
+    },
   ];
 
   const salesOrdersItems = [
     {
       href: "/beapOneLite/sales-order-dashboard",
       icon: Clipboard,
-      label: "Sales Order Management",
+      label: "Sales Order Management Dashboard",
     },
     { href: "/sales-orders-history", icon: Calendar, label: "History" },
   ];
 
   const documentsComplianceItems = [
-    { href: "/beapOneLite/documentDashboard", icon: File, label: "Document Dashboard" },
-    { href: "/beapOneLite/documentRegister", icon: Clipboard, label: "Document Register" },
+    {
+      href: "/beapOneLite/documentDashboard",
+      icon: File,
+      label: "Document Dashboard",
+    },
+    {
+      href: "/beapOneLite/documentRegister",
+      icon: Clipboard,
+      label: "Document Register",
+    },
   ];
 
   const channelManagementItems = [
-    { href: "/beapOneLite/a2-7-A2-4Portal", icon: Clipboard, label: "A2-7/A2-4 Portal" },
-    { href: "/beapOneLite/a1-1LiteAdmin", icon: BarChart3, label: "A1-1 Lite Admin" },
+    {
+      href: "/beapOneLite/a2-7-A2-4Portal",
+      icon: Clipboard,
+      label: "A2-7/A2-4 Portal",
+    },
+    {
+      href: "/beapOneLite/a1-1LiteAdmin",
+      icon: BarChart3,
+      label: "A1-1 Lite Admin",
+    },
   ];
-
 
   return (
     <div
       className={`bg-[#0A0F1F] text-white w-64 h-screen fixed left-0 top-0 overflow-y-auto transition-transform duration-300 z-50 ${
         isOpen ? "translate-x-0" : "-translate-x-64"
       } md:translate-x-0`}>
-   <div
-  className={`
+      <div
+        className={`
     bg-[#0A0F1F] text-white 
     w-64 
     fixed top-0 left-0 bottom-0   /* <-- FULL HEIGHT ALWAYS */
@@ -197,83 +245,81 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     z-50
     ${isOpen ? "translate-x-0" : "-translate-x-64"}
     md:translate-x-0
-  `}
->
-
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <div className="text-xl font-bold">BEAPOne Lite</div>
-        <button className="md:hidden" onClick={toggleSidebar}>
-          <Menu className="text-white" />
-        </button>
-      </div>
-
-      {/* Menu items */}
-      <div className="mt-4 space-y-1 px-2">
-        {menuItems.map((item, idx) => (
-          <MenuItem
-            key={idx}
-            href={item.href}
-            icon={item.icon}
-            label={item.label}
-            status={item.status}
-          />
-        ))}
-
-        {/* Dropdowns */}
-        <Dropdown
-          title="Sales & Invoicing"
-          icon={FileText}
-          items={salesInvoicingItems}
-          isOpen={openDropdowns.salesInvoicing}
-          toggle={() => toggleDropdown("salesInvoicing")}
-        />
-        <Dropdown
-          title="Expenses"
-          icon={Receipt}
-          items={expensesItems}
-          isOpen={openDropdowns.expenses}
-          toggle={() => toggleDropdown("expenses")}
-        />
-        <Dropdown
-          title="Purchasing"
-          icon={ShoppingCart}
-          items={purchasingItems}
-          isOpen={openDropdowns.purchasing}
-          toggle={() => toggleDropdown("purchasing")}
-        />
-        <Dropdown
-          title="Sales Orders"
-          icon={FolderOpen}
-          items={salesOrdersItems}
-          isOpen={openDropdowns.salesOrders}
-          toggle={() => toggleDropdown("salesOrders")}
-        />
-        <Dropdown
-          title="Documents & Compliance"
-          icon={FileText}
-          items={documentsComplianceItems}
-          isOpen={openDropdowns.documentsCompliance}
-          toggle={() => toggleDropdown("documentsCompliance")}
-        />
-        <Dropdown
-          title="Channel Management"
-          icon={Layers}
-          items={channelManagementItems}
-          isOpen={openDropdowns.channelManagement}
-          toggle={() => toggleDropdown("channelManagement")}
-        />
-
-        {/* Plan Section */}
-        <div className="mt-8 p-4 text-center border-t border-gray-700">
-          <div className="text-xs text-gray-400">Current Plan</div>
-          <div className="text-sm font-semibold text-white">FREE TIER</div>
-          <button className="mt-2 px-4 py-2 text-xs text-white bg-purple-500 rounded-md hover:bg-purple-600">
-            Upgrade
+  `}>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+          <div className="text-xl font-bold">BEAPOne Lite</div>
+          <button className="md:hidden" onClick={toggleSidebar}>
+            <Menu className="text-white" />
           </button>
         </div>
+
+        {/* Menu items */}
+        <div className="mt-4 space-y-1 px-2">
+          {menuItems.map((item, idx) => (
+            <MenuItem
+              key={idx}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              status={item.status}
+            />
+          ))}
+
+          {/* Dropdowns */}
+          <Dropdown
+            title="Sales & Invoicing"
+            icon={FileText}
+            items={salesInvoicingItems}
+            isOpen={openDropdowns.salesInvoicing}
+            toggle={() => toggleDropdown("salesInvoicing")}
+          />
+          <Dropdown
+            title="Expenses"
+            icon={Receipt}
+            items={expensesItems}
+            isOpen={openDropdowns.expenses}
+            toggle={() => toggleDropdown("expenses")}
+          />
+          <Dropdown
+            title="Purchasing"
+            icon={ShoppingCart}
+            items={purchasingItems}
+            isOpen={openDropdowns.purchasing}
+            toggle={() => toggleDropdown("purchasing")}
+          />
+          <Dropdown
+            title="Sales Orders"
+            icon={FolderOpen}
+            items={salesOrdersItems}
+            isOpen={openDropdowns.salesOrders}
+            toggle={() => toggleDropdown("salesOrders")}
+          />
+          <Dropdown
+            title="Documents & Compliance"
+            icon={FileText}
+            items={documentsComplianceItems}
+            isOpen={openDropdowns.documentsCompliance}
+            toggle={() => toggleDropdown("documentsCompliance")}
+          />
+          <Dropdown
+            title="Channel Management"
+            icon={Layers}
+            items={channelManagementItems}
+            isOpen={openDropdowns.channelManagement}
+            toggle={() => toggleDropdown("channelManagement")}
+          />
+
+          {/* Plan Section */}
+          <div className="mt-8 p-4 text-center border-t border-gray-700">
+            <div className="text-xs text-gray-400">Current Plan</div>
+            <div className="text-sm font-semibold text-white">FREE TIER</div>
+            <button className="mt-2 px-4 py-2 text-xs text-white bg-purple-500 rounded-md hover:bg-purple-600">
+              Upgrade
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
