@@ -96,7 +96,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       status: "S",
     },
     {
-      href: "/financial-reports",
+      href: "/beapOneLite/financial-reports",
       icon: BarChart3,
       label: "Financial Reports",
       status: "S",
