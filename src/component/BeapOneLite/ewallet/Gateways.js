@@ -10,7 +10,7 @@ import {
   CheckCircle,
   BadgeDollarSign,
   Loader2,
-  PlusCircle, // Added for empty state action
+  PlusCircle,
 } from "lucide-react";
 
 /* ============================================================

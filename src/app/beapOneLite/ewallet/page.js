@@ -16,6 +16,7 @@ import {
   Settings,
   Loader2,
 } from "lucide-react";
+
 import Layout from "@/component/BeapOneLite/Layout";
 import EWalletOverview from "@/component/BeapOneLite/ewallet/Overview";
 import TransactionHistory from "@/component/BeapOneLite/ewallet/Transactions";
@@ -74,7 +75,8 @@ const NAVIGATION_TABS = [
 const BrandHeader = () => (
   <header className="flex items-start mb-6 pt-0">
     <div
-      className={`w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-700/10 ${BRAND_COLOR} mr-4 mt-1`}>
+      className={`w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-700/10 ${BRAND_COLOR} mr-4 mt-1`}
+    >
       <LayoutDashboard size={24} className={BRAND_COLOR} />
     </div>
     <div>
@@ -97,7 +99,8 @@ const WalletCard = ({ data }) => {
         {/* Left: Wallet Info */}
         <div className="flex items-start">
           <div
-            className={`w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-700/10 ${BRAND_COLOR} mr-4`}>
+            className={`w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-700/10 ${BRAND_COLOR} mr-4`}
+          >
             <Wallet size={20} className={BRAND_COLOR} />
           </div>
           <div>
@@ -138,21 +141,24 @@ const ActionButtons = ({ actions }) => (
     {actions?.map((action, i) => {
       const style = ACTION_STYLE_MAP[action.id] ?? ACTION_STYLE_MAP.default;
       const Icon = style.icon;
+
       return (
         <button
           key={i}
           className={`flex-1 flex items-center justify-center px-6 py-3.5 text-white rounded-xl font-semibold transition duration-200 shadow-md ${style.color} ${style.hover}`}
-          onClick={() => console.log(`${action.title} clicked`)}>
+          onClick={() => console.log(`${action.title} clicked`)}
+        >
           <Icon size={18} className="mr-2" />
           {action.title}
         </button>
       );
     })}
 
-    {/* Sync Banks Button (Static) */}
+    {/* Sync Banks Button */}
     <button
       className="flex-1 flex items-center justify-center px-6 py-3.5 border border-gray-300 text-gray-800 bg-white rounded-xl font-semibold hover:bg-gray-50 transition duration-200 shadow-sm"
-      onClick={() => console.log("Sync Banks clicked")}>
+      onClick={() => console.log("Sync Banks clicked")}
+    >
       <RotateCw size={18} className="mr-2" />
       Sync Banks
     </button>
@@ -160,28 +166,27 @@ const ActionButtons = ({ actions }) => (
 );
 
 const NavigationBar = ({ activeTab, setActiveTab }) => (
-  <div>
-    <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200">
-      <div className="flex flex-wrap justify-between gap-1">
-        {NAVIGATION_TABS.map((tab, i) => {
-          const Icon = tab.icon;
-          const isActive = tab.title === activeTab;
+  <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200">
+    <div className="flex flex-wrap justify-between gap-1">
+      {NAVIGATION_TABS.map((tab, i) => {
+        const Icon = tab.icon;
+        const isActive = tab.title === activeTab;
 
-          const classes = isActive
-            ? `px-4 py-2 flex items-center ${BRAND_BG} text-white font-semibold rounded-xl shadow-md transition duration-200`
-            : `px-4 py-2 flex items-center text-gray-600 hover:text-indigo-700 hover:bg-indigo-50/50 transition duration-200 rounded-xl`;
+        const classes = isActive
+          ? `px-4 py-2 flex items-center ${BRAND_BG} text-white font-semibold rounded-xl shadow-md transition duration-200`
+          : `px-4 py-2 flex items-center text-gray-600 hover:text-indigo-700 hover:bg-indigo-50/50 transition duration-200 rounded-xl`;
 
-          return (
-            <button
-              key={i}
-              className={`flex-grow sm:flex-grow-0 sm:min-w-0 ${classes}`}
-              onClick={() => setActiveTab(tab.title)}>
-              <Icon size={18} className="mr-2" />
-              <span className="text-sm font-medium">{tab.title}</span>
-            </button>
-          );
-        })}
-      </div>
+        return (
+          <button
+            key={i}
+            className={`flex-grow sm:flex-grow-0 ${classes}`}
+            onClick={() => setActiveTab(tab.title)}
+          >
+            <Icon size={18} className="mr-2" />
+            <span className="text-sm font-medium">{tab.title}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
@@ -195,7 +200,6 @@ export default function EWalletDashboard() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch Data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -216,10 +220,7 @@ export default function EWalletDashboard() {
     fetchData();
   }, []);
 
-  // Content Renderer
   const renderTabContent = (tab) => {
-    const commonClasses =
-      "p-8 bg-white border border-gray-200 rounded-xl text-gray-700";
     switch (tab) {
       case "Overview":
         return <EWalletOverview />;
@@ -237,7 +238,7 @@ export default function EWalletDashboard() {
         return <SettingsComponent />;
       default:
         return (
-          <div className={commonClasses}>
+          <div className="p-8 bg-white border border-gray-200 rounded-xl text-gray-700">
             <p className="text-gray-500 italic">
               Select a tab to view content.
             </p>
@@ -246,7 +247,6 @@ export default function EWalletDashboard() {
     }
   };
 
-  // Loading State
   if (isLoading) {
     return (
       <Layout>
@@ -262,15 +262,9 @@ export default function EWalletDashboard() {
     <Layout>
       <div className="w-full font-sans p-4 sm:p-6 lg:px-8 lg:pt-4">
         <BrandHeader />
-
-        {/* Dynamic Data Injection */}
         <WalletCard data={data?.walletDetails} />
-
         <ActionButtons actions={data?.availableActions} />
-
         <NavigationBar activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        {/* Content Area */}
         <div className="pt-6">{renderTabContent(activeTab)}</div>
       </div>
     </Layout>

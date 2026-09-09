@@ -1,0 +1,139 @@
+{
+  "metrics": [
+    { "title": "Success Rate", "value": "100.00%", "target": ">= 99.9% (RGSR)" },
+    { "title": "Data Consistency", "value": "100%", "target": "100% (DCCPR)" },
+    { "title": "Avg Latency", "value": "7.5s", "target": "<= 10s (RGL)" },
+    { "title": "Total Reports", "value": "9", "desc": "Generated reports" }
+  ],
+  "periodOptions": ["Today", "Yesterday", "Last 7 days", "Last month", "Last quarter", "Last year"],
+  "locationOptions": ["All locations", "Lagos HQ", "Abuja branch", "Port Harcourt office"],
+  "tabs": ["P&L Statement", "Balance Sheet", "Cash Flow", "Tax Preview"],
+  "reports": {
+    "lagos hq": {
+      "today": { "period": "Today – Lagos HQ", "totalRevenue": 350000, "cogs": 20000, "operatingExpenses": 55000 },
+      "yesterday": { "period": "Yesterday – Lagos HQ", "totalRevenue": 320000, "cogs": 18000, "operatingExpenses": 50000 },
+      "last 7 days": { "period": "Last 7 days – Lagos HQ", "totalRevenue": 2450000, "cogs": 120000, "operatingExpenses": 410000 },
+      "last month": { "period": "Last Month – Lagos HQ", "totalRevenue": 13618000, "cogs": 0, "operatingExpenses": 371063 },
+      "last quarter": { "period": "Last Quarter – Lagos HQ", "totalRevenue": 40000000, "cogs": 1500000, "operatingExpenses": 1200000 },
+      "last year": { "period": "Last Year – Lagos HQ", "totalRevenue": 160000000, "cogs": 5000000, "operatingExpenses": 4800000 }
+    },
+    "abuja branch": {
+      "today": { "period": "Today – Abuja", "totalRevenue": 185000, "cogs": 15000, "operatingExpenses": 32000 },
+      "yesterday": { "period": "Yesterday – Abuja", "totalRevenue": 200000, "cogs": 18000, "operatingExpenses": 35000 },
+      "last 7 days": { "period": "Last 7 days – Abuja", "totalRevenue": 1300000, "cogs": 90000, "operatingExpenses": 250000 },
+      "last month": { "period": "Last Month – Abuja", "totalRevenue": 8200000, "cogs": 250000, "operatingExpenses": 210000 },
+      "last quarter": { "period": "Last Quarter – Abuja", "totalRevenue": 23000000, "cogs": 800000, "operatingExpenses": 650000 },
+      "last year": { "period": "Last Year – Abuja", "totalRevenue": 90000000, "cogs": 3000000, "operatingExpenses": 2800000 }
+    },
+    "port harcourt office": {
+      "today": { "period": "Today – Port Harcourt", "totalRevenue": 120000, "cogs": 10000, "operatingExpenses": 28000 },
+      "yesterday": { "period": "Yesterday – Port Harcourt", "totalRevenue": 110000, "cogs": 9000, "operatingExpenses": 25000 },
+      "last 7 days": { "period": "Last 7 days – Port Harcourt", "totalRevenue": 780000, "cogs": 50000, "operatingExpenses": 180000 },
+      "last month": { "period": "Last Month – Port Harcourt", "totalRevenue": 5400000, "cogs": 100000, "operatingExpenses": 150000 },
+      "last quarter": { "period": "Last Quarter – Port Harcourt", "totalRevenue": 16500000, "cogs": 400000, "operatingExpenses": 550000 },
+      "last year": { "period": "Last Year – Port Harcourt", "totalRevenue": 66000000, "cogs": 1600000, "operatingExpenses": 2200000 }
+    }
+  },
+  "explanations": {
+    "totalRevenue": "This is the total money customers paid you for your goods and services during this period.",
+    "cogs": "The direct cost of the products you sold (e.g., inventory purchases, raw materials).",
+    "grossProfit": "What you earned before paying your business overhead costs.",
+    "operatingExpenses": "All the day-to-day costs to keep your doors open, like rent and wages.",
+    "netProfitBeforeTax": "The final money your business made (or lost) this period."
+  },
+  "balanceSheetData": {
+    "asOfDate": "December 4, 2025",
+    "assets": {
+      "current": [
+        { "label": "Cash and Bank", "amount": 0 },
+        { "label": "Accounts Receivable", "amount": 0 },
+        { "label": "Inventory", "amount": 150000 },
+        { "label": "Prepaid Expenses", "amount": 45000 }
+      ],
+      "fixed": [
+        { "label": "Property, Plant & Equipment", "amount": 850000 },
+        { "label": "Less: Accumulated Depreciation", "amount": -120000, "negative": true }
+      ]
+    },
+    "liabilities": {
+      "current": [
+        { "label": "Accounts Payable", "amount": 0 },
+        { "label": "Accrued Expenses", "amount": 35000 },
+        { "label": "Short-term Debt", "amount": 100000 },
+        { "label": "Taxes Payable", "amount": 25000 }
+      ],
+      "longTerm": [
+        { "label": "Long-term Debt", "amount": 300000 },
+        { "label": "Deferred Revenue", "amount": 50000 }
+      ]
+    },
+    "equity": [
+      { "label": "Owner's Equity", "amount": 500000 },
+      { "label": "Retained Earnings", "amount": 75000 },
+      { "label": "Current Period Income", "amount": 0 }
+    ]
+  },
+  "cashFlowData": {
+    "period": "11/4/2025 – 12/4/2025",
+    "beginningCash": 250000,
+    "netChange": 78000, 
+    "endingCash": 328000, 
+
+    "operating": {
+      "netIncome": 0,
+      "adjustments": [
+        { "label": "Depreciation & Amortization", "amount": 15000 },
+        { "label": "Increase in Accounts Receivable", "amount": -25000 },
+        { "label": "Decrease in Inventory", "amount": 10000 },
+        { "label": "Increase in Accounts Payable", "amount": 18000 }
+      ],
+      "netCash": 18000
+    },
+
+    "investing": {
+      "items": [
+        { "label": "Purchase of Property, Plant & Equipment", "amount": -50000 },
+        { "label": "Proceeds from Sale of Assets", "amount": 0 }
+      ],
+      "netCash": -50000
+    },
+
+    "financing": {
+      "items": [
+        { "label": "Proceeds from Loans", "amount": 100000 },
+        { "label": "Loan Repayments", "amount": -25000 },
+        { "label": "Owner Contributions", "amount": 50000 },
+        { "label": "Owner Draws", "amount": -15000 }
+      ],
+      "netCash": 110000
+    }
+  },
+  "taxData": {
+    "period": "11/4/2025 – 12/4/2025",
+    "filingDueDate": "December 25, 2025",
+    "isOnTrack": true,
+
+    "vat": {
+      "outputVat": 0,
+      "inputVat": 0,
+      "netPayable": 0
+    },
+
+    "wht": {
+      "items": [
+        { "category": "Consultancy (5%)", "rate": "5.0%", "amount": 25000 },
+        { "category": "Professional Services (10%)", "rate": "10.0%", "amount": 45000 },
+        { "category": "Contract/Commission (5%)", "rate": "5.0%", "amount": 15000 }
+      ],
+      "totalCredit": 85000
+    },
+
+    "incomeTax": {
+      "grossIncome": 0,
+      "allowableExpenses": 0,
+      "taxableIncome": 0,
+      "whtCreditApplied": 85000,
+      "estimatedTaxPayable": 0
+    }
+  }
+}
